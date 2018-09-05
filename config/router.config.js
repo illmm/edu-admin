@@ -8,6 +8,8 @@ export default [
       { path: '/user/login', component: './User/Login' },
     ],
   },
+
+
   // app
   {
     path: '/',
@@ -15,7 +17,15 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis' },
+      { path: '/', redirect: '/welcome' },
+
+      {
+        path: '/welcome',
+        name: 'work',
+        icon: 'form',
+        component: './Dashboard/Analysis',
+       
+      },
       {
         path: '/dashboard',
         name: 'dashboard',
@@ -31,11 +41,7 @@ export default [
             name: 'monitor',
             component: './Dashboard/Monitor',
           },
-          {
-            path: '/dashboard/workplace',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
-          },
+          
         ],
       },
       // forms
@@ -43,91 +49,16 @@ export default [
         path: '/form',
         icon: 'form',
         name: 'form',
-        routes: [
-          {
-            path: '/form/basic-form',
-            name: 'basicform',
-            component: './Forms/BasicForm',
-          },
-          {
-            path: '/form/step-form',
-            name: 'stepform',
-            component: './Forms/StepForm',
-            hideChildrenInMenu: true,
-            routes: [
-              {
-                path: '/form/step-form',
-                name: 'stepform',
-                redirect: '/form/step-form/info',
-              },
-              {
-                path: '/form/step-form/info',
-                name: 'info',
-                component: './Forms/StepForm/Step1',
-              },
-              {
-                path: '/form/step-form/confirm',
-                name: 'confirm',
-                component: './Forms/StepForm/Step2',
-              },
-              {
-                path: '/form/step-form/result',
-                name: 'result',
-                component: './Forms/StepForm/Step3',
-              },
-            ],
-          },
-          {
-            path: '/form/advanced-form',
-            name: 'advancedform',
-            component: './Forms/AdvancedForm',
-          },
-        ],
+        component: './Forms/BasicForm',
       },
       // list
       {
         path: '/list',
         icon: 'table',
         name: 'list',
-        routes: [
-          {
-            path: '/list/table-list',
-            name: 'searchtable',
-            component: './List/TableList',
-          },
-          {
-            path: '/list/basic-list',
-            name: 'basiclist',
-            component: './List/BasicList',
-          },
-          {
-            path: '/list/card-list',
-            name: 'cardlist',
-            component: './List/CardList',
-          },
-          {
-            path: '/list/search',
-            name: 'searchlist',
-            component: './List/List',
-            routes: [
-              {
-                path: '/list/search/articles',
-                name: 'articles',
-                component: './List/Articles',
-              },
-              {
-                path: '/list/search/projects',
-                name: 'projects',
-                component: './List/Projects',
-              },
-              {
-                path: '/list/search/applications',
-                name: 'applications',
-                component: './List/Applications',
-              },
-            ],
-          },
-        ],
+        component: './List/TableList',
+
+       
       },
       {
         path: '/profile',
@@ -151,44 +82,20 @@ export default [
         name: 'result',
         icon: 'check-circle-o',
         path: '/result',
-        routes: [
-          // result
-          {
-            path: '/result/success',
-            name: 'success',
-            component: './Result/Success',
-          },
-          { path: '/result/fail', name: 'fail', component: './Result/Error' },
-        ],
+        component: './Result/Success',
+       
+      },
+      {
+        name: 'desire',
+        icon: 'warning',
+        path: '/desire',
+        component: './Exception/403',
       },
       {
         name: 'exception',
         icon: 'warning',
         path: '/exception',
-        routes: [
-          // exception
-          {
-            path: '/exception/403',
-            name: 'not-permission',
-            component: './Exception/403',
-          },
-          {
-            path: '/exception/404',
-            name: 'not-find',
-            component: './Exception/404',
-          },
-          {
-            path: '/exception/500',
-            name: 'server-error',
-            component: './Exception/500',
-          },
-          {
-            path: '/exception/trigger',
-            name: 'trigger',
-            hideInMenu: true,
-            component: './Exception/TriggerException',
-          },
-        ],
+        component: './Exception/403',
       },
       {
         name: 'account',

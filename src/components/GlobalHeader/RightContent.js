@@ -67,14 +67,10 @@ export default class GlobalHeaderRight extends PureComponent {
           <Icon type="setting" />
           <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
         </Menu.Item>
-        <Menu.Item key="triggerError">
-          <Icon type="close-circle" />
-          <FormattedMessage id="menu.account.trigger" defaultMessage="Trigger Error" />
-        </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />
-          退出登录
+          <FormattedMessage id="menu.account.logout" defaultMessage="Sign Out" />
         </Menu.Item>
       </Menu>
     );
@@ -88,7 +84,7 @@ export default class GlobalHeaderRight extends PureComponent {
         <HeaderSearch
           className={`${styles.action} ${styles.search}`}
           placeholder="站内搜索"
-          dataSource={['搜索提示一', '搜索提示二', '搜索提示三']}
+          dataSource={['教材', '视频', '培训']}
           onSearch={value => {
             console.log('input', value); // eslint-disable-line
           }}
@@ -96,17 +92,18 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log('enter', value); // eslint-disable-line
           }}
         />
-        <Tooltip title="使用文档">
+                <Tooltip title="使用帮助">
           <a
             target="_blank"
-            href="https://pro.ant.design/docs/getting-started"
+            href="https://baidu.com"
             rel="noopener noreferrer"
             className={styles.action}
-            title="使用文档"
+            title="使用帮助"
           >
             <Icon type="question-circle-o" />
           </a>
         </Tooltip>
+
         <NoticeIcon
           className={styles.action}
           count={currentUser.notifyCount}

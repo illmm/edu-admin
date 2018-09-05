@@ -1,10 +1,9 @@
 export default {
   'navbar.lang': '中文',
   'menu.home': 'Home',
-  'menu.dashboard': 'Dashboard',
+  'menu.dashboard': 'User Management',
   'menu.dashboard.analysis': 'Analysis',
   'menu.dashboard.monitor': 'Monitor',
-  'menu.dashboard.workplace': 'Workplace',
   'menu.form': 'Form',
   'menu.form.basicform': 'Basic Form',
   'menu.form.stepform': 'Step Form',
