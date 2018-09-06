@@ -3,6 +3,8 @@ import { notification } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
+//const baseUrl = "https://www.easy-mock.com/mock/5b8f677eb06a1c149f4ad59c/api-mock-admin";
+const baseUrl = "";
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -73,6 +75,8 @@ export default function request(
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
+ 
+  url = baseUrl + url;
   const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
   const hashcode = hash
     .sha256()

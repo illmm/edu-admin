@@ -7,8 +7,8 @@ export default {
     userid: '00000001',
     email: 'antdesign@alipay.com',
     signature: '海纳百川，有容乃大',
-    title: '交互专家',
-    group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
+    title: '金牌讲师',
+    group: '王府学校',
     tags: [
       {
         key: '0',

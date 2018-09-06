@@ -8,151 +8,157 @@ export default [
       { path: '/user/login', component: './User/Login' },
     ],
   },
-
-
   // app
   {
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
-      // dashboard
-      { path: '/', redirect: '/welcome' },
+      // 工作台
+      { path: '/', redirect: '/workplace' },
 
       {
-        path: '/welcome',
-        name: 'work',
-        icon: 'form',
-        component: './Dashboard/Analysis',
+        path: '/workplace',
+        name: 'workplace',
+        icon: 'desktop',
+        //component: './Dashboard/Workplace',
+        component: './Workplace',
        
       },
+      //机构管理
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        icon: 'dashboard',
+        path: '/agency',
+        name: 'agency',
+        icon: 'cluster',
         routes: [
           {
-            path: '/dashboard/analysis',
-            name: 'analysis',
-            component: './Dashboard/Analysis',
+            path: '/agency/list',
+            name: 'list',
+            component: './Agency/List',
           },
           {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
+            path: '/agency/resource',
+            name: 'resource',
+            component: './Agency/Resource',
           },
           
         ],
       },
-      // forms
+      // 课程管理
       {
-        path: '/form',
-        icon: 'form',
-        name: 'form',
-        component: './Forms/BasicForm',
+        path: '/course',
+        icon: 'video-camera',
+        name: 'course',
+        routes: [
+          {
+            path: '/course/video',
+            name: 'video',
+            component: './Course/Video',
+          },
+          {
+            path: '/course/online',
+            name: 'online',
+            component: './Course/Online',
+          },
+          
+        ],
       },
-      // list
+      // 教材管理
       {
-        path: '/list',
-        icon: 'table',
-        name: 'list',
-        component: './List/TableList',
+        path: '/material',
+        icon: 'book',
+        name: 'material',
+        routes: [
+          {
+            path: '/material/electron',
+            name: 'electron',
+            component: './Material/Electron',
+          },
+          {
+            path: '/material/world',
+            name: 'world',
+            component: './Material/World',
+          },
+          
+        ],
 
        
       },
+      //培训管理
       {
-        path: '/profile',
-        name: 'profile',
+        name: 'train',
+        icon: 'customer-service',
+        path: '/train',
+        component: './Exception/403',
+      },
+      //套餐产品
+      {
+        name: 'package',
+        icon: 'shop',
+        path: '/package',
+        component: './Exception/403',
+      },
+      //权限管理
+      {
+        path: '/authority',
+        name: 'authority',
         icon: 'profile',
         routes: [
           // profile
           {
-            path: '/profile/basic',
-            name: 'basic',
-            component: './Profile/BasicProfile',
+            path: '/authority/user',
+            name: 'user',
+            component: './Authority/User',
           },
           {
-            path: '/profile/advanced',
-            name: 'advanced',
-            component: './Profile/AdvancedProfile',
+            path: '/authority/role',
+            name: 'role',
+            component: './Exception/403',
+          },
+          {
+            path: '/authority/menu',
+            name: 'menu',
+            component: './Exception/403',
           },
         ],
       },
+      //师生管理
       {
-        name: 'result',
-        icon: 'check-circle-o',
+        name: 'member',
+        icon: 'user',
+        path: '/member',
+        component: './Exception/403',
+      },
+      //消息管理
+      {
+        name: 'message',
+        icon: 'message',
         path: '/result',
-        component: './Result/Success',
+        component: './Exception/403',
        
       },
+      //采购管理
       {
-        name: 'desire',
-        icon: 'warning',
-        path: '/desire',
+        name: 'purchase',
+        icon: 'heart',
+        path: '/purchase',
         component: './Exception/403',
       },
+      //统计报表
       {
-        name: 'exception',
-        icon: 'warning',
-        path: '/exception',
+        name: 'statistics',
+        icon: 'bar-chart',
+        path: '/statistics',
         component: './Exception/403',
       },
+    
+      //系统设置
       {
-        name: 'account',
-        icon: 'user',
-        path: '/account',
-        routes: [
-          {
-            path: '/account/center',
-            name: 'center',
-            component: './Account/Center/Center',
-            routes: [
-              {
-                path: '/account/center',
-                redirect: '/account/center/articles',
-              },
-              {
-                path: '/account/center/articles',
-                component: './Account/Center/Articles',
-              },
-              {
-                path: '/account/center/applications',
-                component: './Account/Center/Applications',
-              },
-              {
-                path: '/account/center/projects',
-                component: './Account/Center/Projects',
-              },
-            ],
-          },
-          {
-            path: '/account/settings',
-            name: 'settings',
-            component: './Account/Settings/Info',
-            routes: [
-              {
-                path: '/account/settings',
-                redirect: '/account/settings/base',
-              },
-              {
-                path: '/account/settings/base',
-                component: './Account/Settings/BaseView',
-              },
-              {
-                path: '/account/settings/security',
-                component: './Account/Settings/SecurityView',
-              },
-              {
-                path: '/account/settings/binding',
-                component: './Account/Settings/BindingView',
-              },
-              {
-                path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
-              },
-            ],
-          },
-        ],
+        name: 'settings',
+        icon: 'setting',
+        path: '/settings',
+        component: './Exception/403',
+        
       },
       {
         component: '404',

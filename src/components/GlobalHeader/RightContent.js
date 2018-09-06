@@ -127,12 +127,7 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyText="您已读完所有消息"
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
           />
-          <NoticeIcon.Tab
-            list={noticeData['待办']}
-            title="待办"
-            emptyText="你已完成所有待办"
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-          />
+          
         </NoticeIcon>
         {currentUser.name ? (
           <Dropdown overlay={menu}>

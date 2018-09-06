@@ -1,6 +1,5 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
-
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -104,7 +103,7 @@ export async function updateFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('https://www.easy-mock.com/mock/5b8f677eb06a1c149f4ad59c/api-mock-admin/login/account', {
+  return request('/login/account', {
     method: 'POST',
     body: params,
   });

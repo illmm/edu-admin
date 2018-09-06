@@ -225,14 +225,14 @@ const getActivities = [
       avatar: avatars2[0],
     },
     group: {
-      name: '高逼格设计天团',
-      link: 'http://github.com/',
+      name: '在线课程',
+      link: 'http://baidu.com/',
     },
     project: {
-      name: '六月迭代',
-      link: 'http://github.com/',
+      name: 'AP课程',
+      link: 'http://baidu.com/',
     },
-    template: '在 @{group} 新建项目 @{project}',
+    template: '在 @{group} 学习了 @{project}',
   },
   {
     id: 'trend-2',
@@ -242,14 +242,14 @@ const getActivities = [
       avatar: avatars2[1],
     },
     group: {
-      name: '高逼格设计天团',
-      link: 'http://github.com/',
+      name: '阅读世界',
+      link: 'http://baidu.com/',
     },
     project: {
-      name: '六月迭代',
-      link: 'http://github.com/',
+      name: '十万个为什么',
+      link: 'http://baidu.com/',
     },
-    template: '在 @{group} 新建项目 @{project}',
+    template: '在 @{group} 阅读了 @{project}',
   },
   {
     id: 'trend-3',
@@ -259,14 +259,14 @@ const getActivities = [
       avatar: avatars2[2],
     },
     group: {
-      name: '中二少女团',
-      link: 'http://github.com/',
+      name: '海外教材',
+      link: 'http://baidu.com/',
     },
     project: {
-      name: '六月迭代',
-      link: 'http://github.com/',
+      name: '十月革命',
+      link: 'http://baidu.com/',
     },
-    template: '在 @{group} 新建项目 @{project}',
+    template: '在 @{group} 阅读了 @{project}',
   },
   {
     id: 'trend-4',
@@ -276,8 +276,8 @@ const getActivities = [
       avatar: avatars2[4],
     },
     project: {
-      name: '5 月日常迭代',
-      link: 'http://github.com/',
+      name: '今日笔记',
+      link: 'http://baidu.com/',
     },
     template: '将 @{project} 更新至已发布状态',
   },
@@ -290,11 +290,11 @@ const getActivities = [
     },
     project: {
       name: '工程效能',
-      link: 'http://github.com/',
+      link: 'http://baidu.com/',
     },
     comment: {
       name: '留言',
-      link: 'http://github.com/',
+      link: 'http://baidu.com/',
     },
     template: '在 @{project} 发布了 @{comment}',
   },
@@ -306,14 +306,14 @@ const getActivities = [
       avatar: avatars2[5],
     },
     group: {
-      name: '程序员日常',
-      link: 'http://github.com/',
+      name: '机构培训',
+      link: 'http://baidu.com/',
     },
     project: {
-      name: '品牌迭代',
-      link: 'http://github.com/',
+      name: '培训课程',
+      link: 'http://baidu.com/',
     },
-    template: '在 @{group} 新建项目 @{project}',
+    template: '在 @{group} 报名了 @{project}',
   },
 ];
 
