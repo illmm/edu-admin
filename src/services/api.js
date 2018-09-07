@@ -23,6 +23,7 @@ export async function removeRule(params) {
 }
 
 export async function addRule(params) {
+  console.log("params"+params);
   return request('/api/rule', {
     method: 'POST',
     body: {

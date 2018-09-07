@@ -51,34 +51,48 @@ const CreateForm = Form.create()(props => {
     <Modal
       destroyOnClose
       title="新建用户"
+      okText="创建"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('organizeId', {
+          rules: [{ required: true, message: '请选择机构！'}],
+        })(
+          <Select placeholder="请选择" style={{ width: '100%' }}>
+            <Option value="0">王府学校</Option>
+            <Option value="1">牛津大学</Option>
+            <Option value="1">北京大学</Option>
+          </Select>
+        )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('nickname', {
+          rules: [{ required: true, message: '请输入姓名！' }],
+        })(<Input placeholder="请输入姓名" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('username', {
+          rules: [{ required: true, message: '请输入账号！'}],
+        })(<Input placeholder="请输入账号" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('password', {
+          rules: [{ required: true, message: '请输入密码！' }],
+        })(<Input placeholder="请输入密码" type="password"/>)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('roleId', {
+          rules: [{ required: true, message: '请选择角色！'}],
+        })(
+          <Select placeholder="请选择角色" style={{ width: '100%' }}>
+          <Option value="0">超级管理员</Option>
+          <Option value="1">机构管理员</Option>
+          <Option value="2">教师</Option>
+          <Option value="3">学生</Option>
+        </Select>
+        )}
       </FormItem>
     </Modal>
   );
@@ -159,30 +173,33 @@ class UpdateForm extends PureComponent {
         visible={updateModalVisible}
         onCancel={() => handleUpdateModalVisible()}
       >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
+        {form.getFieldDecorator('organizeId', {
+          rules: [{ required: true, message: '请选择机构！'}],
+        })(
+          <Select placeholder="请选择" style={{ width: '100%' }}>
+            <Option value="0">王府学校</Option>
+            <Option value="1">牛津大学</Option>
+            <Option value="1">北京大学</Option>
+          </Select>
+        )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('nickname', {
+          rules: [{ required: true, message: '请输入姓名！' }],
+        })(<Input placeholder="请输入姓名" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
+        {form.getFieldDecorator('roleId', {
+          rules: [{ required: true, message: '请选择角色！'}],
+        })(
+          <Select placeholder="请选择角色" style={{ width: '100%' }}>
+          <Option value="0">超级管理员</Option>
+          <Option value="1">机构管理员</Option>
+          <Option value="2">教师</Option>
+          <Option value="3">学生</Option>
+        </Select>
+        )}
       </FormItem>
       
       </Modal>
@@ -192,9 +209,9 @@ class UpdateForm extends PureComponent {
 
 /* eslint react/no-multi-comp:0 */
 export default
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ users, loading }) => ({
+  users,
+  loading: loading.models.users,
 }))
 @Form.create()
 class TableList extends PureComponent {
@@ -272,7 +289,7 @@ class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'users/fetch',
     });
   }
 
@@ -297,7 +314,7 @@ class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'users/fetch',
       payload: params,
     });
   };
@@ -309,7 +326,7 @@ class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'users/fetch',
       payload: {},
     });
   };
@@ -329,7 +346,7 @@ class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'users/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -369,7 +386,7 @@ class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'users/fetch',
         payload: values,
       });
     });
@@ -391,9 +408,9 @@ class TableList extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/add',
+      type: 'users/add',
       payload: {
-        desc: fields.desc,
+       ...fields,
       },
     });
 
@@ -404,7 +421,7 @@ class TableList extends PureComponent {
   handleUpdate = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/update',
+      type: 'users/update',
       payload: {
         name: fields.name,
         desc: fields.desc,
@@ -553,7 +570,7 @@ class TableList extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      users: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
