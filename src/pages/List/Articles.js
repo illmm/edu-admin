@@ -12,15 +12,20 @@ const FormItem = Form.Item;
 
 const pageSize = 5;
 
-export default
 @Form.create()
 @connect(({ list, loading }) => ({
   list,
   loading: loading.models.list,
 }))
-class SearchList extends Component {
+export default class SearchList extends Component {
   componentDidMount() {
-    this.fetchMore();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'list/fetch',
+      payload: {
+        count: 5,
+      },
+    });
   }
 
   setOwner = () => {

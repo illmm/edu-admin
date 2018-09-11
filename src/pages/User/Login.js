@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import Link from 'umi/link';
-import { Checkbox, Alert, Icon } from 'antd';
+import { Alert } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const { UserName, Password, Submit } = Login;
 
-export default
 @connect(({ login, loading }) => ({
   login,
   submitting: loading.effects['login/login'],
 }))
 class LoginPage extends Component {
-  state = {
-  };
+  state = {};
 
   handleSubmit = (err, values) => {
     if (!err) {
@@ -43,21 +40,20 @@ class LoginPage extends Component {
             this.loginForm = form;
           }}
         >
-            {console.log(login)}
-            {!login.success &&
-              !submitting &&
-              this.renderMessage('账户或密码错误')}
-            <UserName name="userName" placeholder="用户名" />
-            <Password
-              name="password"
-              placeholder="密码"
-              onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
-            />
-          <div>
-          </div>
+          {console.log(login)}
+          {!login.success && !submitting && this.renderMessage('账户或密码错误')}
+          <UserName name="userName" placeholder="用户名" />
+          <Password
+            name="password"
+            placeholder="密码"
+            onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
+          />
+          <div />
           <Submit loading={submitting}>登录</Submit>
         </Login>
       </div>
     );
   }
 }
+
+export default LoginPage;

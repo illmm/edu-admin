@@ -56,42 +56,42 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-     <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
         {form.getFieldDecorator('organizeId', {
-          rules: [{ required: true, message: '请选择机构！'}],
+          rules: [{ required: true, message: '请选择机构！' }],
         })(
           <Select placeholder="请选择" style={{ width: '100%' }}>
             <Option value="0">王府学校</Option>
             <Option value="1">牛津大学</Option>
-            <Option value="1">北京大学</Option>
+            <Option value="2">北京大学</Option>
           </Select>
         )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('nickname', {
+        {form.getFieldDecorator('name', {
           rules: [{ required: true, message: '请输入姓名！' }],
         })(<Input placeholder="请输入姓名" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
-        {form.getFieldDecorator('username', {
-          rules: [{ required: true, message: '请输入账号！'}],
+        {form.getFieldDecorator('account', {
+          rules: [{ required: true, message: '请输入账号！' }],
         })(<Input placeholder="请输入账号" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
         {form.getFieldDecorator('password', {
           rules: [{ required: true, message: '请输入密码！' }],
-        })(<Input placeholder="请输入密码" type="password"/>)}
+        })(<Input placeholder="请输入密码" type="password" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
         {form.getFieldDecorator('roleId', {
-          rules: [{ required: true, message: '请选择角色！'}],
+          rules: [{ required: true, message: '请选择角色！' }],
         })(
           <Select placeholder="请选择角色" style={{ width: '100%' }}>
-          <Option value="0">超级管理员</Option>
-          <Option value="1">机构管理员</Option>
-          <Option value="2">教师</Option>
-          <Option value="3">学生</Option>
-        </Select>
+            <Option value="0">超级管理员</Option>
+            <Option value="1">机构管理员</Option>
+            <Option value="2">教师</Option>
+            <Option value="3">学生</Option>
+          </Select>
         )}
       </FormItem>
     </Modal>
@@ -158,10 +158,8 @@ class UpdateForm extends PureComponent {
     });
   };
 
-  
-
   render() {
-    const { form,updateModalVisible, handleUpdateModalVisible } = this.props;
+    const { form, updateModalVisible, handleUpdateModalVisible } = this.props;
     const { currentStep, formVals } = this.state;
 
     return (
@@ -173,48 +171,46 @@ class UpdateForm extends PureComponent {
         visible={updateModalVisible}
         onCancel={() => handleUpdateModalVisible()}
       >
-          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
-        {form.getFieldDecorator('organizeId', {
-          rules: [{ required: true, message: '请选择机构！'}],
-        })(
-          <Select placeholder="请选择" style={{ width: '100%' }}>
-            <Option value="0">王府学校</Option>
-            <Option value="1">牛津大学</Option>
-            <Option value="1">北京大学</Option>
-          </Select>
-        )}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-        {form.getFieldDecorator('nickname', {
-          rules: [{ required: true, message: '请输入姓名！' }],
-        })(<Input placeholder="请输入姓名" />)}
-      </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
-        {form.getFieldDecorator('roleId', {
-          rules: [{ required: true, message: '请选择角色！'}],
-        })(
-          <Select placeholder="请选择角色" style={{ width: '100%' }}>
-          <Option value="0">超级管理员</Option>
-          <Option value="1">机构管理员</Option>
-          <Option value="2">教师</Option>
-          <Option value="3">学生</Option>
-        </Select>
-        )}
-      </FormItem>
-      
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
+          {form.getFieldDecorator('organizeId', {
+            rules: [{ required: true, message: '请选择机构！' }],
+          })(
+            <Select placeholder="请选择" style={{ width: '100%' }}>
+              <Option value="0">王府学校</Option>
+              <Option value="1">牛津大学</Option>
+              <Option value="1">北京大学</Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
+          {form.getFieldDecorator('nickname', {
+            rules: [{ required: true, message: '请输入姓名！' }],
+          })(<Input placeholder="请输入姓名" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+          {form.getFieldDecorator('roleId', {
+            rules: [{ required: true, message: '请选择角色！' }],
+          })(
+            <Select placeholder="请选择角色" style={{ width: '100%' }}>
+              <Option value="0">超级管理员</Option>
+              <Option value="1">机构管理员</Option>
+              <Option value="2">教师</Option>
+              <Option value="3">学生</Option>
+            </Select>
+          )}
+        </FormItem>
       </Modal>
     );
   }
 }
 
 /* eslint react/no-multi-comp:0 */
-export default
 @connect(({ users, loading }) => ({
   users,
   loading: loading.models.users,
 }))
 @Form.create()
-class TableList extends PureComponent {
+export default class TableList extends PureComponent {
   state = {
     modalVisible: false,
     updateModalVisible: false,
@@ -267,7 +263,7 @@ class TableList extends PureComponent {
       // mark to display a total number
       needTotal: true,
     },
-    
+
     {
       title: '服务截止时间',
       dataIndex: 'updatedAt',
@@ -410,8 +406,11 @@ class TableList extends PureComponent {
     dispatch({
       type: 'users/add',
       payload: {
-       ...fields,
+        ...fields,
       },
+      callback: (_ = res => {
+        console.log('res' + res);
+      }),
     });
 
     message.success('添加成功');
@@ -490,11 +489,11 @@ class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="机构名称">
               {getFieldDecorator('name')(
-                 <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="0">王府学校</Option>
                   <Option value="1">牛津大学</Option>
                   <Option value="1">北京大学</Option>
-               </Select>
+                </Select>
               )}
             </FormItem>
           </Col>
@@ -590,7 +589,7 @@ class TableList extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper >
+      <PageHeaderWrapper>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
@@ -600,7 +599,6 @@ class TableList extends PureComponent {
               </Button>
               {selectedRows.length > 0 && (
                 <span>
-                  
                   <Dropdown overlay={menu}>
                     <Button>
                       更多操作 <Icon type="down" />

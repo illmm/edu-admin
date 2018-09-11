@@ -9,7 +9,9 @@ export async function queryActivities() {
 }
 
 export async function queryRule(params) {
-  return request(`/api/rule?${stringify(params)}`);
+  return request(`/api/rule`, {
+    method: 'POST',
+  });
 }
 
 export async function removeRule(params) {
@@ -22,13 +24,11 @@ export async function removeRule(params) {
   });
 }
 
-export async function addRule(params) {
-  console.log("params"+params);
-  return request('/api/rule', {
+export async function addUser(params) {
+  return request('http://192.168.1.145:8999/user/add', {
     method: 'POST',
     body: {
       ...params,
-      method: 'post',
     },
   });
 }

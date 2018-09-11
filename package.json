@@ -1,7 +1,7 @@
 {
-  "name": "ant-design-pro",
-  "version": "2.0.0",
-  "description": "An out-of-box UI solution for enterprise applications",
+  "name": "cnpedu",
+  "version": "1.0.0",
+  "description": "中国图书进出口公司",
   "private": true,
   "scripts": {
     "precommit": "npm run lint-staged",
@@ -23,8 +23,7 @@
     "prettier": "prettier --write ./src/**/**/**/*"
   },
   "dependencies": {
-    "@antv/data-set": "^0.9.0",
-    "@babel/polyfill": "^7.0.0",
+    "@antv/data-set": "^0.9.5",
     "@babel/runtime": "^7.0.0",
     "antd": "^3.9.1",
     "bizcharts": "^3.1.10",
@@ -38,6 +37,7 @@
     "memoize-one": "^4.0.0",
     "moment": "^2.22.2",
     "numeral": "^2.0.6",
+    "nzh": "^1.0.3",
     "omit.js": "^1.0.0",
     "path-to-regexp": "^2.4.0",
     "prop-types": "^15.5.10",
@@ -53,8 +53,6 @@
     "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
-    "umi": "^2.0.0",
-    "umi-plugin-react": "^1.0.0",
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.6",
     "antd-pro-merge-less": "^0.0.9",
@@ -80,7 +78,9 @@
     "pro-download": "^1.0.1",
     "stylelint": "^9.4.0",
     "stylelint-config-prettier": "^4.0.0",
-    "stylelint-config-standard": "^18.0.0"
+    "stylelint-config-standard": "^18.0.0",
+    "umi": "^2.0.1",
+    "umi-plugin-react": "^1.0.1"
   },
   "optionalDependencies": {
     "puppeteer": "^1.6.0"
