@@ -445,7 +445,7 @@ export default class TableList extends PureComponent {
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="0">王府学校</Option>
                   <Option value="1">牛津大学</Option>
-                  <Option value="1">北京大学</Option>
+                  <Option value="2">北京大学</Option>
                 </Select>
               )}
             </FormItem>
@@ -456,7 +456,7 @@ export default class TableList extends PureComponent {
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="0">超级管理员</Option>
                   <Option value="1">机构管理员</Option>
-                  <Option value="1">普通用户</Option>
+                  <Option value="2">普通用户</Option>
                 </Select>
               )}
             </FormItem>

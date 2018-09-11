@@ -9,9 +9,7 @@ export async function queryActivities() {
 }
 
 export async function queryRule(params) {
-  return request(`/api/rule`, {
-    method: 'POST',
-  });
+  return request(`http://192.168.1.145:8999/user/list?${stringify(params)}`);
 }
 
 export async function removeRule(params) {
