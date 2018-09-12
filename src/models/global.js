@@ -1,11 +1,14 @@
 import { queryNotices } from '@/services/api';
-
+import { queryOrganization,queryRole,queryCurrent } from '@/services/user';
 export default {
   namespace: 'global',
 
   state: {
     collapsed: false,
     notices: [],
+    organization: [],
+    role: [],
+    currentUser: {},
   },
 
   effects: {
@@ -16,7 +19,7 @@ export default {
         payload: data,
       });
       yield put({
-        type: 'user/changeNotifyCount',
+        type: 'changeNotifyCount',
         payload: data.length,
       });
     },
@@ -27,8 +30,46 @@ export default {
       });
       const count = yield select(state => state.global.notices.length);
       yield put({
-        type: 'user/changeNotifyCount',
+        type: 'changeNotifyCount',
         payload: count,
+      });
+    },
+    *organization(_, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(queryOrganization);
+      yield put({
+        type: 'setOrganization',
+        payload: response,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *role(_, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(queryRole);
+     
+      yield put({
+        type: 'setRole',
+        payload: response,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *fetchCurrent(_, { call, put }) {
+      const response = yield call(queryCurrent);
+      yield put({
+        type: 'saveCurrentUser',
+        payload: response,
       });
     },
   },
@@ -50,6 +91,39 @@ export default {
       return {
         ...state,
         notices: state.notices.filter(item => item.type !== payload),
+      };
+    },
+    setOrganization(state, action) {
+      return {
+        ...state,
+        organization: action.payload.data,
+      };
+    },
+    setRole(state, action) {
+      return {
+        ...state,
+        role: action.payload.data,
+      };
+    },
+    changeLoading(state, action) {
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
+    },
+    saveCurrentUser(state, action) {
+      return {
+        ...state,
+        currentUser: action.payload.data || {},
+      };
+    },
+    changeNotifyCount(state, action) {
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          notifyCount: action.payload,
+        },
       };
     },
   },

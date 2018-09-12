@@ -6,10 +6,10 @@ import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Center.less';
 
-@connect(({ loading, user, project }) => ({
+@connect(({ loading, global, project }) => ({
   listLoading: loading.effects['list/fetch'],
-  currentUser: user.currentUser,
-  currentUserLoading: loading.effects['user/fetchCurrent'],
+  currentUser: global.currentUser,
+  currentUserLoading: loading.effects['global/fetchCurrent'],
   project,
   projectLoading: loading.effects['project/fetchNotice'],
 }))
@@ -23,7 +23,7 @@ class Center extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/fetchCurrent',
+      type: 'global/fetchCurrent',
     });
     dispatch({
       type: 'list/fetch',

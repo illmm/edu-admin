@@ -26,6 +26,7 @@ export default {
   'menu.settings': '系统设置',
   'menu.account.center': '个人中心',
   'menu.account.settings': '个人设置',
+  'menu.account.logout': '退出登录',
 
   'app.home.introduce': '介绍',
   'app.analysis.test': '工专路 {no} 号店',

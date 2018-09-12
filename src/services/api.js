@@ -8,38 +8,8 @@ export async function queryActivities() {
   return request('/api/activities');
 }
 
-export async function queryRule(params) {
-  return request(`http://192.168.1.145:8999/user/list?${stringify(params)}`);
-}
 
-export async function removeRule(params) {
-  return request('/api/rule', {
-    method: 'POST',
-    body: {
-      ...params,
-      method: 'delete',
-    },
-  });
-}
 
-export async function addUser(params) {
-  return request('http://192.168.1.145:8999/user/add', {
-    method: 'POST',
-    body: {
-      ...params,
-    },
-  });
-}
-
-export async function updateRule(params) {
-  return request('/api/rule', {
-    method: 'POST',
-    body: {
-      ...params,
-      method: 'update',
-    },
-  });
-}
 
 export async function fakeSubmitForm(params) {
   return request('/api/forms', {

@@ -13,33 +13,26 @@ import {
   Dropdown,
   Menu,
   InputNumber,
-  DatePicker,
   Modal,
   message,
   Badge,
   Divider,
-  Steps,
-  Radio,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-
 import styles from '../List/TableList.less';
 
 const FormItem = Form.Item;
-const { Step } = Steps;
-const { TextArea } = Input;
 const { Option } = Select;
-const RadioGroup = Radio.Group;
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['success', 'default', 'processing', 'error'];
-const status = ['正常', '异常', '到期', '禁用'];
+const statusMap = ['error', 'success'];
+const status = ['禁用','正常'];
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -61,9 +54,16 @@ const CreateForm = Form.create()(props => {
           rules: [{ required: true, message: '请选择机构！' }],
         })(
           <Select placeholder="请选择" style={{ width: '100%' }}>
-            <Option value="0">王府学校</Option>
-            <Option value="1">牛津大学</Option>
-            <Option value="2">北京大学</Option>
+            {getOrganizationOption()}
+          </Select>
+        )}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+        {form.getFieldDecorator('roleId', {
+          rules: [{ required: true, message: '请选择角色！' }],
+        })(
+          <Select placeholder="请选择角色" style={{ width: '100%' }}>
+            {getRoleOption()}
           </Select>
         )}
       </FormItem>
@@ -82,18 +82,17 @@ const CreateForm = Form.create()(props => {
           rules: [{ required: true, message: '请输入密码！' }],
         })(<Input placeholder="请输入密码" type="password" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
-        {form.getFieldDecorator('roleId', {
-          rules: [{ required: true, message: '请选择角色！' }],
-        })(
-          <Select placeholder="请选择角色" style={{ width: '100%' }}>
-            <Option value="0">超级管理员</Option>
-            <Option value="1">机构管理员</Option>
-            <Option value="2">教师</Option>
-            <Option value="3">学生</Option>
-          </Select>
-        )}
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
+        {form.getFieldDecorator('phone', {
+          rules: [{ required: true, message: '请输入手机！' }],
+        })(<Input placeholder="请输入手机" />)}
       </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
+        {form.getFieldDecorator('email', {
+          rules: [{ required: true, message: '请输入邮箱！' }],
+        })(<Input placeholder="请输入邮箱" />)}
+      </FormItem>
+      
     </Modal>
   );
 });
@@ -159,9 +158,8 @@ class UpdateForm extends PureComponent {
   };
 
   render() {
-    const { form, updateModalVisible, handleUpdateModalVisible } = this.props;
-    const { currentStep, formVals } = this.state;
-
+    const { form, updateModalVisible, handleUpdateModalVisible,getOrganizationOption,getRoleOption } = this.props;
+    
     return (
       <Modal
         width={640}
@@ -176,9 +174,16 @@ class UpdateForm extends PureComponent {
             rules: [{ required: true, message: '请选择机构！' }],
           })(
             <Select placeholder="请选择" style={{ width: '100%' }}>
-              <Option value="0">王府学校</Option>
-              <Option value="1">牛津大学</Option>
-              <Option value="1">北京大学</Option>
+              {getOrganizationOption()}
+            </Select>
+          )}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+          {form.getFieldDecorator('roleId', {
+            rules: [{ required: true, message: '请选择角色！' }],
+          })(
+            <Select placeholder="请选择角色" style={{ width: '100%' }}>
+              {getRoleOption()}
             </Select>
           )}
         </FormItem>
@@ -187,28 +192,19 @@ class UpdateForm extends PureComponent {
             rules: [{ required: true, message: '请输入姓名！' }],
           })(<Input placeholder="请输入姓名" />)}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
-          {form.getFieldDecorator('roleId', {
-            rules: [{ required: true, message: '请选择角色！' }],
-          })(
-            <Select placeholder="请选择角色" style={{ width: '100%' }}>
-              <Option value="0">超级管理员</Option>
-              <Option value="1">机构管理员</Option>
-              <Option value="2">教师</Option>
-              <Option value="3">学生</Option>
-            </Select>
-          )}
-        </FormItem>
+        
       </Modal>
     );
   }
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ users, loading }) => ({
+@connect(({ users, loading, global }) => ({
   users,
   loading: loading.models.users,
+  global,
 }))
+
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
@@ -223,11 +219,15 @@ export default class TableList extends PureComponent {
   columns = [
     {
       title: '机构名称',
-      dataIndex: 'name',
+      dataIndex: 'organizationName',
     },
     {
       title: '姓名',
-      dataIndex: 'desc',
+      dataIndex: 'name',
+    },
+    {
+      title: '角色',
+      dataIndex: 'roleName',
     },
     {
       title: '状态',
@@ -241,32 +241,19 @@ export default class TableList extends PureComponent {
           text: status[1],
           value: 1,
         },
-        {
-          text: status[2],
-          value: 2,
-        },
-        {
-          text: status[3],
-          value: 3,
-        },
       ],
       render(val) {
         return <Badge status={statusMap[val]} text={status[val]} />;
       },
     },
     {
-      title: '最后登录时间',
-      dataIndex: 'callNo',
-      sorter: true,
-      //align: 'right',
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      // mark to display a total number
-      needTotal: true,
+      title: '手机号',
+      dataIndex: 'phone',
     },
 
     {
-      title: '服务截止时间',
-      dataIndex: 'updatedAt',
+      title: '最后登录时间',
+      dataIndex: 'loginLastTime',
       sorter: true,
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
@@ -287,7 +274,15 @@ export default class TableList extends PureComponent {
     dispatch({
       type: 'users/fetch',
     });
+    dispatch({
+      type: 'global/organization',
+    });
+    dispatch({
+      type: 'global/role',
+    });
+
   }
+  
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -432,31 +427,56 @@ export default class TableList extends PureComponent {
     this.handleUpdateModalVisible();
   };
 
+  getOrganizationOption = () => {
+   
+    const { global:{organization} } = this.props;
+    return this.getOption(organization);
+  };
+  getRoleOption = () => {
+    const { global:{role} } = this.props;
+    return this.getOption(role);
+  };
+  getOption = list => {
+    if (!list || list.length < 1) {
+      return (
+        <Option key={0} value={0}>
+          没有找到选项
+        </Option>
+      );
+    }
+    return list.map(item => (
+      <Option key={item.id} value={item.id}>
+        {item.name}
+      </Option>
+    ));
+  };
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
+     
     } = this.props;
+    
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
+          
             <FormItem label="机构名称">
-              {getFieldDecorator('name')(
+            
+              {getFieldDecorator('organizId')(
+                
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">王府学校</Option>
-                  <Option value="1">牛津大学</Option>
-                  <Option value="2">北京大学</Option>
+                  {this.getOrganizationOption()}
                 </Select>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="角色">
-              {getFieldDecorator('status')(
+            <FormItem label="用户角色">
+              {getFieldDecorator('roleId')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">超级管理员</Option>
-                  <Option value="1">机构管理员</Option>
-                  <Option value="2">普通用户</Option>
+                  {this.getRoleOption()}
                 </Select>
               )}
             </FormItem>
@@ -488,58 +508,49 @@ export default class TableList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="机构名称">
-              {getFieldDecorator('name')(
+              {getFieldDecorator('organizId')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">王府学校</Option>
-                  <Option value="1">牛津大学</Option>
-                  <Option value="1">北京大学</Option>
+                  {this.getOrganizationOption()}
                 </Select>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="用户角色">
-              {getFieldDecorator('status')(
+              {getFieldDecorator('roleId')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">超级管理员</Option>
-                  <Option value="1">机构管理员</Option>
-                  <Option value="1">普通用户</Option>
+                  {this.getRoleOption()}
                 </Select>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="用户姓名">
-              {getFieldDecorator('number')(<InputNumber style={{ width: '100%' }} />)}
+              {getFieldDecorator('name')(<Input style={{ width: '100%' }}  placeholder="请输入用户姓名"/>)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="注册日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
+            <FormItem label="手机号码">
+              {getFieldDecorator('phone')(
+                <InputNumber style={{ width: '100%' }}  placeholder="请输入手机号"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="付费状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">全部</Option>
-                  <Option value="1">已付费</Option>
-                  <Option value="2">已过期</Option>
-                </Select>
+            <FormItem label="电子邮箱">
+              {getFieldDecorator('email')(
+                <Input style={{ width: '100%' }}  placeholder="请输入电子邮箱"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="用户状态">
-              {getFieldDecorator('status4')(
+              {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">全部</Option>
                   <Option value="1">正常</Option>
-                  <Option value="2">禁用</Option>
+                  <Option value="0">禁用</Option>
                 </Select>
               )}
             </FormItem>
@@ -583,10 +594,14 @@ export default class TableList extends PureComponent {
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
+      getOrganizationOption: this.getOrganizationOption,
+      getRoleOption: this.getRoleOption,
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
+      getOrganizationOption: this.getOrganizationOption,
+      getRoleOption: this.getRoleOption,
     };
     return (
       <PageHeaderWrapper>
@@ -601,7 +616,7 @@ export default class TableList extends PureComponent {
                 <span>
                   <Dropdown overlay={menu}>
                     <Button>
-                      更多操作 <Icon type="down" />
+                      批量操作 <Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>

@@ -38,12 +38,12 @@ const links = [
 ];
 
 export default
-@connect(({ user, project, activities, chart, loading }) => ({
-  currentUser: user.currentUser,
+@connect(({ global, project, activities, chart, loading }) => ({
+  currentUser: global.currentUser,
   project,
   activities,
   chart,
-  currentUserLoading: loading.effects['user/fetchCurrent'],
+  currentUserLoading: loading.effects['global/fetchCurrent'],
   projectLoading: loading.effects['project/fetchNotice'],
   activitiesLoading: loading.effects['activities/fetchList'],
 }))
@@ -51,7 +51,7 @@ class Workplace extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/fetchCurrent',
+      type: 'global/fetchCurrent',
     });
     dispatch({
       type: 'project/fetchNotice',

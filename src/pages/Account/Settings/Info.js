@@ -9,8 +9,8 @@ import styles from './Info.less';
 const { Item } = Menu;
 
 export default
-@connect(({ user }) => ({
-  currentUser: user.currentUser,
+@connect(({ global }) => ({
+  currentUser: global.currentUser,
 }))
 class Info extends Component {
   constructor(props) {
