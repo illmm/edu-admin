@@ -29,14 +29,14 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 const statusMap = ['error', 'success'];
-const status = ['禁用','正常'];
+const status = ['禁用','启用'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      form.resetFields();
+      //form.resetFields();
       handleAdd(fieldsValue);
     });
   };
@@ -89,7 +89,7 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
         {form.getFieldDecorator('email', {
-          rules: [{ required: true, message: '请输入邮箱！' }],
+          rules: [{ required: true, message: '请输入邮箱！' },{type: 'email',message: '邮箱格式错误！'}],
         })(<Input placeholder="请输入邮箱" />)}
       </FormItem>
       
@@ -341,18 +341,24 @@ export default class TableList extends PureComponent {
           payload: {
             key: selectedRows.map(row => row.key),
           },
-          callback: () => {
+          callback: ( _ = res => {
+            if(res.success){
+              message.success("删除成功");
+              this.handleFormReset();
+            }else{
+              message.error(res.msg);
+            }
             this.setState({
               selectedRows: [],
             });
-          },
+          }),
         });
         break;
       default:
         break;
     }
   };
-
+  
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -404,12 +410,17 @@ export default class TableList extends PureComponent {
         ...fields,
       },
       callback: (_ = res => {
-        console.log('res' + res);
+        if(res.success){
+          message.success('添加成功');
+          this.handleModalVisible();
+        }else{
+          message.success(res.msg);
+        }
       }),
     });
 
-    message.success('添加成功');
-    this.handleModalVisible();
+   
+    
   };
 
   handleUpdate = fields => {
@@ -587,7 +598,7 @@ export default class TableList extends PureComponent {
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">通知</Menu.Item>
+        {/* <Menu.Item key="approval">通知</Menu.Item> */}
       </Menu>
     );
 

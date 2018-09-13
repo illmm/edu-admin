@@ -14,7 +14,7 @@ export async function addUser(params) {
   return request('http://192.168.1.145:8999/api/user', {
     method: 'POST',
     body: {
-      ...params,
+      ...params
     },
   });
 }
