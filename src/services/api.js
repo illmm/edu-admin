@@ -72,9 +72,8 @@ export async function updateFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('/login/account', {
-    method: 'POST',
-    body: params,
+  return request(`http://192.168.1.145:8999/api/user/login?${stringify(params)}`, {
+    method: 'POST'
   });
 }
 

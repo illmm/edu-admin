@@ -70,7 +70,7 @@ export default class GlobalHeaderRight extends PureComponent {
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />
-          <FormattedMessage id="menu.account.logout" defaultMessage="Sign Out" />
+          <FormattedMessage id="menu.account.logout" defaultMessage="logout" />
         </Menu.Item>
       </Menu>
     );

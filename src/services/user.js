@@ -7,7 +7,6 @@ export async function queryCurrent() {
   return request('http://192.168.1.145:8999/api/common/currentUser');
 }
 export async function queryUser(params) {
-  console.log(stringify(params));
   return request(`http://192.168.1.145:8999/api/user?${stringify(params)}`);
 }
 export async function addUser(params) {

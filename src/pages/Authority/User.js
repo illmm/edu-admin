@@ -262,8 +262,7 @@ export default class TableList extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.handleUpdateModalVisible(true, record)}>编辑</a>
-          <Divider type="vertical" />
-          <a href="">删除</a>
+          {/* <Divider type="vertical" /> */}
         </Fragment>
       ),
     },
@@ -330,35 +329,40 @@ export default class TableList extends PureComponent {
   };
 
   handleMenuClick = e => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
     switch (e.key) {
       case 'remove':
-        dispatch({
-          type: 'users/remove',
-          payload: {
-            key: selectedRows.map(row => row.key),
-          },
-          callback: ( _ = res => {
-            if(res.success){
-              message.success("删除成功");
-              this.handleFormReset();
-            }else{
-              message.error(res.msg);
-            }
-            this.setState({
-              selectedRows: [],
-            });
-          }),
-        });
+        this.handleDelete();
         break;
       default:
         break;
     }
   };
   
+  handleDelete = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if (!selectedRows) return;
+    dispatch({
+      type: 'users/remove',
+      payload: {
+        key: selectedRows.map(row => row.key),
+      },
+      callback: ( _ = res => {
+        if(res.success){
+          message.success("删除成功");
+          this.handleFormReset();
+        }else{
+          message.error(res.msg);
+        }
+        this.setState({
+          selectedRows: [],
+        });
+      }),
+    });
+
+  }
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -396,6 +400,7 @@ export default class TableList extends PureComponent {
   };
 
   handleUpdateModalVisible = (flag, record) => {
+    console.log(record);
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},
@@ -413,6 +418,7 @@ export default class TableList extends PureComponent {
         if(res.success){
           message.success('添加成功');
           this.handleModalVisible();
+          this.handleFormReset();
         }else{
           message.success(res.msg);
         }
@@ -597,11 +603,10 @@ export default class TableList extends PureComponent {
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        {/* <Menu.Item key="approval">通知</Menu.Item> */}
+        <Menu.Item key="disable">禁用</Menu.Item>
+        <Menu.Item key="approval">通知</Menu.Item>
       </Menu>
     );
-
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -625,9 +630,10 @@ export default class TableList extends PureComponent {
               </Button>
               {selectedRows.length > 0 && (
                 <span>
+                  <Button onClick={this.handleDelete}>删除</Button>
                   <Dropdown overlay={menu}>
                     <Button>
-                      批量操作 <Icon type="down" />
+                      更多操作 <Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>

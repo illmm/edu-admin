@@ -13,15 +13,14 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
+    authority: ['admin','user'],
     routes: [
       // 工作台
       { path: '/', redirect: '/workplace' },
-
       {
         path: '/workplace',
         name: 'workplace',
         icon: 'desktop',
-        //component: './Dashboard/Workplace',
         component: './Workplace',
        
       },
@@ -108,6 +107,7 @@ export default [
           {
             path: '/authority/user',
             name: 'user',
+            authority: ['admin'],
             component: './Authority/User',
           },
           {

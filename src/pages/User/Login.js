@@ -31,7 +31,6 @@ class LoginPage extends Component {
 
   render() {
     const { login, submitting } = this.props;
-    const { type, autoLogin } = this.state;
     return (
       <div className={styles.main}>
         <Login
@@ -40,9 +39,8 @@ class LoginPage extends Component {
             this.loginForm = form;
           }}
         >
-          {console.log(login)}
           {!login.success && !submitting && this.renderMessage('账户或密码错误')}
-          <UserName name="userName" placeholder="用户名" />
+          <UserName name="account" placeholder="用户名" />
           <Password
             name="password"
             placeholder="密码"
