@@ -64,14 +64,14 @@ export default {
       );
     },
   },
-
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.data.role);
+      const authority = payload.data?payload.data.role:'guest';
+      setAuthority(authority);
       return {
         ...state,
         success: payload.success,
-        token: payload.data.token,
+        token: payload.data ? payload.data.token : '',
       };
     },
   },

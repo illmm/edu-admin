@@ -165,7 +165,7 @@ class BasicLayout extends React.PureComponent {
       }
     });
     if (!currRouterData) {
-      return 'Ant Design Pro';
+      return '中图教育管理端';
     }
     const message = formatMessage({
       id: currRouterData.locale || currRouterData.name,

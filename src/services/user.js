@@ -4,13 +4,13 @@ import request from '@/utils/request';
 
 
 export async function queryCurrent() {
-  return request('http://192.168.1.145:8999/api/common/currentUser');
+  return request('/api/common/currentUser');
 }
 export async function queryUser(params) {
-  return request(`http://192.168.1.145:8999/api/user?${stringify(params)}`);
+  return request(`/api/user?${stringify(params)}`);
 }
 export async function addUser(params) {
-  return request('http://192.168.1.145:8999/api/user', {
+  return request('/api/user', {
     method: 'POST',
     body: {
       ...params
@@ -18,7 +18,7 @@ export async function addUser(params) {
   });
 }
 export async function removeUser(params) {
-  return request('http://192.168.1.145:8999/api/user', {
+  return request('/api/user', {
     method: 'DELETE',
     body: {
       ...params
@@ -27,7 +27,7 @@ export async function removeUser(params) {
 }
 
 export async function updateUser(params) {
-  return request('http://192.168.1.145:8999/api/user', {
+  return request('/api/user', {
     method: 'PUT',
     body: {
       ...params
@@ -35,10 +35,10 @@ export async function updateUser(params) {
   });
 }
 export async function queryOrganization() {
-  return request('http://192.168.1.145:8999/api/common/getOrganizations');
+  return request('/api/common/getOrganizations');
 }
 
 export async function queryRole() {
-  return request('http://192.168.1.145:8999/api/common/getRoles');
+  return request('/api/common/getRoles');
 }
 

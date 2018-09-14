@@ -69,22 +69,55 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
         {form.getFieldDecorator('name', {
-          rules: [{ required: true, message: '请输入姓名！' }],
+          rules: [
+            { 
+              required: true, 
+              message: '请输入姓名！' 
+            }
+          ],
         })(<Input placeholder="请输入姓名" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
-        {form.getFieldDecorator('account', {
-          rules: [{ required: true, message: '请输入账号！' }],
+        {form.getFieldDecorator('account', { 
+          rules: [
+            { required: true, 
+              message: '请输入账号'
+            },
+            {
+              min:4,max:16,
+              message:'用户名必须为4-16位'
+            },
+            { pattern: new RegExp('^\\w+$','g'), 
+              message: '用户名必须为字母或者数字' 
+            }
+          ],
         })(<Input placeholder="请输入账号" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
         {form.getFieldDecorator('password', {
-          rules: [{ required: true, message: '请输入密码！' }],
+          rules: [
+            { required: true, 
+              message: '请输入密码！' 
+            },
+            { min:6,
+              max:20, 
+              message: '密码必须为6-20位' 
+            }
+          ],
         })(<Input placeholder="请输入密码" type="password" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
         {form.getFieldDecorator('phone', {
-          rules: [{ required: true, message: '请输入手机！' }],
+          rules: [
+            { 
+              required: true, 
+              message: '请输入手机！' 
+            },
+            { 
+              pattern: new RegExp('^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$','g'), 
+              message: '手机号格式错误' 
+            }
+          ],
         })(<Input placeholder="请输入手机" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
@@ -170,13 +203,13 @@ class UpdateForm extends PureComponent {
         onCancel={() => handleUpdateModalVisible()}
       >
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
-          {form.getFieldDecorator('organizeId', {
-            rules: [{ required: true, message: '请选择机构！' }],
-          })(
-            <Select placeholder="请选择" style={{ width: '100%' }}>
-              {getOrganizationOption()}
-            </Select>
-          )}
+        {form.getFieldDecorator('organizeId', {
+          rules: [{ required: true, message: '请选择机构！' }],
+        })(
+          <Select placeholder="请选择" style={{ width: '100%' }}>
+            {getOrganizationOption()}
+          </Select>
+        )}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
           {form.getFieldDecorator('roleId', {
@@ -188,9 +221,58 @@ class UpdateForm extends PureComponent {
           )}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
-          {form.getFieldDecorator('nickname', {
-            rules: [{ required: true, message: '请输入姓名！' }],
+          {form.getFieldDecorator('name', {
+            rules: [
+              { 
+                required: true, 
+                message: '请输入姓名！' 
+              }
+            ],
           })(<Input placeholder="请输入姓名" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
+          {form.getFieldDecorator('account', { 
+            rules: [
+              { required: true, 
+                message: '请输入账号'
+              },
+              {
+                min:4,max:16,
+                message:'用户名必须为4-16位'
+              },
+              { pattern: new RegExp('^\\w+$','g'), 
+                message: '用户名必须为字母或者数字' 
+              }
+            ],
+          })(<Input placeholder="请输入账号" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
+          {form.getFieldDecorator('phone', {
+            rules: [
+              { 
+                required: true, 
+                message: '请输入手机！' 
+              },
+              { 
+                pattern: new RegExp('^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$','g'), 
+                message: '手机号格式错误' 
+              }
+            ],
+          })(<Input placeholder="请输入手机" />)}
+        </FormItem>
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
+          {form.getFieldDecorator('email', {
+            rules: [
+              { 
+                required: true, 
+                message: '请输入邮箱！' 
+              },
+              {
+                type: 'email',
+                message: '邮箱格式错误！'
+              }
+            ],
+          })(<Input placeholder="请输入邮箱" />)}
         </FormItem>
         
       </Modal>
