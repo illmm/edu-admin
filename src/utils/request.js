@@ -3,8 +3,8 @@ import { notification } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
-//const baseUrl = "https://www.easy-mock.com/mock/5b8f677eb06a1c149f4ad59c/api-mock-admin";
-const baseUrl = "";
+import { getAuthority } from './authority';
+
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -65,6 +65,7 @@ const cachedSave = (response, hashcode) => {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
+
 export default function request(
   url,
   options = {
@@ -76,7 +77,6 @@ export default function request(
    * Maybe url has the same parameters
    */
  
-  url = baseUrl + url;
   const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
   const hashcode = hash
     .sha256()
@@ -106,8 +106,16 @@ export default function request(
         ...newOptions.headers,
       };
     }
+    
   }
-
+  const token = getAuthority('token');
+  if(token){
+    newOptions.headers = {
+      "Authorization": 'Bearer ' + token,
+      ...newOptions.headers,
+    };
+  }
+  
   const expirys = options.expirys || 60;
   // options.expirys !== false, return the cache,
   if (options.expirys !== false) {

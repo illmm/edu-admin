@@ -41,9 +41,6 @@ export default {
       }
     },
 
-    *getCaptcha({ payload }, { call }) {
-      yield call(getFakeCaptcha, payload);
-    },
 
     *logout(_, { put }) {
       yield put({
@@ -66,12 +63,11 @@ export default {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      const authority = payload.data?payload.data.role:'guest';
-      setAuthority(authority);
+     // const authority = payload.data||{};
+      setAuthority(payload.data);
       return {
         ...state,
         success: payload.success,
-        token: payload.data ? payload.data.token : '',
       };
     },
   },

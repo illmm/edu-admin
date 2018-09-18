@@ -136,6 +136,7 @@ class BasicLayout extends React.PureComponent {
     const {
       route: { routes },
     } = this.props;
+    console.log(routes);
     return formatter(routes);
   }
 
