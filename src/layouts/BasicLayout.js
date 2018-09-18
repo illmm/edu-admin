@@ -16,7 +16,7 @@ import logo from '../assets/logo.svg';
 import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
-
+import Exception403 from '../pages/Exception/403';
 const { Content } = Layout;
 
 // Conversion router to menu.
@@ -76,6 +76,8 @@ class BasicLayout extends React.PureComponent {
     this.getPageTitle = memoizeOne(this.getPageTitle);
     this.getBreadcrumbNameMap = memoizeOne(this.getBreadcrumbNameMap, isEqual);
     this.breadcrumbNameMap = this.getBreadcrumbNameMap();
+    this.matchParamsPath = memoizeOne(this.matchParamsPath, isEqual);
+
   }
 
   state = {
@@ -155,15 +157,16 @@ class BasicLayout extends React.PureComponent {
     mergeMenuAndRouter(this.getMenuData());
     return routerMap;
   }
+  matchParamsPath = pathname => {
+    const pathKey = Object.keys(this.breadcrumbNameMap).find(key =>
+      pathToRegexp(key).test(pathname)
+    );
+    return this.breadcrumbNameMap[pathKey];
+  };
 
   getPageTitle = pathname => {
-    let currRouterData = null;
-    // match params path
-    Object.keys(this.breadcrumbNameMap).forEach(key => {
-      if (pathToRegexp(key).test(pathname)) {
-        currRouterData = this.breadcrumbNameMap[key];
-      }
-    });
+    const currRouterData = this.matchParamsPath(pathname);
+
     if (!currRouterData) {
       return '中图教育管理端';
     }
@@ -220,6 +223,7 @@ class BasicLayout extends React.PureComponent {
     const { isMobile } = this.state;
     const isTop = PropsLayout === 'topmenu';
     const menuData = this.getMenuData();
+    const routerConfig = this.matchParamsPath(pathname);
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (
@@ -246,7 +250,11 @@ class BasicLayout extends React.PureComponent {
             isMobile={isMobile}
             {...this.props}
           />
-          <Content style={this.getContentStyle()}>{children}</Content>
+          <Content style={this.getContentStyle()}>
+            <Authorized authority={routerConfig.authority} noMatch={<Exception403 />}>
+              {children}
+            </Authorized>
+          </Content>
           <Footer />
         </Layout>
       </Layout>
