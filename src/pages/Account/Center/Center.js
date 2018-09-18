@@ -31,9 +31,7 @@ class Center extends PureComponent {
         count: 8,
       },
     });
-    dispatch({
-      type: 'project/fetchNotice',
-    });
+    
   }
 
   onTabChange = key => {

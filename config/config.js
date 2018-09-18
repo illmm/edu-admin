@@ -95,7 +95,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://192.168.1.145:8999'
+      target: 'http://localhost:8080'
     }
   },
 };

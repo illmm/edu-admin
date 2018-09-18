@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from '../List/TableList.less';
+import styles from './User.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;

@@ -54,9 +54,6 @@ class Workplace extends PureComponent {
       type: 'global/fetchCurrent',
     });
     dispatch({
-      type: 'project/fetchNotice',
-    });
-    dispatch({
       type: 'activities/fetchList',
     });
     dispatch({
