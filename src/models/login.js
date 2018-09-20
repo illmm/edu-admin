@@ -1,17 +1,22 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { fakeAccountLogin, getFakeCaptcha } from '@/services/api';
+import { fakeAccountLogin, queryGeetest } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 
+
 export default {
   namespace: 'login',
-
   state: {
     success: true,
+    geetest:{
+      
+    },
   },
-
+  reducers:{
+    
+  },
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
@@ -60,6 +65,13 @@ export default {
         })
       );
     },
+    *geetest({ payload }, { call, put }) {
+      const response = yield call(queryGeetest, payload);
+      yield put({
+        type: 'saveGeetest',
+        payload: response,
+      });
+    },
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
@@ -70,5 +82,11 @@ export default {
         success: payload.success,
       };
     },
+    saveGeetest(state, { payload }) {
+       return {
+         ...state,
+         geetest: payload,
+       };
+     },
   },
 };

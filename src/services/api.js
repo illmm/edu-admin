@@ -11,4 +11,8 @@ export async function fakeAccountLogin(params) {
 export async function queryNotices() {
   return request('/api/notices');
 }
+export async function queryGeetest() {
+  return request('/api/captcha');
+}
+
 

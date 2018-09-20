@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Alert } from 'antd';
+import { Alert,Button } from 'antd';
 import Login from '@/components/Login';
+import Geetest from '@/components/Geetest';
 import styles from './Login.less';
+
 
 const { UserName, Password, Submit } = Login;
 
@@ -10,9 +12,16 @@ const { UserName, Password, Submit } = Login;
   login,
   submitting: loading.effects['login/login'],
 }))
+
 class LoginPage extends Component {
   state = {};
-
+  
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/geetest',
+    });
+  }
   handleSubmit = (err, values) => {
     if (!err) {
       const { dispatch } = this.props;
@@ -24,10 +33,13 @@ class LoginPage extends Component {
       });
     }
   };
-
+  handlerGeetest = (result) => {
+    
+  };
   renderMessage = content => (
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
+  
 
   render() {
     const { login, submitting } = this.props;
@@ -45,6 +57,13 @@ class LoginPage extends Component {
             name="password"
             placeholder="密码"
             onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
+          />
+          <Geetest 
+            width="100%"
+            gt={login.geetest.gt}
+            challenge={login.geetest.challenge}
+            success={login.geetest.success}
+            onSuccess={this.handlerGeetest}
           />
           <div />
           <Submit loading={submitting}>登录</Submit>
