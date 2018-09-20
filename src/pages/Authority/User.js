@@ -16,7 +16,7 @@ import {
   Modal,
   message,
   Badge,
-  Divider,
+  Switch,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -28,8 +28,6 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-const statusMap = ['error', 'success'];
-const status = ['禁用','启用'];
 
 const CreateForm = Form.create()(props => {
   const { modalVisible, form, handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
@@ -138,13 +136,13 @@ class UpdateForm extends PureComponent {
     this.state = {
       formVals: {
         name: props.values.name,
-        desc: props.values.desc,
-        key: props.values.key,
-        target: '0',
-        template: '0',
-        type: '1',
-        time: '',
-        frequency: 'month',
+        email: props.values.email,
+        id: props.values.key,
+        roleId: props.values.roleId,
+        phone: props.values.phone,
+        organizeId: props.values.organizeId,
+        account:props.values.account,
+        status:props.values.status,
       },
       currentStep: 0,
     };
@@ -154,27 +152,18 @@ class UpdateForm extends PureComponent {
       wrapperCol: { span: 13 },
     };
   }
-
-  handleNext = currentStep => {
-    const { form, handleUpdate } = this.props;
-    const { formVals: oldValue } = this.state;
-    form.validateFields((err, fieldsValue) => {
+  updateOkHandle = () => {
+    const { form,handleUpdate} = this.props;
+    const { formVals:oldVal } = this.state;
+  
+    form.validateFields((err,fieldsValue) => {
+      const formVals = { ...oldVal, ...fieldsValue };
+      console.log(formVals);
       if (err) return;
-      const formVals = { ...oldValue, ...fieldsValue };
-      this.setState(
-        {
-          formVals,
-        },
-        () => {
-          if (currentStep < 2) {
-            this.forward();
-          } else {
-            handleUpdate(formVals);
-          }
-        }
-      );
+      handleUpdate(formVals);
     });
   };
+  
 
   backward = () => {
     const { currentStep } = this.state;
@@ -189,10 +178,20 @@ class UpdateForm extends PureComponent {
       currentStep: currentStep + 1,
     });
   };
-
-  render() {
-    const { form, updateModalVisible, handleUpdateModalVisible,getOrganizationOption,getRoleOption } = this.props;
+  changeStatus = (value) => {
     
+    this.setState({
+      formVals:{
+        ...this.state.formVals,
+        status:value
+      }
+    });
+    const {formVals} = this.state;
+    console.log(formVals)
+  };
+  render() {
+    const { form, updateModalVisible,handleUpdateModalVisible,getOrganizationOption,getRoleOption } = this.props;
+    const { formVals } = this.state;
     return (
       <Modal
         width={640}
@@ -201,10 +200,16 @@ class UpdateForm extends PureComponent {
         title="编辑用户"
         visible={updateModalVisible}
         onCancel={() => handleUpdateModalVisible()}
-      >
+        onOk={() => this.updateOkHandle()}
+        >
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
+          {formVals.account}
+        </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
-        {form.getFieldDecorator('organizeId', {
-          rules: [{ required: true, message: '请选择机构！' }],
+          {form.getFieldDecorator('organizeId', {
+          
+            initialValue:formVals.organizeId,
+            rules: [{ required: true, message: '请选择机构！' }],
         })(
           <Select placeholder="请选择" style={{ width: '100%' }}>
             {getOrganizationOption()}
@@ -213,6 +218,7 @@ class UpdateForm extends PureComponent {
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
           {form.getFieldDecorator('roleId', {
+            initialValue: formVals.roleId,
             rules: [{ required: true, message: '请选择角色！' }],
           })(
             <Select placeholder="请选择角色" style={{ width: '100%' }}>
@@ -222,6 +228,7 @@ class UpdateForm extends PureComponent {
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
           {form.getFieldDecorator('name', {
+            initialValue: formVals.name,
             rules: [
               { 
                 required: true, 
@@ -230,24 +237,10 @@ class UpdateForm extends PureComponent {
             ],
           })(<Input placeholder="请输入姓名" />)}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
-          {form.getFieldDecorator('account', { 
-            rules: [
-              { required: true, 
-                message: '请输入账号'
-              },
-              {
-                min:4,max:16,
-                message:'用户名必须为4-16位'
-              },
-              { pattern: new RegExp('^\\w+$','g'), 
-                message: '用户名必须为字母或者数字' 
-              }
-            ],
-          })(<Input placeholder="请输入账号" />)}
-        </FormItem>
+        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
           {form.getFieldDecorator('phone', {
+            initialValue: formVals.phone,
             rules: [
               { 
                 required: true, 
@@ -262,6 +255,7 @@ class UpdateForm extends PureComponent {
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
           {form.getFieldDecorator('email', {
+            initialValue: formVals.email,
             rules: [
               { 
                 required: true, 
@@ -274,9 +268,19 @@ class UpdateForm extends PureComponent {
             ],
           })(<Input placeholder="请输入邮箱" />)}
         </FormItem>
-        
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="状态">
+       
+          <Switch 
+              unCheckedChildren = "禁用" 
+              defaultChecked = {formVals.status}  
+              checkedChildren = "启用"
+              onChange={checked => this.changeStatus(checked)}
+            />
+          
+        </FormItem>
       </Modal>
     );
+    
   }
 }
 
@@ -316,16 +320,19 @@ export default class TableList extends PureComponent {
       dataIndex: 'status',
       filters: [
         {
-          text: status[0],
-          value: 0,
+          text: "启用",
+          value: true,
         },
         {
-          text: status[1],
-          value: 1,
+          text: "禁用",
+          value: false,
         },
       ],
       render(val) {
-        return <Badge status={statusMap[val]} text={status[val]} />;
+        if(val)
+          return <Badge status="success" text="启用" />;
+        else
+          return <Badge status="error" text="禁用" />;
       },
     },
     {
@@ -421,27 +428,38 @@ export default class TableList extends PureComponent {
   };
   
   handleDelete = () => {
-    const { dispatch } = this.props;
     const { selectedRows } = this.state;
+    Modal.confirm({
+      title: '删除用户',
+      content: `确定删除选中的${selectedRows.length}位用户吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      centered:true,
+      onOk: () => {
+        const { dispatch } = this.props;
+        
 
-    if (!selectedRows) return;
-    dispatch({
-      type: 'users/remove',
-      payload: {
-        key: selectedRows.map(row => row.key),
-      },
-      callback: ( _ = res => {
-        if(res.success){
-          message.success("删除成功");
-          this.handleFormReset();
-        }else{
-          message.error(res.msg);
-        }
-        this.setState({
-          selectedRows: [],
+        if (!selectedRows) return;
+        dispatch({
+          type: 'users/remove',
+          payload: {
+            key: selectedRows.map(row => row.key),
+          },
+          callback: ( _ = res => {
+            if(res.success){
+              message.success("删除成功");
+              this.handleFormReset();
+            }else{
+              message.error(res.msg);
+            }
+            this.setState({
+              selectedRows: [],
+            });
+          }),
         });
-      }),
+      },
     });
+    
 
   }
 
@@ -481,8 +499,7 @@ export default class TableList extends PureComponent {
     });
   };
 
-  handleUpdateModalVisible = (flag, record) => {
-    console.log(record);
+  handleUpdateModalVisible = (flag, record) => {  
     this.setState({
       updateModalVisible: !!flag,
       stepFormValues: record || {},
@@ -499,13 +516,14 @@ export default class TableList extends PureComponent {
       callback: (_ = res => {
         if(res.success){
           message.success('添加成功');
-          this.handleModalVisible();
+          
           this.handleFormReset();
         }else{
-          message.success(res.msg);
+          message.error(res.msg);
         }
       }),
     });
+    this.handleModalVisible();
 
    
     
@@ -516,13 +534,18 @@ export default class TableList extends PureComponent {
     dispatch({
       type: 'users/update',
       payload: {
-        name: fields.name,
-        desc: fields.desc,
-        key: fields.key,
+        ...fields
       },
+      callback: (_ = res => {
+        if(res.success){
+          message.success('更新成功');
+          this.handleFormReset();
+          
+        }else{
+          message.error(res.msg);
+        }
+      }),
     });
-
-    message.success('配置成功');
     this.handleUpdateModalVisible();
   };
 
