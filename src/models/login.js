@@ -11,7 +11,9 @@ export default {
   state: {
     success: true,
     geetest:{
-      
+      gt: "",
+      challenge: "",
+      success: -1,
     },
   },
   reducers:{

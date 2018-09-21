@@ -9,6 +9,8 @@ export default {
       pagination: {},
     },
     
+  
+    
   },
   effects: {
     *fetch({ payload }, { call, put }) {

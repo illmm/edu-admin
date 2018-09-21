@@ -30,7 +30,8 @@ const getValue = obj =>
     .join(',');
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
+  const { modalVisible,organizationCode, form, setOrganizationCode,handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
+  
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -51,7 +52,7 @@ const CreateForm = Form.create()(props => {
         {form.getFieldDecorator('organizeId', {
           rules: [{ required: true, message: '请选择机构！' }],
         })(
-          <Select placeholder="请选择" style={{ width: '100%' }}>
+          <Select placeholder="请选择" style={{ width: '100%' }} onChange={setOrganizationCode}>
             {getOrganizationOption()}
           </Select>
         )}
@@ -89,7 +90,7 @@ const CreateForm = Form.create()(props => {
               message: '用户名必须为字母或者数字' 
             }
           ],
-        })(<Input placeholder="请输入账号" />)}
+        })(<Input  addonBefore={organizationCode} placeholder="请输入账号"/>)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
         {form.getFieldDecorator('password', {
@@ -140,7 +141,6 @@ class UpdateForm extends PureComponent {
         id: props.values.key,
         roleId: props.values.roleId,
         phone: props.values.phone,
-        organizeId: props.values.organizeId,
         account:props.values.account,
         status:props.values.status,
       },
@@ -158,7 +158,6 @@ class UpdateForm extends PureComponent {
   
     form.validateFields((err,fieldsValue) => {
       const formVals = { ...oldVal, ...fieldsValue };
-      console.log(formVals);
       if (err) return;
       handleUpdate(formVals);
     });
@@ -187,7 +186,6 @@ class UpdateForm extends PureComponent {
       }
     });
     const {formVals} = this.state;
-    console.log(formVals)
   };
   render() {
     const { form, updateModalVisible,handleUpdateModalVisible,getOrganizationOption,getRoleOption } = this.props;
@@ -205,7 +203,7 @@ class UpdateForm extends PureComponent {
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
           {formVals.account}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
+        {/* <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
           {form.getFieldDecorator('organizeId', {
           
             initialValue:formVals.organizeId,
@@ -215,7 +213,7 @@ class UpdateForm extends PureComponent {
             {getOrganizationOption()}
           </Select>
         )}
-        </FormItem>
+        </FormItem> */}
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
           {form.getFieldDecorator('roleId', {
             initialValue: formVals.roleId,
@@ -300,6 +298,7 @@ export default class TableList extends PureComponent {
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
+    organizationCode:"",
   };
 
   columns = [
@@ -310,6 +309,10 @@ export default class TableList extends PureComponent {
     {
       title: '姓名',
       dataIndex: 'name',
+    },
+    {
+      title: '账号',
+      dataIndex: 'account',
     },
     {
       title: '角色',
@@ -496,6 +499,7 @@ export default class TableList extends PureComponent {
   handleModalVisible = flag => {
     this.setState({
       modalVisible: !!flag,
+      organizationCode: "",
     });
   };
 
@@ -573,6 +577,19 @@ export default class TableList extends PureComponent {
     ));
   };
 
+  setOrganizationCode = value =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'global/organizationCode',
+      payload: value,
+      callback: (_ = res => {
+        this.setState({
+          organizationCode:res.data
+        });
+      }),
+    });
+  }
+
   renderSimpleForm() {
     const {
       form: { getFieldDecorator },
@@ -588,7 +605,11 @@ export default class TableList extends PureComponent {
             
               {getFieldDecorator('organizId')(
                 
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select 
+                  allowClear={true} 
+                  placeholder="请选择" 
+                  style={{ width: '100%' }} 
+                >
                   {this.getOrganizationOption()}
                 </Select>
               )}
@@ -597,7 +618,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="用户角色">
               {getFieldDecorator('roleId')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
                   {this.getRoleOption()}
                 </Select>
               )}
@@ -631,7 +652,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="机构名称">
               {getFieldDecorator('organizId')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
                   {this.getOrganizationOption()}
                 </Select>
               )}
@@ -640,7 +661,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="用户角色">
               {getFieldDecorator('roleId')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
                   {this.getRoleOption()}
                 </Select>
               )}
@@ -670,8 +691,8 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="用户状态">
               {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="1">正常</Option>
+                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
+                  <Option value="1">启用</Option>
                   <Option value="0">禁用</Option>
                 </Select>
               )}
@@ -705,11 +726,11 @@ export default class TableList extends PureComponent {
       users: { data },
       loading,
     } = this.props;
-    const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+    const { selectedRows, modalVisible,organizationCode, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="disable">禁用</Menu.Item>
-        <Menu.Item key="approval">通知</Menu.Item>
+        {/* <Menu.Item key="approval">通知</Menu.Item> */}
       </Menu>
     );
     const parentMethods = {
@@ -717,6 +738,7 @@ export default class TableList extends PureComponent {
       handleModalVisible: this.handleModalVisible,
       getOrganizationOption: this.getOrganizationOption,
       getRoleOption: this.getRoleOption,
+      setOrganizationCode: this.setOrganizationCode,
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
@@ -754,7 +776,7 @@ export default class TableList extends PureComponent {
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} />
+        <CreateForm {...parentMethods}  modalVisible={modalVisible} organizationCode={organizationCode} />
         {stepFormValues && Object.keys(stepFormValues).length ? (
           <UpdateForm
             {...updateMethods}

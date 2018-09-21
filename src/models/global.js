@@ -1,5 +1,5 @@
 import { queryNotices } from '@/services/api';
-import { queryOrganization,queryRole,queryCurrent } from '@/services/user';
+import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user';
 export default {
   namespace: 'global',
 
@@ -48,6 +48,10 @@ export default {
         type: 'changeLoading',
         payload: false,
       });
+    },
+    *organizationCode({payload, callback}, { call }) {
+      const response = yield call(queryOrganizationCode,payload);
+      if (callback) callback(response);
     },
     *role(_, { call, put }) {
       yield put({
