@@ -55,6 +55,7 @@ export default {
         payload: {
           status: false,
           data: {role: 'guest'},
+          success: true,
         },
       });
       reloadAuthorized();

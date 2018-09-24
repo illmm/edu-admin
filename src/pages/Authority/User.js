@@ -109,7 +109,6 @@ const CreateForm = Form.create()(props => {
         {form.getFieldDecorator('phone', {
           rules: [
             { 
-              required: true, 
               message: '请输入手机！' 
             },
             { 
@@ -121,7 +120,7 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
         {form.getFieldDecorator('email', {
-          rules: [{ required: true, message: '请输入邮箱！' },{type: 'email',message: '邮箱格式错误！'}],
+          rules: [{ message: '请输入邮箱！' },{type: 'email',message: '邮箱格式错误！'}],
         })(<Input placeholder="请输入邮箱" />)}
       </FormItem>
       
@@ -185,10 +184,9 @@ class UpdateForm extends PureComponent {
         status:value
       }
     });
-    const {formVals} = this.state;
   };
   render() {
-    const { form, updateModalVisible,handleUpdateModalVisible,getOrganizationOption,getRoleOption } = this.props;
+    const { form, updateModalVisible,handleUpdateModalVisible,getRoleOption } = this.props;
     const { formVals } = this.state;
     return (
       <Modal
@@ -241,7 +239,6 @@ class UpdateForm extends PureComponent {
             initialValue: formVals.phone,
             rules: [
               { 
-                required: true, 
                 message: '请输入手机！' 
               },
               { 
@@ -256,7 +253,6 @@ class UpdateForm extends PureComponent {
             initialValue: formVals.email,
             rules: [
               { 
-                required: true, 
                 message: '请输入邮箱！' 
               },
               {
@@ -324,11 +320,11 @@ export default class TableList extends PureComponent {
       filters: [
         {
           text: "启用",
-          value: true,
+          value: 1,
         },
         {
           text: "禁用",
-          value: false,
+          value: 0,
         },
       ],
       render(val) {
@@ -603,7 +599,7 @@ export default class TableList extends PureComponent {
           
             <FormItem label="机构名称">
             
-              {getFieldDecorator('organizId')(
+              {getFieldDecorator('organizeId')(
                 
                 <Select 
                   allowClear={true} 
@@ -651,7 +647,7 @@ export default class TableList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="机构名称">
-              {getFieldDecorator('organizId')(
+              {getFieldDecorator('organizeId')(
                 <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
                   {this.getOrganizationOption()}
                 </Select>
@@ -669,26 +665,35 @@ export default class TableList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="用户姓名">
-              {getFieldDecorator('name')(<Input style={{ width: '100%' }}  placeholder="请输入用户姓名"/>)}
+              {getFieldDecorator('name')(
+                <Input style={{ width: '100%' }}  placeholder="通过姓名查询"/>
+              )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
+              <FormItem label="用户账号">
+                {getFieldDecorator('account')(
+                  <Input style={{ width: '100%' }}  placeholder="通过账号查询"/>
+                )}
+              </FormItem>
+            </Col>
+          <Col md={8} sm={24}>
             <FormItem label="手机号码">
               {getFieldDecorator('phone')(
-                <InputNumber style={{ width: '100%' }}  placeholder="请输入手机号"/>
+                <Input style={{ width: '100%' }}  placeholder="通过手机号查询"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="电子邮箱">
               {getFieldDecorator('email')(
-                <Input style={{ width: '100%' }}  placeholder="请输入电子邮箱"/>
+                <Input style={{ width: '100%' }}  placeholder="通过电子邮箱查询"/>
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
+          {/* <Col md={8} sm={24}>
             <FormItem label="用户状态">
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
@@ -697,7 +702,7 @@ export default class TableList extends PureComponent {
                 </Select>
               )}
             </FormItem>
-          </Col>
+          </Col> */}
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <div style={{ float: 'right', marginBottom: 24 }}>
