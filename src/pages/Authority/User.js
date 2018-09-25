@@ -294,7 +294,7 @@ export default class TableList extends PureComponent {
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
-    organizationCode:"",
+    organizationCode: "",
   };
 
   columns = [

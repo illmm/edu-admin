@@ -44,7 +44,8 @@ class LoginPage extends Component {
       });
     }
   };
-  handlerGeetest = (result) => {
+  handlerCaptchaSuccess = (result) => {
+    
     this.setState({
       captchaData:result,
       captcha:true,
@@ -80,7 +81,7 @@ class LoginPage extends Component {
             gt={login.geetest.gt}
             challenge={login.geetest.challenge}
             success={login.geetest.success}
-            onSuccess={this.handlerGeetest}
+            onSuccess={this.handlerCaptchaSuccess}
           />
           <div />
           <Submit loading={submitting}>登录</Submit>
