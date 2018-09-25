@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Alert,Button } from 'antd';
+import { Alert,message } from 'antd';
 import Login from '@/components/Login';
 import Geetest from '@/components/Geetest';
 import styles from './Login.less';
@@ -14,7 +14,9 @@ const { UserName, Password, Submit } = Login;
 }))
 
 class LoginPage extends Component {
-  state = {};
+  state = {
+
+  };
   
   componentWillMount() {
     const { dispatch } = this.props;
@@ -23,18 +25,32 @@ class LoginPage extends Component {
     });
   }
   handleSubmit = (err, values) => {
+    if(!this.state.captcha){
+      this.setState({
+        captchaErr:true,
+      });
+      return;
+    }
+
     if (!err) {
       const { dispatch } = this.props;
+
       dispatch({
         type: 'login/login',
         payload: {
           ...values,
+          ...this.state.captchaData,
         },
       });
     }
   };
   handlerGeetest = (result) => {
-    
+    this.setState({
+      captchaData:result,
+      captcha:true,
+      captchaErr:false,
+
+    });
   };
   renderMessage = content => (
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
@@ -58,6 +74,7 @@ class LoginPage extends Component {
             placeholder="密码"
             onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
           />
+          {this.state.captchaErr && this.renderMessage('请点击下方进行验证')}
           <Geetest 
             width="100%"
             gt={login.geetest.gt}

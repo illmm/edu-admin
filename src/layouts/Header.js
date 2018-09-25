@@ -68,6 +68,7 @@ class HeaderView extends PureComponent {
       dispatch({
         type: 'login/logout',
       });
+      
     }
   };
 
