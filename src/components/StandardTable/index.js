@@ -1,4 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
+import {formatMessage} from 'umi/locale'
 import { Table, Alert } from 'antd';
 import styles from './index.less';
 
@@ -90,7 +91,8 @@ class StandardTable extends PureComponent {
           <Alert
             message={
               <Fragment>
-                共{pagination.total}项,已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项&nbsp;&nbsp;
+                {formatMessage({id: 'app.total'})}
+                <a style={{ fontWeight: 600 }}>{pagination.total}</a>,{formatMessage({id: 'app.selected'})} <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> &nbsp;&nbsp;
                 {/* {needTotalList.map(item => (
                   <span style={{ marginLeft: 8 }} key={item.dataIndex}>
                     {item.title}
@@ -101,7 +103,7 @@ class StandardTable extends PureComponent {
                   </span>
                 ))} */}
                 <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }}>
-                  清空
+                  {formatMessage({id: 'app.clear'})}
                 </a>
                 
               </Fragment>

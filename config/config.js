@@ -34,6 +34,13 @@ export default {
           : {}),
       },
     ],
+    [
+      'umi-plugin-ga',
+      {
+        code: 'UA-126457224-1',
+      },
+    ],
+
   ],
   define: {
     APP_TYPE: process.env.APP_TYPE || '',

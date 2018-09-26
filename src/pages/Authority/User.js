@@ -1,4 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
+import { formatMessage } from 'umi/locale';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -42,86 +43,86 @@ const CreateForm = Form.create()(props => {
   return (
     <Modal
       destroyOnClose
-      title="新建用户"
-      okText="创建"
+      title={formatMessage({id: 'app.authority.user.create.modal.title'})}
+      okText={formatMessage({id: 'app.authority.user.create.modal.ok'})}
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.organization'})}>
         {form.getFieldDecorator('organizeId', {
-          rules: [{ required: true, message: '请选择机构！' }],
+          rules: [{ required: true, message: formatMessage({id:'app.please.select'})}],
         })(
-          <Select placeholder="请选择" style={{ width: '100%' }} onChange={setOrganizationCode}>
+          <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} onChange={setOrganizationCode}>
             {getOrganizationOption()}
           </Select>
         )}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.role'})}>
         {form.getFieldDecorator('roleId', {
-          rules: [{ required: true, message: '请选择角色！' }],
+          rules: [{ required: true, message: formatMessage({id:'app.please.select'}) }],
         })(
-          <Select placeholder="请选择角色" style={{ width: '100%' }}>
+          <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }}>
             {getRoleOption()}
           </Select>
         )}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.name'})}>
         {form.getFieldDecorator('name', {
           rules: [
             { 
               required: true, 
-              message: '请输入姓名！' 
+              message: formatMessage({id:'app.please.enter'})
             }
           ],
-        })(<Input placeholder="请输入姓名" />)}
+        })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.account'})}>
         {form.getFieldDecorator('account', { 
           rules: [
             { required: true, 
-              message: '请输入账号'
+              message: formatMessage({id:'app.please.enter'})
             },
             {
               min:4,max:16,
-              message:'用户名必须为4-16位'
+              message:formatMessage({id:'app.authority.user.account.error.length'})
             },
             { pattern: new RegExp('^\\w+$','g'), 
-              message: '用户名必须为字母或者数字' 
+              message: formatMessage({id:'app.authority.user.account.error.type'})
             }
           ],
-        })(<Input  addonBefore={organizationCode} placeholder="请输入账号"/>)}
+        })(<Input  addonBefore={organizationCode} placeholder={formatMessage({id:'app.please.enter'})}/>)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.password'})}>
         {form.getFieldDecorator('password', {
           rules: [
             { required: true, 
-              message: '请输入密码！' 
+              message: formatMessage({id:'app.please.enter'}) 
             },
             { min:6,
               max:20, 
-              message: '密码必须为6-20位' 
+              message: formatMessage({id:'app.authority.user.password.error.length'})
             }
           ],
-        })(<Input placeholder="请输入密码" type="password" />)}
+        })(<Input placeholder={formatMessage({id:'app.please.enter'})} type="password" />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.phone'})}>
         {form.getFieldDecorator('phone', {
           rules: [
             { 
-              message: '请输入手机！' 
+              message: formatMessage({id:'app.please.enter'}) 
             },
             { 
               pattern: new RegExp('^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$','g'), 
-              message: '手机号格式错误' 
+              message: formatMessage({id:'app.authority.user.phone.error.format'})
             }
           ],
-        })(<Input placeholder="请输入手机" />)}
+        })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.email'})}>
         {form.getFieldDecorator('email', {
-          rules: [{ message: '请输入邮箱！' },{type: 'email',message: '邮箱格式错误！'}],
-        })(<Input placeholder="请输入邮箱" />)}
+          rules: [{ message: formatMessage({id:'app.please.enter'}) },{type: 'email',message: formatMessage({id:'app.authority.user.email.error.format'})}],
+        })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
       </FormItem>
       
     </Modal>
@@ -193,12 +194,12 @@ class UpdateForm extends PureComponent {
         width={640}
         bodyStyle={{ padding: '32px 40px 48px' }}
         destroyOnClose
-        title="编辑用户"
+        title={formatMessage({id:'app.edit'})}
         visible={updateModalVisible}
         onCancel={() => handleUpdateModalVisible()}
         onOk={() => this.updateOkHandle()}
         >
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="账号">
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.account'})}>
           {formVals.account}
         </FormItem>
         {/* <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
@@ -212,62 +213,62 @@ class UpdateForm extends PureComponent {
           </Select>
         )}
         </FormItem> */}
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.role'})}>
           {form.getFieldDecorator('roleId', {
             initialValue: formVals.roleId,
-            rules: [{ required: true, message: '请选择角色！' }],
+            rules: [{ required: true, message: formatMessage({id:'app.please.select'}) }],
           })(
-            <Select placeholder="请选择角色" style={{ width: '100%' }}>
+            <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }}>
               {getRoleOption()}
             </Select>
           )}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="姓名">
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.name'})}>
           {form.getFieldDecorator('name', {
             initialValue: formVals.name,
             rules: [
               { 
                 required: true, 
-                message: '请输入姓名！' 
+                message: formatMessage({id:'app.please.enter'})
               }
             ],
-          })(<Input placeholder="请输入姓名" />)}
+          })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
         </FormItem>
         
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机">
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.phone'})}>
           {form.getFieldDecorator('phone', {
             initialValue: formVals.phone,
             rules: [
               { 
-                message: '请输入手机！' 
+                message: formatMessage({id:'app.please.enter'})
               },
               { 
                 pattern: new RegExp('^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$','g'), 
-                message: '手机号格式错误' 
+                message: formatMessage({id:'app.authority.user.phone.error.format'})
               }
             ],
-          })(<Input placeholder="请输入手机" />)}
+          })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="邮箱">
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.email'})}>
           {form.getFieldDecorator('email', {
             initialValue: formVals.email,
             rules: [
               { 
-                message: '请输入邮箱！' 
+                message: formatMessage({id:'app.please.enter'})
               },
               {
                 type: 'email',
-                message: '邮箱格式错误！'
+                message: formatMessage({id:'app.authority.user.email.error.format'})
               }
             ],
-          })(<Input placeholder="请输入邮箱" />)}
+          })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="状态">
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.status'})}>
        
           <Switch 
-              unCheckedChildren = "禁用" 
+              unCheckedChildren = {formatMessage({id:'app.authority.user.disable'})}
               defaultChecked = {formVals.status}  
-              checkedChildren = "启用"
+              checkedChildren = {formatMessage({id:'app.authority.user.enable'})}
               onChange={checked => this.changeStatus(checked)}
             />
           
@@ -299,57 +300,57 @@ export default class TableList extends PureComponent {
 
   columns = [
     {
-      title: '机构名称',
+      title: formatMessage({id:'app.authority.user.organization'}),
       dataIndex: 'organizationName',
     },
     {
-      title: '姓名',
+      title: formatMessage({id:'app.authority.user.name'}),
       dataIndex: 'name',
     },
     {
-      title: '账号',
+      title: formatMessage({id:'app.authority.user.account'}),
       dataIndex: 'account',
     },
     {
-      title: '角色',
+      title: formatMessage({id:'app.authority.user.role'}),
       dataIndex: 'roleName',
     },
     {
-      title: '状态',
+      title: formatMessage({id:'app.authority.user.status'}),
       dataIndex: 'status',
       filters: [
         {
-          text: "启用",
+          text: formatMessage({id:'app.authority.user.enable'}),
           value: 1,
         },
         {
-          text: "禁用",
+          text: formatMessage({id:'app.authority.user.disable'}),
           value: 0,
         },
       ],
       render(val) {
         if(val)
-          return <Badge status="success" text="启用" />;
+          return <Badge status="success" text={formatMessage({id:'app.authority.user.enable'})} />;
         else
-          return <Badge status="error" text="禁用" />;
+          return <Badge status="error" text={formatMessage({id:'app.authority.user.disable'})}/>;
       },
     },
     {
-      title: '手机号',
+      title: formatMessage({id:'app.authority.user.phone'}),
       dataIndex: 'phone',
     },
 
     {
-      title: '最后登录时间',
+      title: formatMessage({id:'app.authority.user.lastLoginTime'}),
       dataIndex: 'loginLastTime',
       sorter: true,
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
-      title: '操作',
+      title: formatMessage({id:'app.authority.user.operating'}),
       render: (text, record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(true, record)}>编辑</a>
+          <a onClick={() => this.handleUpdateModalVisible(true, record)}>{formatMessage({id: 'app.edit'})}</a>
           {/* <Divider type="vertical" /> */}
         </Fragment>
       ),
@@ -429,10 +430,8 @@ export default class TableList extends PureComponent {
   handleDelete = () => {
     const { selectedRows } = this.state;
     Modal.confirm({
-      title: '删除用户',
-      content: `确定删除选中的${selectedRows.length}位用户吗？`,
-      okText: '确认',
-      cancelText: '取消',
+      title: formatMessage({id:'app.delete'}),
+      content: `${selectedRows.length}`+formatMessage({id:'app.authority.user.msg.delete'}),
       centered:true,
       onOk: () => {
         const { dispatch } = this.props;
@@ -446,7 +445,7 @@ export default class TableList extends PureComponent {
           },
           callback: ( _ = res => {
             if(res.success){
-              message.success("删除成功");
+              message.success(formatMessage({id:'app.authority.user.msg.success'}));
               this.handleFormReset();
             }else{
               message.error(res.msg);
@@ -515,7 +514,7 @@ export default class TableList extends PureComponent {
       },
       callback: (_ = res => {
         if(res.success){
-          message.success('添加成功');
+          message.success(formatMessage({id:'app.authority.user.msg.success'}));
           
           this.handleFormReset();
         }else{
@@ -538,7 +537,7 @@ export default class TableList extends PureComponent {
       },
       callback: (_ = res => {
         if(res.success){
-          message.success('更新成功');
+          message.success(formatMessage({id:'app.authority.user.msg.success'}));
           this.handleFormReset();
           
         }else{
@@ -562,7 +561,7 @@ export default class TableList extends PureComponent {
     if (!list || list.length < 1) {
       return (
         <Option key={0} value={0}>
-          没有找到选项
+          {formatMessage({id:'app.authority.user.msg.notOptions'})}
         </Option>
       );
     }
@@ -591,19 +590,28 @@ export default class TableList extends PureComponent {
       form: { getFieldDecorator },
      
     } = this.props;
-    
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 4 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 13 },
+      },
+    };
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
           
-            <FormItem label="机构名称">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.organization'})}>
             
               {getFieldDecorator('organizeId')(
                 
                 <Select 
                   allowClear={true} 
-                  placeholder="请选择" 
+                  placeholder={formatMessage({id:'app.please.select'})}
                   style={{ width: '100%' }} 
                 >
                   {this.getOrganizationOption()}
@@ -612,9 +620,9 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="用户角色">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.role'})}>
               {getFieldDecorator('roleId')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
+                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear={true} >
                   {this.getRoleOption()}
                 </Select>
               )}
@@ -623,13 +631,13 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
-                查询
+                {formatMessage({id: 'app.search'})}
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-                重置
+                {formatMessage({id: 'app.reset'})}
               </Button>
               <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
+                {formatMessage({id: 'app.expand'})} <Icon type="down" />
               </a>
             </span>
           </Col>
@@ -642,54 +650,64 @@ export default class TableList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 4 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 13 },
+      },
+    };
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="机构名称">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.organization'})}>
               {getFieldDecorator('organizeId')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
+                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear={true} >
                   {this.getOrganizationOption()}
                 </Select>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="用户角色">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.role'})}>
               {getFieldDecorator('roleId')(
-                <Select placeholder="请选择" style={{ width: '100%' }} allowClear={true} >
+                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear={true} >
                   {this.getRoleOption()}
                 </Select>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="用户姓名">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.name'})}>
               {getFieldDecorator('name')(
-                <Input style={{ width: '100%' }}  placeholder="通过姓名查询"/>
+                <Input style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-              <FormItem label="用户账号">
+              <FormItem  {...formItemLayout} label={formatMessage({id:'app.authority.user.account'})}>
                 {getFieldDecorator('account')(
-                  <Input style={{ width: '100%' }}  placeholder="通过账号查询"/>
+                  <Input style={{ width: '100%' }}  />
                 )}
               </FormItem>
             </Col>
           <Col md={8} sm={24}>
-            <FormItem label="手机号码">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.phone'})}>
               {getFieldDecorator('phone')(
-                <Input style={{ width: '100%' }}  placeholder="通过手机号查询"/>
+                <Input style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="电子邮箱">
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.email'})}>
               {getFieldDecorator('email')(
-                <Input style={{ width: '100%' }}  placeholder="通过电子邮箱查询"/>
+                <Input style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
@@ -707,13 +725,13 @@ export default class TableList extends PureComponent {
         <div style={{ overflow: 'hidden' }}>
           <div style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">
-              查询
+              {formatMessage({id: 'app.search'})}
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-              重置
+            {formatMessage({id: 'app.reset'})}
             </Button>
             <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
+            {formatMessage({id: 'app.contract'})} <Icon type="up" />
             </a>
           </div>
         </div>
@@ -734,7 +752,7 @@ export default class TableList extends PureComponent {
     const { selectedRows, modalVisible,organizationCode, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="disable">禁用</Menu.Item>
+        <Menu.Item key="disable">{formatMessage({id: 'app.disabled'})}</Menu.Item>
         {/* <Menu.Item key="approval">通知</Menu.Item> */}
       </Menu>
     );
@@ -758,14 +776,14 @@ export default class TableList extends PureComponent {
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建用户
+                {formatMessage({id: 'app.authority.user.create.modal.title'})}
               </Button>
               {selectedRows.length > 0 && (
                 <span>
-                  <Button onClick={this.handleDelete}>删除</Button>
+                  <Button onClick={this.handleDelete}>{formatMessage({id: 'app.delete'})}</Button>
                   <Dropdown overlay={menu}>
                     <Button>
-                      更多操作 <Icon type="down" />
+                    {formatMessage({id: 'app.more'})}<Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>

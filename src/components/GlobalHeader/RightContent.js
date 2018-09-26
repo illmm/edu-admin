@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, setLocale, getLocale } from 'umi/locale';
+import { FormattedMessage, formatMessage, setLocale, getLocale } from 'umi/locale';
 import { Spin, Tag, Menu, Icon, Dropdown, Avatar, Tooltip, Button } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
@@ -83,7 +83,7 @@ export default class GlobalHeaderRight extends PureComponent {
       <div className={className}>
         <HeaderSearch
           className={`${styles.action} ${styles.search}`}
-          placeholder="站内搜索"
+          placeholder={formatMessage({ id: 'component.globalHeader.search' })}
           dataSource={['教材', '视频', '培训']}
           onSearch={value => {
             console.log('input', value); // eslint-disable-line
@@ -92,13 +92,13 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log('enter', value); // eslint-disable-line
           }}
         />
-                <Tooltip title="使用帮助">
+        <Tooltip title={formatMessage({ id: 'component.globalHeader.help' })}>
           <a
             target="_blank"
             href="https://baidu.com"
             rel="noopener noreferrer"
             className={styles.action}
-            title="使用帮助"
+            title="{ formatMessage({id: 'component.globalHeader.help'}) }"
           >
             <Icon type="question-circle-o" />
           </a>
@@ -117,14 +117,14 @@ export default class GlobalHeaderRight extends PureComponent {
         >
           <NoticeIcon.Tab
             list={noticeData['通知']}
-            title="通知"
-            emptyText="你已查看所有通知"
+            title={formatMessage({ id: 'component.globalHeader.notification' })}
+            emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
           <NoticeIcon.Tab
             list={noticeData['消息']}
-            title="消息"
-            emptyText="您已读完所有消息"
+            title={formatMessage({ id: 'component.globalHeader.message' })}
+            emptyText={formatMessage({ id: 'component.globalHeader.message.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
           />
           
