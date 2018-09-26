@@ -39,7 +39,8 @@ export default {
   'menu.account.center': '个人中心',
   'menu.account.settings': '个人设置',
   'menu.account.logout': '退出登录',
-
+  'app.name':'中图教育管理端',
+  'app.title':'中图教育',
   'app.search':'查询',
   'app.reset':'重置',
   'app.delete':'删除',

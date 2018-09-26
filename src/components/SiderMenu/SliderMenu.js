@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import {formatMessage} from 'umi/locale'
 import { Layout } from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import classNames from 'classnames';
@@ -110,7 +111,7 @@ export default class SiderMenu extends PureComponent {
         <div className={styles.logo} id="logo">
           <Link to="/">
             <img src={logo} alt="logo" />
-            <h1>中图教育</h1>
+            <h1>{formatMessage({id:'app.title'})}</h1>
           </Link>
         </div>
         <BaseMenu

@@ -593,12 +593,13 @@ export default class TableList extends PureComponent {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 3 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 13 },
+        sm: { span: 14 },
       },
+      colon:false,
     };
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
@@ -653,12 +654,13 @@ export default class TableList extends PureComponent {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 3 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 13 },
+        sm: { span: 14 },
       },
+      colon:false,
     };
     return (
       <Form onSubmit={this.handleSearch} layout="inline">

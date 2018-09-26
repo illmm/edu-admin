@@ -38,7 +38,8 @@ export default {
   'menu.account.settings': 'Account Settings',
   'menu.account.logout': 'Logout',
 
-
+  'app.name':'Cnpeducation Admin',
+  'app.title':'CNPEDU',
   'app.search':'Search',
   'app.reset':'Reset',
   'app.delete':'Delete',
@@ -54,7 +55,7 @@ export default {
   'app.please.enter':'please enter',
   'app.authority.user.create.modal.title':'Create User',
   'app.authority.user.create.modal.ok':'Create',
-  'app.authority.user.organization':'Organization',
+  'app.authority.user.organization':'Organize',
   'app.authority.user.role':'Role',
   'app.authority.user.name':'Name',
   'app.authority.user.account':'Account',

@@ -168,13 +168,13 @@ class BasicLayout extends React.PureComponent {
     const currRouterData = this.matchParamsPath(pathname);
 
     if (!currRouterData) {
-      return '中图教育管理端';
+      return formatMessage({id:'app.name'});
     }
     const message = formatMessage({
       id: currRouterData.locale || currRouterData.name,
       defaultMessage: currRouterData.name,
     });
-    return `${message} - 中图教育管理端`;
+    return `${message} - `+formatMessage({id:'app.name'});
   };
 
   getLayoutStyle = () => {
