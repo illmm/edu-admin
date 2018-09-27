@@ -14,5 +14,12 @@ export async function queryNotices() {
 export async function queryGeetest() {
   return request('/api/captcha');
 }
+export async function queryBasicProfile() {
+  return request('/api/profile/basic');
+}
+
+export async function queryAdvancedProfile() {
+  return request('/api/profile/advanced');
+}
 
 

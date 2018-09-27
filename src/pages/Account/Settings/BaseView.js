@@ -169,7 +169,7 @@ class BaseView extends Component {
                   },
                   { validator: validatorPhone },
                 ],
-              })(<PhoneView />)}
+              })(<Input />)}
             </FormItem>
             <Button type="primary">
               <FormattedMessage
@@ -183,6 +183,7 @@ class BaseView extends Component {
           <AvatarView avatar={this.getAvatarURL()} />
         </div>
       </div>
+     
     );
   }
 }

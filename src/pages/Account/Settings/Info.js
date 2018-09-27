@@ -21,9 +21,7 @@ class Info extends Component {
       security: (
         <FormattedMessage id="app.settings.menuMap.security" defaultMessage="Security Settings" />
       ),
-      binding: (
-        <FormattedMessage id="app.settings.menuMap.binding" defaultMessage="Account Binding" />
-      ),
+      
       notification: (
         <FormattedMessage
           id="app.settings.menuMap.notification"
@@ -96,7 +94,7 @@ class Info extends Component {
 
   render() {
     const { children, currentUser } = this.props;
-    if (!currentUser.userid) {
+    if (!currentUser.id) {
       return '';
     }
     const { mode, selectKey } = this.state;

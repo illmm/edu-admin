@@ -3,7 +3,8 @@ import moment from 'moment';
 import { connect } from 'dva';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Button,Card } from 'antd';
+import { Button,Card, Divider } from 'antd';
+import Link from 'umi/link';
 import styles from './List.less';
 
 /* eslint react/no-multi-comp:0 */
@@ -26,10 +27,6 @@ export default class AgencyList extends PureComponent{
       dataIndex: 'code',
     },
     {
-      title: '描述',
-      dataIndex: 'description',
-    },
-    {
       title: '销售员',
       dataIndex: 'salesman',
     },
@@ -40,10 +37,17 @@ export default class AgencyList extends PureComponent{
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
+      title: '描述',
+      dataIndex: 'description',
+    },
+    {
       title: '操作',
       render: (text,record) => (
         <Fragment>
           <a>编辑</a>
+          <Divider type="vertical" />
+          {/* <a>详细</a> */}
+          <Link to="/agency/info">详细</Link>
         </Fragment>
       ),
     }

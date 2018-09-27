@@ -22,11 +22,7 @@ class NotificationView extends Component {
         description: formatMessage({ id: 'app.settings.notification.messages-description' }, {}),
         actions: [Action],
       },
-      {
-        title: formatMessage({ id: 'app.settings.notification.todo' }, {}),
-        description: formatMessage({ id: 'app.settings.notification.todo-description' }, {}),
-        actions: [Action],
-      },
+      
     ];
   };
 

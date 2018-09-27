@@ -17,6 +17,7 @@ export default {
   'menu.agency':'Agency',
   'menu.agency.list':'AgencyList',
   'menu.agency.resource': 'AgencyResource',
+  'menu.agency.info': 'Info',
   'menu.course':'Course',
   'menu.course.video':'Video',
   'menu.course.online':'Online',
