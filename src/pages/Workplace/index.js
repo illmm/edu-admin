@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import { Row, Col, Card, List, Avatar } from 'antd';
 
-import { Radar } from '@/components/Charts';
 import EditableLinkGroup from '@/components/EditableLinkGroup';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import DescriptionList from '@/components/DescriptionList';
 
 import styles from './index.less';
-
+const { Description } = DescriptionList;
 const links = [
   {
     title: '新增成员',
@@ -129,39 +128,6 @@ class Workplace extends PureComponent {
       >
         <Row gutter={24}>
           <Col xl={16} lg={24} md={24} sm={24} xs={24}>
-            {/* <Card
-              className={styles.projectList}
-              style={{ marginBottom: 24 }}
-              title="进行中的项目"
-              bordered={false}
-              extra={<Link to="/">全部项目</Link>}
-              loading={projectLoading}
-              bodyStyle={{ padding: 0 }}
-            >
-              {notice.map(item => (
-                <Card.Grid className={styles.projectGrid} key={item.id}>
-                  <Card bodyStyle={{ padding: 0 }} bordered={false}>
-                    <Card.Meta
-                      title={
-                        <div className={styles.cardTitle}>
-                          <Avatar size="small" src={item.logo} />
-                          <Link to={item.href}>{item.title}</Link>
-                        </div>
-                      }
-                      description={item.description}
-                    />
-                    <div className={styles.projectItemContent}>
-                      <Link to={item.memberLink}>{item.member || ''}</Link>
-                      {item.updatedAt && (
-                        <span className={styles.datetime} title={item.updatedAt}>
-                          {moment(item.updatedAt).fromNow()}
-                        </span>
-                      )}
-                    </div>
-                  </Card>
-                </Card.Grid>
-              ))}
-            </Card> */}
             <Card
               bodyStyle={{ padding: 0 }}
               bordered={false}
@@ -176,7 +142,7 @@ class Workplace extends PureComponent {
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>将<a>十万个为什么</a>加入了愿望单</span>
                       </span>
@@ -193,7 +159,7 @@ class Workplace extends PureComponent {
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>将<a>十万个为什么</a>加入了愿望单</span>
                       </span>
@@ -210,7 +176,7 @@ class Workplace extends PureComponent {
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>将<a>十万个为什么</a>加入了愿望单</span>
                       </span>
@@ -227,7 +193,7 @@ class Workplace extends PureComponent {
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>登陆了系统</span>
                       </span>
@@ -239,12 +205,12 @@ class Workplace extends PureComponent {
                     }
                   />
                 </List.Item>
-                <List.Item key={4}>
+                <List.Item key={5}>
                   <List.Item.Meta
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>登陆了系统</span>
                       </span>
@@ -256,12 +222,12 @@ class Workplace extends PureComponent {
                     }
                   />
                 </List.Item>
-                <List.Item key={4}>
+                <List.Item key={6}>
                   <List.Item.Meta
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>登陆了系统</span>
                       </span>
@@ -273,12 +239,12 @@ class Workplace extends PureComponent {
                     }
                   />
                 </List.Item>
-                <List.Item key={4}>
+                <List.Item key={7}>
                   <List.Item.Meta
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>登陆了系统</span>
                       </span>
@@ -290,12 +256,12 @@ class Workplace extends PureComponent {
                     }
                   />
                 </List.Item>
-                <List.Item key={4}>
+                <List.Item key={8}>
                   <List.Item.Meta
                     avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
                     title={
                       <span>
-                        <a className={styles.username}><a>李四</a></a>
+                        <a className={styles.username}>李四</a>
                         &nbsp;
                         <span className={styles.event}>登陆了系统</span>
                       </span>
@@ -321,50 +287,27 @@ class Workplace extends PureComponent {
             >
               <EditableLinkGroup onAdd={() => {}} links={links} linkElement={Link} />
             </Card>
-            {/* <Card
-              style={{ marginBottom: 24 }}
-              bordered={false}
-              title="XX 指数"
-              loading={radarData.length === 0}
-            >
-              <div className={styles.chart}>
-                <Radar hasLegend height={343} data={radarData} />
-              </div>
-            </Card> */}
+            
             <Card
               bodyStyle={{ paddingTop: 12, paddingBottom: 12 }}
               bordered={false}
               title="机构信息"
               
             >
-              <div className={styles.members}>
-                <Row gutter={48}>
-                 
-                    <Col span={24} key={`members-item-1`}>
-                      <Link to={1}>
-                        <span className={styles.member}>机构名称：王府学校</span>
-                      </Link>
-                    </Col>
-                    <Col span={24} key={`members-item-1`}>
-                      <Link to={1}>
-                        <span className={styles.member}>合作级别：战略合作伙伴</span>
-                      </Link>
-                    </Col>
-                    <Col span={24} key={`members-item-1`}>
-                      <Link to={1}>
-                        <span className={styles.member}>专属客服：孟亚楠</span>
-                      </Link>
-                    </Col>
-                    <Col span={24} key={`members-item-1`}>
-                      <Link to={1}>
-                        <span className={styles.member}>服务期限：2018-01-01~2019-01-01</span>
-                      </Link>
-                    </Col>
-                    
-                    
-                    
-                </Row>
-              </div>
+              
+              <DescriptionList style={{ marginBottom: 24 }} col={1}>
+                <Description term="机构名称">王府学校</Description>
+              </DescriptionList>
+              <DescriptionList style={{ marginBottom: 24 }} col={1}>
+                <Description term="合作级别">战略合作伙伴</Description>
+              </DescriptionList>  
+              <DescriptionList style={{ marginBottom: 24 }} col={1}>
+                <Description term="专属客服">孟亚楠</Description>
+              </DescriptionList>
+              <DescriptionList style={{ marginBottom: 24 }} col={1}>
+                <Description term="服务期限">2018-01-01~2019-01-01</Description>
+              </DescriptionList>
+              
             </Card>
           </Col>
         </Row>

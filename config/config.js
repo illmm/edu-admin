@@ -105,4 +105,5 @@ export default {
       target: 'http://localhost:8999'
     }
   },
+
 };
