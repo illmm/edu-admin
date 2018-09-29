@@ -1,5 +1,5 @@
 export default {
-  'navbar.lang': '中文',
+  'navbar.lang': 'Languages',
   'corporate.name':'2018 China National Publications Import and Export (Group) Corporation',
   'component.globalHeader.search': 'Search',
   'component.globalHeader.help': 'Help',

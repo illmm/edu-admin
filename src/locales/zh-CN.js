@@ -1,7 +1,7 @@
 // import zhMessages from '../../locales/zh.json';
 
 export default {
-  'navbar.lang': 'English',
+  'navbar.lang': '语言',
   'corporate.name':'2018 中国图书进出口(集团)总公司',
   'component.globalHeader.search': '站内搜索',
   'component.globalHeader.help': '使用帮助',
