@@ -1,12 +1,15 @@
 version: "3.5"
 
 services:
-  ant-design-pro_dev:
+  cnpeducation-admin_dev:
+    ports:
+      - 8000:8000
     build:
-      context: ./
+      context: ../
       dockerfile: Dockerfile.dev
-    container_name: "ant-design-pro_dev"
+    container_name: "cnpeducation-admin_dev"
     volumes:
-      - ./src:/usr/src/app/src
-      - ./config:/usr/src/app/config
-      - ./mock:/usr/src/app/mock
+      - ../src:/usr/src/app/src
+      - ../config:/usr/src/app/config
+      - ../mock:/usr/src/app/mock
+

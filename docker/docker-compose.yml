@@ -1,15 +1,17 @@
 version: "3.5"
 
 services:
-  ant-design-pro_build:
-    build: ./
-    container_name: "ant-design-pro_build"
+  cnpeducation_build:
+    build: ../
+    container_name: "cnpeducation_build"
     volumes:
       - dist:/usr/src/app/dist
 
-  ant-design-pro_web:
+  cnpeducation_web:
     image: nginx
-    container_name: "ant-design-pro_web"
+    ports:
+      - 8081:80
+    container_name: "cnpeducation_web"
     restart: unless-stopped
     volumes:
       - dist:/usr/share/nginx/html:ro

@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Menu, Icon } from 'antd';
 import Link from 'umi/link';
+import isEqual from 'lodash/isEqual';
+import memoizeOne from 'memoize-one';
 import { formatMessage } from 'umi/locale';
 import pathToRegexp from 'path-to-regexp';
 import { urlToList } from '../_utils/pathTools';
@@ -22,12 +24,16 @@ const getIcon = icon => {
   return icon;
 };
 
-export const getMenuMatches = (flatMenuKeys, path) =>
-  flatMenuKeys.filter(item => item && pathToRegexp(item).test(path));
+export const getMenuMatches = memoizeOne(
+  (flatMenuKeys, path) => flatMenuKeys.filter(item => item && pathToRegexp(item).test(path)),
+  isEqual
+);
+
 
 export default class BaseMenu extends PureComponent {
   constructor(props) {
     super(props);
+    this.getSelectedMenuKeys = memoizeOne(this.getSelectedMenuKeys, isEqual);
     this.flatMenuKeys = this.getFlatMenuKeys(props.menuData);
   }
 
@@ -66,12 +72,10 @@ export default class BaseMenu extends PureComponent {
   };
 
   // Get the currently selected menu
-  getSelectedMenuKeys = () => {
-    const {
-      location: { pathname },
-    } = this.props;
-    return urlToList(pathname).map(itemPath => getMenuMatches(this.flatMenuKeys, itemPath).pop());
-  };
+
+  getSelectedMenuKeys = pathname =>
+    urlToList(pathname).map(itemPath => getMenuMatches(this.flatMenuKeys, itemPath).pop());
+
 
   /**
    * get SubMenu or Item
@@ -79,7 +83,7 @@ export default class BaseMenu extends PureComponent {
   getSubMenuOrItem = item => {
     // doc: add hideChildrenInMenu
     if (item.children && !item.hideChildrenInMenu && item.children.some(child => child.name)) {
-      const name = formatMessage({ id: item.locale });
+      const name = item.locale ? formatMessage({ id: item.locale }) : item.name;
       return (
         <SubMenu
           title={
@@ -107,7 +111,7 @@ export default class BaseMenu extends PureComponent {
    * @memberof SiderMenu
    */
   getMenuItemPath = item => {
-    const name = formatMessage({ id: item.locale });
+    const name = item.locale ? formatMessage({ id: item.locale }) : item.name;
     const itemPath = this.conversionPath(item.path);
     const icon = getIcon(item.icon);
     const { target } = item;
