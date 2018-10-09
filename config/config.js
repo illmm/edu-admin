@@ -1,7 +1,7 @@
 // https://umijs.org/config/
 import os from 'os';
 import pageRoutes from './router.config';
-import webpackplugin from './plugin.config';
+import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 
 export default {
@@ -37,6 +37,7 @@ export default {
       'umi-plugin-ga',
       {
         code: 'UA-126457224-1',
+        judge: () => process.env.APP_TYPE === 'site',
       },
     ],
 
@@ -85,7 +86,7 @@ export default {
     },
   },
   manifest: {
-    name: 'ant-design-pro',
+    name: 'cnpeducation',
     background_color: '#FFF',
     description: 'An out-of-box UI solution for enterprise applications as a React boilerplate.',
     display: 'standalone',
@@ -99,7 +100,7 @@ export default {
     ],
   },
 
-  chainWebpack: webpackplugin,
+  chainWebpack: webpackPlugin,
   cssnano: {
     mergeRules: false,
   },

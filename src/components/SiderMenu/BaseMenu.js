@@ -29,7 +29,6 @@ export const getMenuMatches = memoizeOne(
   isEqual
 );
 
-
 export default class BaseMenu extends PureComponent {
   constructor(props) {
     super(props);
@@ -72,10 +71,8 @@ export default class BaseMenu extends PureComponent {
   };
 
   // Get the currently selected menu
-
   getSelectedMenuKeys = pathname =>
     urlToList(pathname).map(itemPath => getMenuMatches(this.flatMenuKeys, itemPath).pop());
-
 
   /**
    * get SubMenu or Item
@@ -162,9 +159,14 @@ export default class BaseMenu extends PureComponent {
   };
 
   render() {
-    const { openKeys, theme, mode } = this.props;
+    const {
+      openKeys,
+      theme,
+      mode,
+      location: { pathname },
+    } = this.props;
     // if pathname can't match, use the nearest parent's key
-    let selectedKeys = this.getSelectedMenuKeys();
+    let selectedKeys = this.getSelectedMenuKeys(pathname);
     if (!selectedKeys.length && openKeys) {
       selectedKeys = [openKeys[openKeys.length - 1]];
     }

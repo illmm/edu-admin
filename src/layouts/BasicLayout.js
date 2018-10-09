@@ -20,7 +20,7 @@ import Exception403 from '../pages/Exception/403';
 const { Content } = Layout;
 
 // Conversion router to menu.
-function formatter(data, parentPath = '', parentAuthority, parentName) {
+function formatter(data, parentAuthority, parentName) {
   return data
   .map(item => {
     let locale = 'menu';
@@ -38,12 +38,7 @@ function formatter(data, parentPath = '', parentAuthority, parentName) {
         authority: item.authority || parentAuthority,
       };
       if (item.routes) {
-        const children = formatter(
-          item.routes,
-          `${parentPath}${item.path}/`,
-          item.authority,
-          locale
-        );
+        const children = formatter(item.routes, item.authority, locale);
         // Reduce memory usage
         result.children = children;
       }
@@ -175,7 +170,7 @@ class BasicLayout extends React.PureComponent {
     const pathKey = Object.keys(this.breadcrumbNameMap).find(key =>
       pathToRegexp(key).test(pathname)
     );
-    return this.breadcrumbNameMap[pathKey];
+    return this.breadcrumbNameMap[pathKey] || {};
   };
 
   getPageTitle = pathname => {
