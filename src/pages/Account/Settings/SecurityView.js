@@ -38,31 +38,9 @@ class SecurityView extends Component {
         </a>,
       ],
     },
-    {
-      title: formatMessage({ id: 'app.settings.security.phone' }, {}),
-      description: `${formatMessage(
-        { id: 'app.settings.security.phone-description' },
-        {}
-      )}：138****8293`,
-      actions: [
-        <a>
-          <FormattedMessage id="app.settings.security.modify" defaultMessage="Modify" />
-        </a>,
-      ],
-    },
     
-    {
-      title: formatMessage({ id: 'app.settings.security.email' }, {}),
-      description: `${formatMessage(
-        { id: 'app.settings.security.email-description' },
-        {}
-      )}：ant***sign.com`,
-      actions: [
-        <a>
-          <FormattedMessage id="app.settings.security.modify" defaultMessage="Modify" />
-        </a>,
-      ],
-    },
+    
+    
     
   ];
 

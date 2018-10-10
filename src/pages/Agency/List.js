@@ -15,6 +15,7 @@ import {
   Icon,
   DatePicker,
   message,
+  Select,
 } from 'antd';
 import Link from 'umi/link';
 import styles from './List.less';
@@ -115,6 +116,22 @@ const CreateForm = Form.create()(props => {
             }
           ]
         })(<InputNumber min={1} placeholder="数量" />)}
+      </FormItem>
+      <FormItem {...formItemLayout} label="销售人员">
+        {form.getFieldDecorator('salesman',{
+          rules: [
+            {
+              required: true,
+              message: '请选择销售人员'
+            }
+          ]
+        })( <Select
+              mode="tags"
+              style={{ width: '100%' }}
+              placeholder="请输入或选择销售人员"
+              // onChange={handleChange}
+            >
+            </Select>)}
       </FormItem>
       <FormItem {...formItemLayout} label="机构Logo">
         {form.getFieldDecorator('logo',{

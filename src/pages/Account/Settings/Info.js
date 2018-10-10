@@ -22,12 +22,7 @@ class Info extends Component {
         <FormattedMessage id="app.settings.menuMap.security" defaultMessage="Security Settings" />
       ),
       
-      notification: (
-        <FormattedMessage
-          id="app.settings.menuMap.notification"
-          defaultMessage="New Message Notification"
-        />
-      ),
+      
     };
     const key = location.pathname.replace(`${match.path}/`, '');
     this.state = {

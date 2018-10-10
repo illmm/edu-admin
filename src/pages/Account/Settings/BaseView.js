@@ -88,6 +88,16 @@ class BaseView extends Component {
       <div className={styles.baseView} ref={this.getViewDom}>
         <div className={styles.left}>
           <Form layout="vertical" onSubmit={this.handleSubmit} hideRequiredMark>
+          <FormItem label="账号">
+              {getFieldDecorator('account', {
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'app.settings.basic.email-message' }, {}),
+                  },
+                ],
+              })(<Input disabled />)}
+            </FormItem>
             <FormItem label={formatMessage({ id: 'app.settings.basic.email' })}>
               {getFieldDecorator('email', {
                 rules: [
@@ -108,58 +118,10 @@ class BaseView extends Component {
                 ],
               })(<Input />)}
             </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.profile' })}>
-              {getFieldDecorator('profile', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'app.settings.basic.profile-message' }, {}),
-                  },
-                ],
-              })(
-                <Input.TextArea
-                  placeholder={formatMessage({ id: 'app.settings.basic.profile-placeholder' })}
-                  rows={4}
-                />
-              )}
-            </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.country' })}>
-              {getFieldDecorator('country', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'app.settings.basic.country-message' }, {}),
-                  },
-                ],
-              })(
-                <Select style={{ maxWidth: 220 }}>
-                  <Option value="China">中国</Option>
-                </Select>
-              )}
-            </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.geographic' })}>
-              {getFieldDecorator('geographic', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'app.settings.basic.geographic-message' }, {}),
-                  },
-                  {
-                    validator: validatorGeographic,
-                  },
-                ],
-              })(<GeographicView />)}
-            </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.address' })}>
-              {getFieldDecorator('address', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'app.settings.basic.address-message' }, {}),
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
+            
+            
+            
+            
             <FormItem label={formatMessage({ id: 'app.settings.basic.phone' })}>
               {getFieldDecorator('phone', {
                 rules: [
