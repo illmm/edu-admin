@@ -170,7 +170,7 @@ class BasicLayout extends React.PureComponent {
     const pathKey = Object.keys(this.breadcrumbNameMap).find(key =>
       pathToRegexp(key).test(pathname)
     );
-    return this.breadcrumbNameMap[pathKey] || {};
+    return this.breadcrumbNameMap[pathKey];
   };
 
   getPageTitle = pathname => {
@@ -259,7 +259,11 @@ class BasicLayout extends React.PureComponent {
             {...this.props}
           />
           <Content style={this.getContentStyle()}>
-            <Authorized authority={routerConfig.authority} noMatch={<Exception403 />}>
+            <Authorized
+              authority={routerConfig && routerConfig.authority}
+              noMatch={<Exception403 />}
+            >
+
               {children}
             </Authorized>
           </Content>
