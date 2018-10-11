@@ -18,24 +18,9 @@ import {
   Select,
 } from 'antd';
 import Link from 'umi/link';
+import { getBase64 } from '@/utils/utils';
 import styles from './List.less';
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
 
-function beforeUpload(file) {
-  const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' ;
-  if (!isJPG) {
-    message.error('你只能上传JPG,PNG文件！');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('图像必须小于2MB！');
-  }
-  return isJPG && isLt2M;
-}
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
@@ -67,7 +52,20 @@ const CreateForm = Form.create()(props => {
       <div className="ant-upload-text">上传</div>
     </div>
   );
-  
+  const data = {
+    token:'3szjMYDo-XNVHEhC286FNpKeLLHyGn916Bo8NcnV:puRbfwz_NMTLM4_6ejNwlxpvc0g=:eyJzY29wZSI6InN0YXRpYyIsImRlYWRsaW5lIjoxNTM5MjUwNjAyfQ=='
+  }
+  const beforeUpload = file => {
+    const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' ;
+    if (!isJPG) {
+      message.error('你只能上传JPG,PNG文件！');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('图像必须小于2MB！');
+    }
+    return isJPG && isLt2M;
+  }
   return(
     <Modal
       destroyOnClose
@@ -125,13 +123,7 @@ const CreateForm = Form.create()(props => {
               message: '请选择销售人员'
             }
           ]
-        })( <Select
-              mode="tags"
-              style={{ width: '100%' }}
-              placeholder="请输入或选择销售人员"
-              // onChange={handleChange}
-            >
-            </Select>)}
+        })( <Input/>)}
       </FormItem>
       <FormItem {...formItemLayout} label="机构Logo">
         {form.getFieldDecorator('logo',{
@@ -146,15 +138,17 @@ const CreateForm = Form.create()(props => {
               listType="picture-card"
               className={styles.uploadImage}
               showUploadList={false}
-              action="//jsonplaceholder.typicode.com/posts/"
+              action="//upload.qiniup.com"
               beforeUpload={beforeUpload}
               onChange={handleUploadChange}
+              name="file"
+              data={data}
             >
               {imageUrl ? <img src={imageUrl} className={styles.uploadImage} alt="avatar" /> : uploadButton}
             </Upload>)}
       </FormItem>
       <FormItem {...formItemLayout} label="服务期限">
-        {form.getFieldDecorator('expireTime',{
+        {form.getFieldDecorator('date',{
           rules: [
             {
               required: true,
@@ -206,8 +200,14 @@ export default class AgencyList extends PureComponent{
       dataIndex: 'salesman',
     },
     {
-      title: '服务截止日期',
-      dataIndex: 'expireTime',
+      title: '开始日期',
+      dataIndex: 'startDate',
+      sorter: true,
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'endDate',
       sorter: true,
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
@@ -239,12 +239,15 @@ export default class AgencyList extends PureComponent{
   handleModalVisible = flag => {
     this.setState({
       modalVisible: !!flag,
+      imageUrl:null,
     });
   };  
   handleAdd = fields => {
     const { dispatch } = this.props;
+    // const { fileKey } = this.state;
+    // const formVals = { ...fields, fileKey };
     dispatch({
-      type: 'users/add',
+      type: 'agency/add',
       payload: {
         ...fields,
       },
@@ -259,12 +262,26 @@ export default class AgencyList extends PureComponent{
     });
     this.handleModalVisible();
   };
+  handleFormReset = () => {
+    const { form, dispatch } = this.props;
+    form.resetFields();
+    this.setState({
+      formValues: {},
+    });
+    dispatch({
+      type: 'agency/fetch',
+      payload: {},
+    });
+  };
   handleUploadChange = (info) => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
     if (info.file.status === 'done') {
+      this.setState({
+        fileKey:info.file.response.key,
+      });
       getBase64(info.file.originFileObj, imageUrl => this.setState({
         imageUrl,
         loading: false,

@@ -34,7 +34,7 @@ export default {
   'menu.authority.user':'用户管理',
   'menu.authority.role':'角色管理',
   'menu.authority.menu':'菜单管理',
-  'menu.member': '成员管理',
+  'menu.member': '师生管理',
   'menu.message': '消息管理',
   'menu.purchase':'采购管理',
   'menu.statistics':'统计报表',

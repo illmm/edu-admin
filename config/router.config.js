@@ -13,7 +13,6 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
-    authority: ['admin','user'],
     routes: [
       // 工作台
       { path: '/', redirect: '/workplace' },
@@ -30,6 +29,7 @@ export default [
         name: 'agency',
         icon: 'cluster',
         component: './Agency/List',
+        authority: ['admin'],
         
       },
       {
@@ -37,18 +37,21 @@ export default [
         name: 'agency.resource',
         component: './Agency/Resource',
         hideInMenu: true,
+        authority: ['admin'],
       },
       {
         path: '/agency/info',
         name: 'agency.info',
         component: './Agency/Info',
         hideInMenu: true,
+        authority: ['admin'],
       },
       // 课程管理
       {
         path: '/course',
         icon: 'video-camera',
         name: 'course',
+        authority: ['admin'],
         routes: [
           {
             path: '/course/video',
@@ -68,6 +71,7 @@ export default [
         path: '/material',
         icon: 'book',
         name: 'material',
+        authority: ['admin'],
         routes: [
           {
             path: '/material/electron',
@@ -89,6 +93,7 @@ export default [
         name: 'train',
         icon: 'customer-service',
         path: '/train',
+        authority: ['admin'],
         component: './Exception/403',
       },
       //套餐产品
@@ -96,6 +101,7 @@ export default [
         name: 'package',
         icon: 'shop',
         path: '/package',
+        authority: ['admin'],
         component: './Exception/403',
       },
       //权限管理
@@ -103,6 +109,7 @@ export default [
         path: '/authority',
         name: 'authority',
         icon: 'profile',
+        authority: ['admin'],
         routes: [
           // profile
           {
@@ -128,6 +135,7 @@ export default [
         name: 'member',
         icon: 'user',
         path: '/member',
+        authority: ['organize_admin','principal'],
         component: './Exception/403',
       },
       //消息管理
@@ -143,6 +151,7 @@ export default [
         name: 'purchase',
         icon: 'heart',
         path: '/purchase',
+        authority: ['organize_admin','principal'],
         component: './Exception/403',
       },
       //统计报表
@@ -150,6 +159,7 @@ export default [
         name: 'statistics',
         icon: 'bar-chart',
         path: '/statistics',
+        authority: ['organize_admin','principal'],
         component: './Exception/403',
       },
     

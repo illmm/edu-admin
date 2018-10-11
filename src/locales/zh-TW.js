@@ -33,7 +33,7 @@ export default {
   'menu.authority.user':'用戶管理',
   'menu.authority.role':'角色管理',
   'menu.authority.menu':'菜單管理',
-  'menu.member': '成員管理',
+  'menu.member': '师生管理',
   'menu.message': '消息管理',
   'menu.purchase':'采購管理',
   'menu.statistics':'統計報表',

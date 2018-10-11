@@ -94,8 +94,8 @@ class Workplace extends PureComponent {
               ，祝你开心每一天！
             </div>
             <div>
-              {/* {currentUser.title} |{currentUser.group} */}
-              王府学校 | 管理员
+              {currentUser.organizationName} |{currentUser.roleName}
+              
             </div>
           </div>
         </div>
