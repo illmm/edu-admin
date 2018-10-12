@@ -1,12 +1,16 @@
 
-import { queryAgency,addAgency,removeAgency,updateAgency } from '@/services/agency';
+import { queryAgency,addAgency,removeAgency,updateAgency,queryAgencyInfo } from '@/services/agency';
 export default {
   namespace: 'agency',
   state: {
     data: {
       list: [],
       pagination: {},
-    },  
+    },
+    info: {
+      name:'',
+      logo:'',
+    }  
   },
   effects: {
     *fetch({ payload }, { call, put }){
@@ -39,6 +43,13 @@ export default {
       const response = yield call(updateAgency, payload);
       if (callback) callback(response);
     },
+    *info({ payload }, { call,put }) {
+      const response = yield call(queryAgencyInfo, payload);
+      yield put({
+        type:'savaAgencyInfo',
+        payload:response,
+      });
+    },
     
   },
   reducers: {
@@ -46,6 +57,12 @@ export default {
       return {
         ...state,
         data:action.payload.data,
+      };
+    },
+    savaAgencyInfo(state,action){
+      return {
+        ...state,
+        info:action.payload.data,
       };
     },
   },

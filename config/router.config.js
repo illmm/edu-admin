@@ -40,7 +40,7 @@ export default [
         authority: ['admin'],
       },
       {
-        path: '/agency/info',
+        path: '/agency/info/:id',
         name: 'agency.info',
         component: './Agency/Info',
         hideInMenu: true,

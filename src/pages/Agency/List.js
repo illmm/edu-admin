@@ -222,10 +222,7 @@ export default class AgencyList extends PureComponent{
       title: '操作',
       render: (text,record) => (
         <Fragment>
-          <a>编辑</a>
-          <Divider type="vertical" />
-          {/* <a>详细</a> */}
-          <Link to="/agency/info">详细</Link>
+          <Link to={`/agency/info/${record.key}`}>详情</Link>
         </Fragment>
       ),
     }
@@ -368,11 +365,11 @@ export default class AgencyList extends PureComponent{
             {selectedRows.length > 0 && (
               <span>
                 <Button onClick={this.handleDelete}>删除</Button>
-                <Dropdown overlay={menu}>
+                {/* <Dropdown overlay={menu}>
                   <Button>
                   更多<Icon type="down" />
                   </Button>
-                </Dropdown>
+                </Dropdown> */}
               </span>
             )}
             </div>

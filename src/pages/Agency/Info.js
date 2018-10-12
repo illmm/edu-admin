@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import { connect } from 'dva';
+import moment from 'moment';
 import {
   Button,
   Menu,
@@ -9,68 +10,118 @@ import {
   Icon,
   Row,
   Col,
-  Steps,
   Card,
-  Popover,
-  Badge,
-  Table,
-  Tooltip,
-  Divider,
+  Form,
+  Modal,
+  Transfer,
 } from 'antd';
-import classNames from 'classnames';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './info.less';
 
-const { Step } = Steps;
 const { Description } = DescriptionList;
 const ButtonGroup = Button.Group;
 
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
+const EditResource = Form.create()(props =>{
+  const { form,modalVisible,resourceTabKey,handleModalVisible,handleResourceTabChange } = props;
+  const okHandle = () => {
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      //form.resetFields();
+      //handleAdd(fieldsValue);
+    });
+  };
+  console.log(resourceTabKey);
+  const targetKeys = [];
+  const mockData = [];
+  for (let i = 0; i < 20; i++) {
+    const data = {
+      key: i.toString(),
+      title: `海外教材${i + 1}`,
+      description: `海外教材${i + 1}`,
+      chosen: Math.random() * 2 > 1,
+    };
+    if (data.chosen) {
+      targetKeys.push(data.key);
+    }
+    mockData.push(data);
+  }
+  const filterOption = (inputValue, option) => {
+    return option.description.indexOf(inputValue) > -1;
+  }
+  return(
+    <Modal
+      destroyOnClose
+      title="分配资源"
+      okText="完成"
+      visible={modalVisible}
+      onOk={okHandle}
+      width={900}
+      
+      onCancel={() => handleModalVisible()}
+    >
+     <Card
+        bordered={false}
+        className={styles.tabsCard}
+        tabList={classifyTabList}
+        onTabChange={handleResourceTabChange}
+        activeTabKey={resourceTabKey}
+        
+      >
+      <Transfer
+          dataSource={mockData}
+          showSearch
+          filterOption={filterOption}
+          targetKeys={targetKeys}
+          //onChange={this.handleChange}
+          listStyle={{
+            width: 376,
+            height: 400,
+          }}
+          titles={['资源库', '已分配']}
+          render={item => item.title}
+        />
+      </Card>
+      
+
+    </Modal>
+  );
+});
+
+
 const menu = (
   <Menu>
-    <Menu.Item key="1">通知</Menu.Item>
-    <Menu.Item key="2">成员</Menu.Item>
+    <Menu.Item key="1">新增联系人</Menu.Item>
+    <Menu.Item key="2">批量导入资源</Menu.Item>
+    <Menu.Item key="3">批量导入成员</Menu.Item>
   </Menu>
 );
 
-const action = (
-  <Fragment>
-    <ButtonGroup>
-      <Button>编辑</Button>
-      <Button>禁用</Button>
-      <Dropdown overlay={menu} placement="bottomRight">
-        <Button>
-          <Icon type="ellipsis" />
-        </Button>
-      </Dropdown>
-    </ButtonGroup>
-    <Button type="primary">资源管理</Button>
-  </Fragment>
-);
 
-const extra = (
+const agencyStatus = ["停止服务","服务中"];
+const extra = info => (
   <Row>
     <Col xs={24} sm={12}>
       <div className={styles.textSecondary}>状态</div>
-      <div className={styles.heading}>服务中</div>
+      <div className={styles.heading}>{agencyStatus[info.status]}</div>
     </Col>
     <Col xs={24} sm={12}>
       <div className={styles.textSecondary}>剩余天数</div>
-      <div className={styles.heading}>568天</div>
+      <div className={styles.heading}>{moment(info.endDate).diff(moment(), 'days')}天</div>
     </Col>
   </Row>
 );
 
-const description = (
+const description = info => (
   <DescriptionList className={styles.headerList} size="small" col="2">
-    <Description term="销售员">孟亚楠</Description>
-    <Description term="学生数量">100位</Description>
-    <Description term="创建时间">2017-07-07</Description>
-    <Description term="教师数量">10位</Description>
-    <Description term="服务起止日期">2017-07-07 ~ 2017-08-08</Description>
-    <Description term="描述">北京王府校区创建于1996年，自建校以来，树立国际化办学理念，率先引进英美课程体系</Description>
+    <Description term="销售员">{info.salesman}</Description>
+    <Description term="学生数量">{info.studentNum}位</Description>
+    <Description term="创建时间">{moment(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</Description>
+    <Description term="教师数量">{info.teacherNum}位</Description>
+    <Description term="服务起止日期">{moment(info.startDate).format('YYYY-MM-DD')}至{moment(info.endDate).format('YYYY-MM-DD')}</Description>
+    <Description term="描述">{info.description}</Description>
   </DescriptionList>
 );
 
@@ -82,77 +133,34 @@ const tabList = [
   
 ];
 
-const desc1 = (
-  <div className={classNames(styles.textSecondary, styles.stepDescription)}>
-    <Fragment>
-      曲丽丽
-      <Icon type="dingding-o" style={{ marginLeft: 8 }} />
-    </Fragment>
-    <div>2016-12-12 12:32</div>
-  </div>
-);
-
-const desc2 = (
-  <div className={styles.stepDescription}>
-    <Fragment>
-      周毛毛
-      <Icon type="dingding-o" style={{ color: '#00A0E9', marginLeft: 8 }} />
-    </Fragment>
-    <div>
-      <a href="">催一下</a>
-    </div>
-  </div>
-);
-
-const popoverContent = (
-  <div style={{ width: 160 }}>
-    吴加号
-    <span className={styles.textSecondary} style={{ float: 'right' }}>
-      <Badge status="default" text={<span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>未响应</span>} />
-    </span>
-    <div className={styles.textSecondary} style={{ marginTop: 4 }}>
-      耗时：2小时25分钟
-    </div>
-  </div>
-);
-
-const customDot = (dot, { status }) =>
-  status === 'process' ? (
-    <Popover placement="topLeft" arrowPointAtCenter content={popoverContent}>
-      {dot}
-    </Popover>
-  ) : (
-    dot
-  );
-
-const operationTabList = [
+const classifyTabList = [
   {
     key: 'tab1',
-    tab: '已购海外教材',
+    tab: '海外教材',
   },
   {
     key: 'tab2',
-    tab: '已购阅读世界',
+    tab: '阅读世界',
   },
   {
     key: 'tab3',
-    tab: '已购视频课程',
+    tab: '视频课程',
   },
   {
     key: 'tab4',
-    tab: '已购在线课程',
+    tab: '在线课程',
   },
   {
     key: 'tab5',
-    tab: '已购培训',
+    tab: '培训',
   },
   {
     key: 'tab6',
-    tab: '已购测评',
+    tab: '测评',
   },
   {
     key: 'tab7',
-    tab: '已购套餐',
+    tab: '套餐',
   },
 ];
 
@@ -181,20 +189,22 @@ const columns = [
   
 ];
 
-@connect(({ profile, loading }) => ({
-  profile,
-  loading: loading.effects['profile/fetchAdvanced'],
+@connect(({ agency, loading }) => ({
+  agency,
+  loading: loading.effects['agency/info'],
 }))
-class AdvancedProfile extends Component {
+@Form.create()
+class AgencyInfo extends Component {
   state = {
-    operationkey: 'tab1',
+    resourceTabKey: 'tab1',
     stepDirection: 'horizontal',
+    resourceModalVisible:false,
   };
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'profile/fetchAdvanced',
+      type: 'agency/info',
+      payload:this.props.match.params.id
     });
 
     this.setStepDirection();
@@ -207,7 +217,11 @@ class AdvancedProfile extends Component {
   }
 
   onOperationTabChange = key => {
-    this.setState({ operationkey: key });
+    //this.setState({ operationkey: key });
+  };
+  handleResourceTabChange = key => {
+    this.setState({ resourceTabKey: key });
+    console.log(this.state.resourceTabKey);
   };
 
   @Bind()
@@ -225,47 +239,71 @@ class AdvancedProfile extends Component {
       });
     }
   }
-
+  handleResourceModalVisible = flag => {
+    this.setState({
+      resourceModalVisible: !!flag,
+    });
+  };
   render() {
-    const { stepDirection, operationkey } = this.state;
-    const { profile, loading } = this.props;
-    const { advancedOperation1, advancedOperation2, advancedOperation3 } = profile;
+    const { resourceModalVisible } = this.state;
+    const { 
+      agency: {info},
+    } = this.props;
     const contentList = {
-      tab1: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation1}
-          columns={columns}
-        />
-      ),
-      tab2: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation2}
-          columns={columns}
-        />
-      ),
-      tab3: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation3}
-          columns={columns}
-        />
-      ),
+      // tab1: (
+      //   <Table
+      //     pagination={false}
+      //     loading={loading}
+      //     dataSource={}
+      //     columns={columns}
+      //   />
+      // ),
+      // tab2: (
+      //   <Table
+      //     pagination={false}
+      //     loading={loading}
+      //     dataSource={}
+      //     columns={columns}
+      //   />
+      // ),
+      // tab3: (
+      //   <Table
+      //     pagination={false}
+      //     loading={loading}
+      //     dataSource={}
+      //     columns={columns}
+      //   />
+      // ),
     };
+    const action = (
+      <Fragment>
+        <ButtonGroup>
+          <Button>编辑</Button>
+          <Dropdown overlay={menu} placement="bottomRight">
+            <Button>
+              <Icon type="ellipsis" />
+            </Button>
+          </Dropdown>
+        </ButtonGroup>
+        <Button type="primary" onClick={() => this.handleResourceModalVisible(true)}>资源管理</Button>
+      </Fragment>
+    );
 
+    const resourceProps = {
+      handleModalVisible: this.handleResourceModalVisible,
+      handleResourceTabChange:this.handleResourceTabChange,
+      resourceTabKey:this.state.resourceTabKey,
+
+    };
     return (
       <PageHeaderWrapper
-        title="机构名称：王府学校"
+        title={`机构名称：${info.name}`}
         logo={
-          <img alt="" src="http://www.brs.edu.cn/wp-content/uploads/2014/06/wangfu-logo-1.png" />
+          <img alt="" src={info.logo} />
         }
         action={action}
-        content={description}
-        extraContent={extra}
+        content={description(info)}
+        extraContent={extra(info)}
         tabList={tabList}
       >
         
@@ -285,13 +323,13 @@ class AdvancedProfile extends Component {
         </Card>
         
         <Card
-          style={{ marginBottom: 24 }} bordered={false}
+          style={{ marginBottom: 24 }}
           className={styles.tabsCard}
           bordered={false}
-          tabList={operationTabList}
+          tabList={classifyTabList}
           onTabChange={this.onOperationTabChange}
         >
-          {contentList[operationkey]}
+          {/* {contentList[resourceTabKey]} */}
         </Card>
         <Card title="客户近半年购买记录" style={{ marginBottom: 24 }} bordered={false}>
           <div className={styles.noData}>
@@ -299,9 +337,11 @@ class AdvancedProfile extends Component {
             暂无数据
           </div>
         </Card>
+        <EditResource modalVisible={resourceModalVisible} {...resourceProps}/>
       </PageHeaderWrapper>
+      
     );
   }
 }
 
-export default AdvancedProfile;
+export default AgencyInfo;
