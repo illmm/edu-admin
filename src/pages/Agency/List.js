@@ -15,7 +15,8 @@ import {
   Icon,
   DatePicker,
   message,
-  Select,
+  Menu,
+  Dropdown,
 } from 'antd';
 import Link from 'umi/link';
 import { getBase64 } from '@/utils/utils';
@@ -25,6 +26,7 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
+//Modal 布局
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -36,16 +38,17 @@ const formItemLayout = {
   },
   colon:false,
 };
-
+//新增机构组件
 const CreateForm = Form.create()(props => {
   const { form,modalVisible,handleModalVisible,handleAdd,handleUploadChange,imageUrl } = props;
+  //确认按钮
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       handleAdd(fieldsValue);
     });
   };
-
+  //上传按钮
   const uploadButton = (
     <div>
       <Icon type="plus" />
@@ -235,17 +238,16 @@ export default class AgencyList extends PureComponent{
       payload: {},
     });
   }
-    
+  //显示隐藏机构新增Modal
   handleModalVisible = flag => {
     this.setState({
       modalVisible: !!flag,
       imageUrl:null,
     });
   };  
+  //机构新增
   handleAdd = fields => {
     const { dispatch } = this.props;
-    // const { fileKey } = this.state;
-    // const formVals = { ...fields, fileKey };
     dispatch({
       type: 'agency/add',
       payload: {
@@ -262,6 +264,7 @@ export default class AgencyList extends PureComponent{
     });
     this.handleModalVisible();
   };
+  //重置表单及刷新列表
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -273,6 +276,7 @@ export default class AgencyList extends PureComponent{
       payload: {},
     });
   };
+  //上传LOGO变更事件
   handleUploadChange = (info) => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
@@ -288,12 +292,64 @@ export default class AgencyList extends PureComponent{
       }));
     }
   }
+  //列表选择事件
+  handleSelectRows = rows => {
+    this.setState({
+      selectedRows: rows,
+    });
+  };
+  //更多菜单事件
+  handleMenuClick = e => {
+    switch (e.key) {
+      case 'more':
+        break;
+      default:
+        break;
+    }
+  };
+  //删除机构
+  handleDelete = () => {
+    const { selectedRows } = this.state;
+    Modal.confirm({
+      title: '删除机构',
+      content: `确认删除选择的${selectedRows.length}个机构吗?`,
+      centered:true,
+      onOk: () => {
+        const { dispatch } = this.props;
+        if (!selectedRows) return;
+        dispatch({
+          type: 'agency/remove',
+          payload: {
+            key: selectedRows.map(row => row.key),
+          },
+          callback: ( _ = res => {
+            if(res.success){
+              message.success('删除机构成功');
+              this.handleFormReset();
+            }else{
+              message.error(res.msg);
+            }
+            this.setState({
+              selectedRows: [],
+            });
+          }),
+        });
+      },
+    });
+    
+
+  }
   render(){
     const {
       agency: { data },
       loading,
     } = this.props;
     const { selectedRows,modalVisible,imageUrl } = this.state;
+    const menu = (
+      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+        <Menu.Item key="more">更多</Menu.Item>
+      </Menu>
+    );
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
@@ -309,12 +365,23 @@ export default class AgencyList extends PureComponent{
             <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
               新建机构
             </Button>
+            {selectedRows.length > 0 && (
+              <span>
+                <Button onClick={this.handleDelete}>删除</Button>
+                <Dropdown overlay={menu}>
+                  <Button>
+                  更多<Icon type="down" />
+                  </Button>
+                </Dropdown>
+              </span>
+            )}
             </div>
             <StandardTable
               selectedRows={selectedRows}
               data={data}
               loading={loading}
               columns={this.columns}
+              onSelectRow={this.handleSelectRows}
             />
           </div>
         </Card>

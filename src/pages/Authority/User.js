@@ -163,20 +163,6 @@ class UpdateForm extends PureComponent {
     });
   };
   
-
-  backward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep - 1,
-    });
-  };
-
-  forward = () => {
-    const { currentStep } = this.state;
-    this.setState({
-      currentStep: currentStep + 1,
-    });
-  };
   changeStatus = (value) => {
     
     this.setState({
@@ -202,17 +188,6 @@ class UpdateForm extends PureComponent {
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.account'})}>
           {formVals.account}
         </FormItem>
-        {/* <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="机构">
-          {form.getFieldDecorator('organizeId', {
-          
-            initialValue:formVals.organizeId,
-            rules: [{ required: true, message: '请选择机构！' }],
-        })(
-          <Select placeholder="请选择" style={{ width: '100%' }}>
-            {getOrganizationOption()}
-          </Select>
-        )}
-        </FormItem> */}
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.role'})}>
           {form.getFieldDecorator('roleId', {
             initialValue: formVals.roleId,
@@ -234,7 +209,6 @@ class UpdateForm extends PureComponent {
             ],
           })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
         </FormItem>
-        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.phone'})}>
           {form.getFieldDecorator('phone', {
             initialValue: formVals.phone,
@@ -264,14 +238,12 @@ class UpdateForm extends PureComponent {
           })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.status'})}>
-       
           <Switch 
               unCheckedChildren = {formatMessage({id:'app.authority.user.disable'})}
               defaultChecked = {formVals.status}  
               checkedChildren = {formatMessage({id:'app.authority.user.enable'})}
               onChange={checked => this.changeStatus(checked)}
             />
-          
         </FormItem>
       </Modal>
     );

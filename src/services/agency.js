@@ -12,3 +12,19 @@ export async function addAgency(params) {
     },
   });
 }
+export async function removeAgency(params) {
+  return request('/api/organization', {
+    method: 'DELETE',
+    body: {
+      ...params
+    },
+  });
+}
+export async function updateAgency(params) {
+  return request('/api/organization', {
+    method: 'PUT',
+    body: {
+      ...params
+    },
+  });
+}

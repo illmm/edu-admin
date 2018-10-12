@@ -1,5 +1,5 @@
 
-import { queryAgency,addAgency } from '@/services/agency';
+import { queryAgency,addAgency,removeAgency,updateAgency } from '@/services/agency';
 export default {
   namespace: 'agency',
   state: {
@@ -17,7 +17,6 @@ export default {
       });
     },
     *add({ payload,callback }, { call }){
-
       const vals = {
         name:payload.name,
         code:payload.code,
@@ -30,6 +29,14 @@ export default {
         description:payload.description,
       }
       const response = yield call(addAgency,vals);
+      if (callback) callback(response);
+    },
+    *remove({ payload, callback }, { call }) {
+      const response = yield call(removeAgency, payload);
+      if (callback) callback(response);
+    },
+    *update({ payload, callback }, { call }) {
+      const response = yield call(updateAgency, payload);
       if (callback) callback(response);
     },
     
