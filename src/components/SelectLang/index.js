@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, setLocale, getLocale } from 'umi/locale';
+import { formatMessage, FormattedMessage, setLocale, getLocale } from 'umi/locale';
 import { Menu, Icon, Dropdown } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
@@ -24,13 +24,14 @@ export default class SelectLang extends PureComponent {
           <FormattedMessage id="lang.english" />
         </Menu.Item>
       </Menu>
-
     );
     return (
-      <Dropdown overlay={langMenu}>
-        <span className={classNames(styles.dropDown, className)}>
-          <FormattedMessage id="navBar.lang" /> <Icon type="down" />
-        </span>
+      <Dropdown overlay={langMenu} placement="bottomRight">
+        <Icon
+          type="global"
+          className={classNames(styles.dropDown, className)}
+          title={formatMessage({ id: 'navBar.lang' })}
+        />
       </Dropdown>
     );
   }
