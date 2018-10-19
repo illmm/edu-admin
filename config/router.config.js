@@ -72,21 +72,7 @@ export default [
         icon: 'book',
         name: 'material',
         authority: ['admin'],
-        routes: [
-          {
-            path: '/material/electron',
-            name: 'electron',
-            component: './Material/Electron',
-          },
-          {
-            path: '/material/world',
-            name: 'world',
-            component: './Material/World',
-          },
-          
-        ],
-
-       
+        component: './Material',
       },
       //培训管理
       {

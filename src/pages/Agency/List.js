@@ -6,7 +6,6 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { 
   Button,
   Card, 
-  Divider,
   Input,
   Form,
   Modal,
@@ -16,7 +15,6 @@ import {
   DatePicker,
   message,
   Menu,
-  Dropdown,
 } from 'antd';
 import Link from 'umi/link';
 import { getBase64 } from '@/utils/utils';
