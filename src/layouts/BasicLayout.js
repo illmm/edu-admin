@@ -12,7 +12,8 @@ import { formatMessage } from 'umi/locale';
 import SiderMenu from '@/components/SiderMenu';
 import Authorized from '@/utils/Authorized';
 import SettingDrawer from '@/components/SettingDrawer';
-import logo from '../assets/logo.svg';
+// import logo from '../assets/logo.svg';
+import logo from '../assets/logo.ico';
 import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
@@ -23,30 +24,28 @@ const { Content } = Layout;
 function formatter(data, parentAuthority, parentName) {
   return data
   .map(item => {
+    if (!item.name || !item.path) {
+      return null;
+    }
     let locale = 'menu';
-    if (parentName && item.name) {
+    if (parentName) {
       locale = `${parentName}.${item.name}`;
-    } else if (item.name) {
+    } else {
       locale = `menu.${item.name}`;
-    } else if (parentName) {
-      locale = parentName;
     }
-    if (item.path) {
-      const result = {
-        ...item,
-        locale,
-        authority: item.authority || parentAuthority,
-      };
-      if (item.routes) {
-        const children = formatter(item.routes, item.authority, locale);
-        // Reduce memory usage
-        result.children = children;
-      }
-      delete result.routes;
-      return result;
+    const result = {
+      ...item,
+      name: formatMessage({ id: locale, defaultMessage: item.name }),
+      locale,
+      authority: item.authority || parentAuthority,
+    };
+    if (item.routes) {
+      const children = formatter(item.routes, item.authority, locale);
+      // Reduce memory usage
+      result.children = children;
     }
-
-    return null;
+    delete result.routes;
+    return result;
   })
   .filter(item => item);
 
