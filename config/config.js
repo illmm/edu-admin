@@ -4,44 +4,53 @@ import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 
+const plugins = [
+  [
+    'umi-plugin-react',
+    {
+      antd: true,
+      dva: {
+        hmr: true,
+      },
+      targets: {
+        ie: 11,
+      },
+      locale: {
+        enable: true, // default false
+        default: 'zh-CN', // default zh-CN
+        baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
+      },
+      dynamicImport: {
+        loadingComponent: './components/PageLoading/index',
+      },
+      ...(!process.env.TEST && os.platform() === 'darwin'
+        ? {
+            dll: {
+              include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+              exclude: ['@babel/runtime'],
+            },
+            hardSource: true,
+          }
+        : {}),
+    },
+  ],
+];
+
+// judge add ga
+if (process.env.APP_TYPE === 'site') {
+  plugins.push([
+    'umi-plugin-ga',
+    {
+      code: 'UA-126457224-1',
+    },
+  ]);
+}
+
+
+
 export default {
   // add for transfer to umi
-  plugins: [
-    [
-      'umi-plugin-react',
-      {
-        antd: true,
-        dva: {
-          hmr: true,
-        },
-        locale: {
-          enable: true, // default false
-          default: 'zh-CN', // default zh-CN
-          baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
-        },
-        dynamicImport: {
-          loadingComponent: './components/PageLoading/index',
-        },
-        ...(!process.env.TEST && os.platform() === 'darwin'
-          ? {
-              dll: {
-                include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-                exclude: ['@babel/runtime'],
-              },
-              hardSource: true,
-            }
-          : {}),
-      },
-    ],
-    [
-      'umi-plugin-ga',
-      {
-        code: 'UA-126457224-1',
-        judge: () => process.env.APP_TYPE === 'site',
-      },
-    ],
-
-  ],
+  plugins,
   targets: {
     ie: 11,
   },
@@ -50,13 +59,17 @@ export default {
   },
   // 路由配置
   routes: pageRoutes,
-  // Theme for antd
-  // https://ant.design/docs/react/customize-theme-cn
+  
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
   externals: {
     '@antv/data-set': 'DataSet',
+  },
+  proxy: {
+    '/api': {
+      target: 'http://192.168.1.154:8999'
+    }
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
@@ -86,28 +99,14 @@ export default {
     },
   },
   manifest: {
-    name: 'cnpeducation',
-    background_color: '#FFF',
-    description: 'An out-of-box UI solution for enterprise applications as a React boilerplate.',
-    display: 'standalone',
-    start_url: '/index.html',
-    icons: [
-      {
-        src: '/favicon.png',
-        sizes: '48x48',
-        type: 'image/png',
-      },
-    ],
+    basePath: '/',
   },
 
   chainWebpack: webpackPlugin,
-  cssnano: {
-    mergeRules: false,
-  },
-  proxy: {
-    '/api': {
-      target: 'http://192.168.1.154:8999'
-    }
-  },
-
+  
 };
+
+
+
+
+  
