@@ -82,6 +82,11 @@ const CreateForm = Form.create()(props => {
             {
               required: true,
               message: '请输入机构名称'
+            },
+            {
+              min:2,
+              max:20,
+              message:'必须为2-20位'
             }
           ]
         })(<Input placeholder="请输入机构名称"/>)}
@@ -92,6 +97,14 @@ const CreateForm = Form.create()(props => {
             {
               required: true,
               message: '请输入机构编号'
+            },
+            {
+              max:8,
+              message:'必须为1-8位'
+            },
+            {
+              pattern:/^[a-z]+$/,
+              message: '必须为字母'
             }
           ]
         })(<Input placeholder="请输入机构编号"/>)}
@@ -104,7 +117,7 @@ const CreateForm = Form.create()(props => {
               message: '请输入教师数量'
             }
           ]
-        })(<InputNumber min={1} placeholder="数量"/>)}
+        })(<InputNumber min={1} max={9999} placeholder="数量"/>)}
       </FormItem>
       <FormItem {...formItemLayout} label="学生数量">
         {form.getFieldDecorator('studentNum',{
@@ -114,7 +127,7 @@ const CreateForm = Form.create()(props => {
               message: '请输入学生数量'
             }
           ]
-        })(<InputNumber min={1} placeholder="数量" />)}
+        })(<InputNumber min={1} max={9999} placeholder="数量" />)}
       </FormItem>
       <FormItem {...formItemLayout} label="销售人员">
         {form.getFieldDecorator('salesman',{
@@ -122,6 +135,10 @@ const CreateForm = Form.create()(props => {
             {
               required: true,
               message: '请选择销售人员'
+            },
+            {
+              max:10,
+              message:'长度不能超过10位'
             }
           ]
         })( <Input/>)}
@@ -164,6 +181,10 @@ const CreateForm = Form.create()(props => {
             {
               required: true,
               message: '请输机构描述'
+            },
+            {
+              max:500,
+              message:'长度不能超过500位'
             }
           ]
         })(<TextArea rows={4} />)}
