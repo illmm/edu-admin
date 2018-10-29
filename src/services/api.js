@@ -7,6 +7,11 @@ export async function fakeAccountLogin(params) {
     method: 'POST'
   });
 }
+/* 获取七牛上传token */
+export async function getQiniuToken() {
+  return request('/api/qiniu/token');
+  
+}
 /* 查询消息*/
 export async function queryNotices() {
   return request('/api/notices');
