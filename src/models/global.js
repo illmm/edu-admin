@@ -1,4 +1,4 @@
-import { queryNotices } from '@/services/api';
+import { queryNotices, getQiniuToken } from '@/services/api';
 import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user';
 export default {
   namespace: 'global',
@@ -12,6 +12,10 @@ export default {
   },
 
   effects: {
+    *getQiniuToekn({ callback },{ call }){
+      const response = yield call(getQiniuToken);
+      if(callback) callback(response)
+    },
     *fetchNotices(_, { call, put }) {
       const data = yield call(queryNotices);
       yield put({

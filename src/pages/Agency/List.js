@@ -38,8 +38,11 @@ const formItemLayout = {
 };
 //新增机构组件
 const CreateForm = Form.create()(props => {
-  const { form,modalVisible,handleModalVisible,handleAdd,handleUploadChange,imageUrl } = props;
+  const { form,modalVisible,handleModalVisible,handleAdd,handleUploadChange,imageUrl,qiniuToken } = props;
   //确认按钮
+  const data = {
+    token: qiniuToken
+  }
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -53,9 +56,7 @@ const CreateForm = Form.create()(props => {
       <div className="ant-upload-text">上传</div>
     </div>
   );
-  const data = {
-    token:'3szjMYDo-XNVHEhC286FNpKeLLHyGn916Bo8NcnV:puRbfwz_NMTLM4_6ejNwlxpvc0g=:eyJzY29wZSI6InN0YXRpYyIsImRlYWRsaW5lIjoxNTM5MjUwNjAyfQ=='
-  }
+  
   const beforeUpload = file => {
     const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' ;
     if (!isJPG) {
@@ -65,6 +66,7 @@ const CreateForm = Form.create()(props => {
     if (!isLt2M) {
       message.error('图像必须小于2MB！');
     }
+
     return isJPG && isLt2M;
   }
   return(
@@ -256,6 +258,19 @@ export default class AgencyList extends PureComponent{
   }
   //显示隐藏机构新增Modal
   handleModalVisible = flag => {
+    if(flag){
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'global/getQiniuToekn',
+        callback: _ = res => {
+          console.log(res);
+         
+          this.setState({
+            qiniuToken: res.data.token
+          })
+        }
+      });
+    }
     this.setState({
       modalVisible: !!flag,
       imageUrl:null,
@@ -360,17 +375,19 @@ export default class AgencyList extends PureComponent{
       agency: { data },
       loading,
     } = this.props;
-    const { selectedRows,modalVisible,imageUrl } = this.state;
+    const { selectedRows,modalVisible,imageUrl,qiniuToken } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="more">更多</Menu.Item>
       </Menu>
     );
+   
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
       handleUploadChange: this.handleUploadChange,
       imageUrl:imageUrl,
+      qiniuToken:qiniuToken,
     };
     return(
       <PageHeaderWrapper>
