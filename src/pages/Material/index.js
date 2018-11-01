@@ -1,4 +1,5 @@
 import React, { PureComponent,Fragment } from 'react';
+import { FormattedNumber } from 'react-intl'
 import StandardTable from '@/components/StandardTable';
 import { formatMessage } from 'umi/locale';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -63,9 +64,7 @@ class UpdateForm extends PureComponent {
     function filter(inputValue, path) {
       return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
     }
-    const children = [];
-    console.log(tags);
-    tags.map(item => <Option key="${item.id}">${item.name}</Option>)
+
     
     function handleChange(value) {
       // console.log(`selected ${value}`);
@@ -157,6 +156,10 @@ class UpdateForm extends PureComponent {
               { 
                 required: true, 
                 message: '请输入商城URL'
+              },
+              {
+                type:'url',
+                message: 'URL格式不正确'
               }
             ],
           })(<Input />)}
@@ -253,6 +256,9 @@ export default class MaterialList extends React.Component{
     {
       title: '价格',
       dataIndex: 'listprice',
+      render(val){
+        return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+      }
     },
     {
       title: '状态',

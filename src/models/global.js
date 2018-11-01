@@ -10,6 +10,7 @@ export default {
     organization: [],
     role: [],
     currentUser: {},
+    tags: [],
   
   },
 
