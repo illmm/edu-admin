@@ -1,5 +1,6 @@
-import { queryNotices, getQiniuToken } from '@/services/api';
-import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user';
+import { queryNotices, getQiniuToken, getClassify, getTags } from '@/services/api'
+import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user'
+
 export default {
   namespace: 'global',
 
@@ -9,9 +10,25 @@ export default {
     organization: [],
     role: [],
     currentUser: {},
+  
   },
 
   effects: {
+    *getTags(_,{ call, put }){
+      const response = yield call(getTags);
+      yield put({
+        type: 'saveTags',
+        payload: response,
+      });
+    },
+    *getClassify({ payload },{ call, put }){
+      const response = yield call(getClassify,payload);
+      yield put({
+        type:'saveClassify',
+        payload:response,
+      });
+      
+    },
     *getQiniuToekn({ callback },{ call }){
       const response = yield call(getQiniuToken);
       if(callback) callback(response)
@@ -45,7 +62,7 @@ export default {
       });
       const response = yield call(queryOrganization);
       yield put({
-        type: 'setOrganization',
+        type: 'saveOrganization',
         payload: response,
       });
       yield put({
@@ -65,7 +82,7 @@ export default {
       const response = yield call(queryRole);
      
       yield put({
-        type: 'setRole',
+        type: 'saveRole',
         payload: response,
       });
       yield put({
@@ -101,16 +118,28 @@ export default {
         notices: state.notices.filter(item => item.type !== payload),
       };
     },
-    setOrganization(state, action) {
+    saveOrganization(state, action) {
       return {
         ...state,
         organization: action.payload.data,
       };
     },
-    setRole(state, action) {
+    saveRole(state, action) {
       return {
         ...state,
         role: action.payload.data,
+      };
+    },
+    saveClassify(state, action) {
+      return {
+        ...state,
+        classify: action.payload,
+      };
+    },
+    saveTags(state, action){
+      return {
+        ...state,
+        tags: action.payload.data,
       };
     },
     changeLoading(state, action) {

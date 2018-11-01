@@ -20,12 +20,14 @@ import {
   Switch,
   InputNumber,
   Upload,
+  Badge,
 } from 'antd';
 import styles from './index.less';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const statusMap = [ 'error','success'];
+const status = ["未发布","已发布"];
 @Form.create()
 class UpdateForm extends PureComponent {
   constructor(props) {
@@ -51,63 +53,22 @@ class UpdateForm extends PureComponent {
   
   
   render() {
-    const { form, updateModalVisible,handleUpdateModalVisible,handleUploadChange,imageUrl } = this.props;
-
-    const options = [{
-      value: '三到六岁',
-      label: '三到六岁',
-      children: [{
-        value: '数学',
-        label: '数学',
-      }],
-    }, {
-      value: '六到九岁',
-      label: '六到九岁',
-      children: [{
-        value: 'ACCA',
-        label: 'ACCA',
-      }],
-    },
-    {
-      value: '九到十二岁',
-      label: '九到十二岁',
-      children: [{
-        value: '语文',
-        label: '语文',
-        children: [{
-          value: '政治',
-          label: '政治',
-        }],
-      }],
-    },
-    {
-      value: '十二到十五岁',
-      label: '十二到十五岁',
-      children: [{
-        value: '语文',
-        label: '语文',
-        children: [{
-          value: '政治',
-          label: '政治',
-        }],
-      }],
-    }];
+    const { form, updateModalVisible, handleUpdateModalVisible, handleUploadChange,
+            imageUrl, classify, tags, handleTypeChange } = this.props;
+    
     function onChange(value, selectedOptions) {
-      console.log(value, selectedOptions);
+      //console.log(value, selectedOptions);
     }
     
     function filter(inputValue, path) {
       return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
     }
     const children = [];
+    console.log(tags);
+    tags.map(item => <Option key="${item.id}">${item.name}</Option>)
     
-    children.push(<Option key="ap">ap</Option>);
-    children.push(<Option key="IBM">IBM</Option>);
-    children.push(<Option key="ACCA">ACCA</Option>);
-    children.push(<Option key="其他">其他</Option>);
-
     function handleChange(value) {
-      console.log(`selected ${value}`);
+      // console.log(`selected ${value}`);
     }
     const uploadButton = (
       <div>
@@ -142,7 +103,7 @@ class UpdateForm extends PureComponent {
        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
           {form.getFieldDecorator('type', {
-            initialValue:"",
+            valuePropName:'check',
             rules: [
               { 
                 required: true, 
@@ -150,7 +111,7 @@ class UpdateForm extends PureComponent {
               }
             ],
           })(
-            <Radio.Group  buttonStyle="solid">
+            <Radio.Group defaultValue="3" buttonStyle="solid" onChange={handleTypeChange}>
               <Radio.Button value="3">海外教材</Radio.Button>
               <Radio.Button value="4">阅读世界</Radio.Button>
             </Radio.Group>
@@ -166,7 +127,7 @@ class UpdateForm extends PureComponent {
             ],
           })(<Cascader 
               style={{width:'100%'}}
-              options={options}     
+              options={classify}     
               onChange={onChange}
               placeholder="请选择分类" 
               showSearch={{ filter }}
@@ -187,7 +148,7 @@ class UpdateForm extends PureComponent {
                 placeholder="选择标签"
                 onChange={handleChange}
               >
-                {children}
+                {tags.map(item => <Option key={item.id}>{item.name}</Option>)}
               </Select>)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商城URL">
@@ -260,7 +221,8 @@ class UpdateForm extends PureComponent {
   }
 }
 
-@connect(({ material,loading }) => ({
+@connect(({ global,material,loading }) => ({
+  global,
   material,
   loading: loading.models.material,
 }))
@@ -270,7 +232,7 @@ export default class MaterialList extends React.Component{
     selectedRows: [],
     updateModalVisible:false,
   }
-
+  
   columns = [
     {
       title: 'ISBN',
@@ -293,6 +255,23 @@ export default class MaterialList extends React.Component{
       dataIndex: 'listprice',
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      filters: [
+        {
+          text: status[0],
+          value: 0,
+        },
+        {
+          text: status[1],
+          value: 1,
+        },
+      ],
+      render(val) {
+        return <Badge status={statusMap[val]} text={status[val]} />;
+      },
+    },
+    {
       title: '操作',
       render: (text,record) => (
         <Fragment>
@@ -311,6 +290,14 @@ export default class MaterialList extends React.Component{
       type: 'material/fetch',
       payload: {},
     });
+    dispatch({
+      type: 'global/getClassify',
+      payload: { type:3 },
+    });
+    dispatch({
+      type: 'global/getTags',
+  
+    });
   }
   //列表选择事件
   handleSelectRows = rows => {
@@ -320,10 +307,13 @@ export default class MaterialList extends React.Component{
   };
 
   handleUpdateModalVisible = (flag, record) => {  
-    console.log(record);
+    let key = {};
+    if(flag){
+      key = record.key 
+    }
     this.setState({
       updateModalVisible: !!flag,
-      editId:record.key || {},
+      editId:key,
     });
   };
 
@@ -362,12 +352,21 @@ export default class MaterialList extends React.Component{
       }));
     }
   }
+  handleTypeChange = (e) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'global/getClassify',
+      payload: { type:e.target.value },
+    });
+  }
   
   render(){
     const {
+      global: { classify,tags },
       material: { data },
       loading,
     } = this.props;
+   
     const { selectedRows,updateModalVisible,editId } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
@@ -379,6 +378,9 @@ export default class MaterialList extends React.Component{
       handleUpdate: this.handleUpdate,
       handleUploadChange:this.handleUploadChange,
       imageUrl:this.state.imageUrl,
+      classify:classify,
+      tags:tags,
+      handleTypeChange:this.handleTypeChange,
     };
     return(
       <PageHeaderWrapper>

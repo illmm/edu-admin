@@ -1,7 +1,7 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
-/* 用户登录*/
+/* 用户登录 */
 export async function fakeAccountLogin(params) {
   return request(`/api/user/login?${stringify(params)}`, {
     method: 'POST'
@@ -12,7 +12,19 @@ export async function getQiniuToken() {
   return request('/api/qiniu/token');
   
 }
-/* 查询消息*/
+/* 获取分类 */
+export async function getClassify(params){
+  return request(`/api/classify?${stringify(params)}`);
+}
+
+/* 获取标签 */
+export async function getTags() {
+  return request('/api/front/common/tags');
+}
+
+
+
+/* 查询消息 */
 export async function queryNotices() {
   return request('/api/notices');
 }

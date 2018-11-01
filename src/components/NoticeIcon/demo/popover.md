@@ -49,6 +49,8 @@ const data = [{
   description: '描述信息描述信息描述信息',
   datetime: '2017-08-07',
   type: '消息',
+  clickClose: true,
+
 }, {
   id: '000000007',
   avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
@@ -56,6 +58,8 @@ const data = [{
   description: '这种模板用于提醒谁与你发生了互动，左侧放『谁』的头像',
   datetime: '2017-08-07',
   type: '消息',
+  clickClose: true,
+
 }, {
   id: '000000008',
   avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
@@ -63,6 +67,7 @@ const data = [{
   description: '这种模板用于提醒谁与你发生了互动，左侧放『谁』的头像',
   datetime: '2017-08-07',
   type: '消息',
+  clickClose: true,
 }, {
   id: '000000009',
   title: '任务名称',
