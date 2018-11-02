@@ -365,7 +365,64 @@ export default class MaterialList extends React.Component{
       payload: { type:e.target.value },
     });
   }
+  handlePutaway = () => {
+    const { selectedRows } = this.state;
+    Modal.confirm({
+      title: '上架',
+      content: `确认上架选择的${selectedRows.length}项吗？`,
+      centered:true,
+      onOk: () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'material/putaway',
+          payload: {
+            key: selectedRows.map(row => row.key)
+          },
+          callback: (_ = res =>{
+            if(res.success){
+              message.success('上架成功');
+              this.handleFormReset();
+            }else{
+              message.error(res.msg);
+            }
+            this.setState({
+              selectedRows: [],
+            });
+          })
+        });
+      }
+    });
+  }
   
+  handleSoldout = () => {
+    const { selectedRows } = this.state;
+    Modal.confirm({
+      title: '下架',
+      content: `确认下架选择的${selectedRows.length}项吗？`,
+      centered:true,
+      onOk: () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'material/soldout',
+          payload: {
+            key: selectedRows.map(row => row.key)
+          },
+          callback: (_ = res =>{
+            if(res.success){
+              message.success('下架成功');
+              this.handleFormReset();
+            }else{
+              message.error(res.msg);
+            }
+            this.setState({
+              selectedRows: [],
+            });
+          })
+        });
+      }
+    });
+  }
+
   render(){
     const {
       global: { classify,tags },
@@ -375,8 +432,8 @@ export default class MaterialList extends React.Component{
    
     const { selectedRows,updateModalVisible,editId } = this.state;
     const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="down">下架</Menu.Item>
+      <Menu>
+        <Menu.Item onClick={this.handleSoldout} key="down">下架</Menu.Item>
       </Menu>
     );
     const updateMethods = {
@@ -399,7 +456,7 @@ export default class MaterialList extends React.Component{
             </Button>
             {selectedRows.length > 0 && (
               <span>
-                <Button onClick={this.handleDelete}>上架</Button>
+                <Button onClick={this.handlePutaway}>上架</Button>
                 <Dropdown overlay={menu}>
                   <Button>
                   更多<Icon type="down" />

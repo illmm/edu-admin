@@ -1,5 +1,5 @@
 
-import { queryMaterial } from '@/services/material';
+import { queryMaterial, putaway, soldout } from '@/services/material';
 export default {
   namespace: 'material',
   state: {
@@ -10,6 +10,14 @@ export default {
      
   },
   effects: {
+    *putaway({ payload, callback },{ call }){
+      const response = yield call(putaway,payload);
+      if(callback) callback(response);
+    },
+    *soldout({ payload, callback },{ call }){
+      const response = yield call(soldout, payload);
+      if(callback) callback(response);
+    },
     *fetch({ payload }, { call, put }){
       const response = yield call(queryMaterial,payload);
       yield put({

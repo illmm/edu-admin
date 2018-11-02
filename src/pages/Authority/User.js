@@ -400,15 +400,15 @@ export default class TableList extends PureComponent {
   
   handleDelete = () => {
     const { selectedRows } = this.state;
+    if (!selectedRows) return;
     Modal.confirm({
       title: formatMessage({id:'app.delete'}),
       content: `${selectedRows.length}`+formatMessage({id:'app.authority.user.msg.delete'}),
       centered:true,
       onOk: () => {
+
         const { dispatch } = this.props;
         
-
-        if (!selectedRows) return;
         dispatch({
           type: 'users/remove',
           payload: {
