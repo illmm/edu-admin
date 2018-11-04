@@ -74,6 +74,14 @@ export default [
         authority: ['admin'],
         component: './Material',
       },
+      // 教材详细
+      {
+        path: '/material/info/:id',
+        name: 'material.info',
+        component: './Material/Info',
+        hideInMenu: true,
+        authority: ['admin'],
+      },
       //培训管理
       {
         name: 'train',

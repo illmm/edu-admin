@@ -105,17 +105,17 @@ class Workplace extends PureComponent {
       <div className={styles.extraContent}>
         <div className={styles.statItem}>
           <p>资源数</p>
-          <p>1556</p>
+          <p>{currentUser.resourceNum}</p>
         </div>
         <div className={styles.statItem}>
           <p>学生</p>
           <p>
-            88<span> / 100</span>
+            {currentUser.usedStudentNum}<span> / {currentUser.studentNum}</span>
           </p>
         </div>
         <div className={styles.statItem}>
           <p>教师</p>
-          <p> 7<span> / 10</span></p>
+          <p> {currentUser.usedTeacherNum}<span> / {currentUser.teacherNum}</span></p>
         </div>
       </div>
     );

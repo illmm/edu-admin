@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './info.less';
+import styles from './Info.less';
 
 const { Description } = DescriptionList;
 const ButtonGroup = Button.Group;

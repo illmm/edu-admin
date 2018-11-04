@@ -22,8 +22,9 @@ import {
   InputNumber,
   Upload,
   Badge,
+  message,
 } from 'antd';
-import styles from './index.less';
+import styles from './Index.less';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -182,7 +183,7 @@ class UpdateForm extends PureComponent {
                 message: '请输入促销价格'
               }
             ],
-          })(<InputNumber min={0.01} max={99999} style={{width:'50%'}}/>)}
+          })(<InputNumber min={0.01} precision={2} max={99999} style={{width:'50%'}}/>)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="封面">
           {form.getFieldDecorator('logo', {
@@ -289,7 +290,7 @@ export default class MaterialList extends React.Component{
       ),
     }
   ]
-
+  
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -311,7 +312,12 @@ export default class MaterialList extends React.Component{
       selectedRows: rows,
     });
   };
-
+  handleTableReset = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'material/fetch',
+    });
+  }
   handleUpdateModalVisible = (flag, record) => {  
     let key = {};
     if(flag){
@@ -333,7 +339,7 @@ export default class MaterialList extends React.Component{
       callback: (_ = res => {
         if(res.success){
           message.success(formatMessage({id:'app.authority.user.msg.success'}));
-          this.handleFormReset();
+          this.handleTableReset();
           
         }else{
           message.error(res.msg);
@@ -381,7 +387,7 @@ export default class MaterialList extends React.Component{
           callback: (_ = res =>{
             if(res.success){
               message.success('上架成功');
-              this.handleFormReset();
+              this.handleTableReset();
             }else{
               message.error(res.msg);
             }
@@ -410,7 +416,7 @@ export default class MaterialList extends React.Component{
           callback: (_ = res =>{
             if(res.success){
               message.success('下架成功');
-              this.handleFormReset();
+              this.handleTableReset();
             }else{
               message.error(res.msg);
             }
