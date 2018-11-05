@@ -23,6 +23,9 @@ import {
   Upload,
   Badge,
   message,
+  Alert,
+  Row,
+  Col,
 } from 'antd';
 import styles from './Index.less';
 
@@ -30,6 +33,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const statusMap = [ 'error','success'];
 const status = ["未发布","已发布"];
+
 @Form.create()
 class UpdateForm extends PureComponent {
   constructor(props) {
@@ -70,26 +74,9 @@ class UpdateForm extends PureComponent {
     function handleChange(value) {
       // console.log(`selected ${value}`);
     }
-    const uploadButton = (
-      <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">上传</div>
-      </div>
-    );
-    const data = {
-      token:'3szjMYDo-XNVHEhC286FNpKeLLHyGn916Bo8NcnV:puRbfwz_NMTLM4_6ejNwlxpvc0g=:eyJzY29wZSI6InN0YXRpYyIsImRlYWRsaW5lIjoxNTM5MjUwNjAyfQ=='
-    }
-    const beforeUpload = file => {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' ;
-      if (!isJPG) {
-        message.error('你只能上传JPG,PNG文件！');
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        message.error('图像必须小于2MB！');
-      }
-      return isJPG && isLt2M;
-    }
+    
+    
+    
     return (
       <Modal
         width={640}
@@ -103,13 +90,8 @@ class UpdateForm extends PureComponent {
        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
           {form.getFieldDecorator('type', {
+            initialValue:3,
             valuePropName:'check',
-            rules: [
-              { 
-                required: true, 
-                message: '请选择类型'
-              }
-            ],
           })(
             <Radio.Group defaultValue="3" buttonStyle="solid" onChange={handleTypeChange}>
               <Radio.Button value="3">海外教材</Radio.Button>
@@ -135,7 +117,7 @@ class UpdateForm extends PureComponent {
         </FormItem>
        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="标签">
-          {form.getFieldDecorator('isVoice', {
+          {form.getFieldDecorator('tags', {
             rules: [
               { 
                 required: true, 
@@ -154,10 +136,7 @@ class UpdateForm extends PureComponent {
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商城URL">
           {form.getFieldDecorator('shoppingUrl', {
             rules: [
-              { 
-                required: true, 
-                message: '请输入商城URL'
-              },
+              
               {
                 type:'url',
                 message: 'URL格式不正确'
@@ -166,58 +145,11 @@ class UpdateForm extends PureComponent {
           })(<Input />)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="蓝思值">
-          {form.getFieldDecorator('lexile', {
-            rules: [
-              { 
-                required: true, 
-                message: '请输入蓝思值'
-              }
-            ],
-          })(<InputNumber style={{width:'50%'}} />)}
+          {form.getFieldDecorator('lexile')(<InputNumber style={{width:'50%'}} />)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="促销价格">
-          {form.getFieldDecorator('price', {
-            rules: [
-              { 
-                required: true, 
-                message: '请输入促销价格'
-              }
-            ],
-          })(<InputNumber min={0.01} precision={2} max={99999} style={{width:'50%'}}/>)}
+          {form.getFieldDecorator('price')(<InputNumber min={0.01} precision={2} max={99999} style={{width:'50%'}}/>)}
         </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="封面">
-          {form.getFieldDecorator('logo', {
-            rules: [
-              { 
-                required: true, 
-                message: '请选择封面'
-              }
-            ],
-          })( <Upload
-            name="avatar"
-            listType="picture-card"
-            className={styles.uploadImage}
-            showUploadList={false}
-            action="//upload.qiniup.com"
-            beforeUpload={beforeUpload}
-            onChange={handleUploadChange}
-            name="file"
-            data={data}
-          >
-            {imageUrl ? <img src={imageUrl} className={styles.uploadImage} alt="avatar" /> : uploadButton}
-          </Upload>)}
-        </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="状态">
-          {form.getFieldDecorator('status', {
-            rules: [
-              { 
-                required: true, 
-                message: '状态'
-              }
-            ],
-          })( <Switch checkedChildren="上架" unCheckedChildren="下架" defaultChecked />)}
-        </FormItem>
-        
       </Modal>
       
     );
@@ -235,6 +167,7 @@ export default class MaterialList extends React.Component{
   state = {
     selectedRows: [],
     updateModalVisible:false,
+    perfectModalVisible:false,
   }
   
   columns = [
@@ -282,7 +215,8 @@ export default class MaterialList extends React.Component{
       title: '操作',
       render: (text,record) => (
         <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(true,record)}>完善</a>
+          { !record.type && <a onClick={() => this.handleUpdateModalVisible(true,record)}>完善</a> }
+          { record.type && <a onClick={() => this.handleUpdateModalVisible(true,record)}>编辑</a> }
           <Divider type="vertical" />
           <Link to={`/material/info/${record.key}`}>详细</Link>
         </Fragment>
@@ -328,17 +262,22 @@ export default class MaterialList extends React.Component{
       editId:key,
     });
   };
+  handlePerfectModalVisible = (flag) => {
+    this.setState({
+      perfectModalVisible: !!flag,
+    });
+  }
 
   handleUpdate = fields => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'users/update',
+      type: 'material/update',
       payload: {
         ...fields
       },
       callback: (_ = res => {
         if(res.success){
-          message.success(formatMessage({id:'app.authority.user.msg.success'}));
+          message.success("已完善");
           this.handleTableReset();
           
         }else{
@@ -428,15 +367,99 @@ export default class MaterialList extends React.Component{
       }
     });
   }
+  renderForm () {
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 3 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+      },
+      colon:false,
+    };
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
+            <FormItem {...formItemLayout} label="类型">
+              {getFieldDecorator('type')(
+                <Select allowClear={true} style={{ width: '100%' }}>
+                <Option value="3">海外教材</Option>
+                <Option value="4">阅读世界</Option>
+              </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem {...formItemLayout} label="教材状态">
+              {getFieldDecorator('title')(
+                <Select allowClear={true} style={{ width: '100%' }}>
+                  <Option value="1">已发布</Option>
+                  <Option value="0">未发布</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem {...formItemLayout} label="作者">
+              {getFieldDecorator('name')(
+                <Input style={{ width: '100%' }} />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
+            <FormItem {...formItemLayout} label="ISBN">
+              {getFieldDecorator('isbn')(
+                <Input style={{ width: '100%' }}  />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem {...formItemLayout} label="教材名称">
+              {getFieldDecorator('title')(
+                 <Input style={{ width: '100%' }}  />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem {...formItemLayout} label="出版社">
+              {getFieldDecorator('name')(
+                <Input style={{ width: '100%' }} />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <div style={{ overflow: 'hidden' }}>
+          <div style={{ float: 'right', marginBottom: 24 }}>
+            <Button type="primary" htmlType="submit">
+              {formatMessage({id: 'app.search'})}
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
+            {formatMessage({id: 'app.reset'})}
+            </Button>
+            
+          </div>
+        </div>
+      </Form>
+    );
+  }
 
   render(){
     const {
       global: { classify,tags },
       material: { data },
       loading,
+      form,
     } = this.props;
    
-    const { selectedRows,updateModalVisible,editId } = this.state;
+    const { selectedRows,updateModalVisible,editId,perfectModalVisible } = this.state;
     const menu = (
       <Menu>
         <Menu.Item onClick={this.handleSoldout} key="down">下架</Menu.Item>
@@ -451,14 +474,25 @@ export default class MaterialList extends React.Component{
       tags:tags,
       handleTypeChange:this.handleTypeChange,
     };
+    const beforeUpload = file => {
+      const isJPG = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      if (!isJPG) {
+        message.error('你只能上传.xlsx文件！');
+      }
+      const isLt2M = file.size / 1024 / 1024 < 20;
+      if (!isLt2M) {
+        message.error('Excel必须小于20MB！');
+      }
+      return isJPG && isLt2M;
+    }
     return(
       <PageHeaderWrapper>
         <Card>
           <div className={styles.tableList}>
-            <div className={styles.tableListForm}></div>
+            <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-              导入信息
+            <Button icon="edit" type="primary" onClick={() => this.handlePerfectModalVisible(true)}>
+              批量完善
             </Button>
             {selectedRows.length > 0 && (
               <span>
@@ -485,6 +519,53 @@ export default class MaterialList extends React.Component{
           updateModalVisible={updateModalVisible}
           editId={editId}
         />
+        <Modal
+          width={640}
+          bodyStyle={{ padding: '32px 40px 48px' }}
+          destroyOnClose
+          title="批量完善"
+          onCancel={() => this.handlePerfectModalVisible()}
+          //onOk={() => this.updateOkHandle()}
+          footer={null}
+          visible={perfectModalVisible}
+        >
+     
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="模板文件">
+              <a><Icon type="download" theme="outlined" />下载模板</a>
+        </FormItem>
+
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="Excel文件">
+          {form.getFieldDecorator('price', {
+            rules: [
+              { 
+                required: true, 
+                message: '请上传Excel'
+              }
+            ],
+          })(<Upload 
+              name= 'file'
+              action= '//upload.qiniup.com'
+              showUploadList={false}
+              beforeUpload={beforeUpload}
+              >
+                <Button>
+                  <Icon type="upload" /> 上传Excel 
+                </Button>
+            </Upload>)}
+        </FormItem>
+        <Alert
+          message="上传成功"
+          description="已完善成功教材107册，失败10册"
+          type="success"
+          showIcon
+        />
+        {/* <Alert
+          message="提示"
+          description="需按照模板格式要求组织数据."
+          type="info"
+          showIcon
+        /> */}
+        </Modal>
       </PageHeaderWrapper>
     ) 
   }

@@ -20,3 +20,11 @@ export async function soldout(params) {
     },
   });
 }
+export async function updateMaterial(params) {
+  return request('/api/textbook',{
+    method: 'PUT',
+    body: {
+      ...params
+    },
+  });
+}

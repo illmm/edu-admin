@@ -25,21 +25,27 @@ const extra = () => (
     </Col>
   </Row>
 );
- {/* <img style={{ width: 190 }} src="//static.cnpeducation.com/9780321739759.jpg" /> */}
-      
+     
 const description = () => (
    
-    
-        <DescriptionList  size="small" col="3">
-          <Description term="书号">9781305071711</Description>
-          <Description term="副标题">我是副标题</Description>
-          <Description term="书名">AP</Description>
-          <Description term="类型">海外教材</Description>
-          <Description term="分类">高中教育/数学/奥数</Description>
-          <Description term="电子书价格">￥59.00</Description>
-          <Description term="纸书价格">￥59.00</Description>
-          <Description term="促销价格">￥59.00</Description>
-        </DescriptionList>
+  <div className={styles.outer}>
+    <div className={styles.sidebar} >
+      <img src="//static.cnpeducation.com/9780321739759.jpg" />
+    </div>
+    <div className={styles.content} >
+      <DescriptionList  size="small" col="1">
+        <Description term="书号">9781305071711</Description>
+        <Description term="副标题">我是副标题</Description>
+        <Description term="书名">AP</Description>
+        <Description term="类型">海外教材</Description>
+        <Description term="分类">高中教育/数学/奥数</Description>
+        <Description term="电子书价格">￥59.00</Description>
+        <Description term="纸书价格">￥59.00</Description>
+        <Description term="促销价格">￥59.00</Description>
+      </DescriptionList>
+    </div>
+  </div>
+  
      
      
   
@@ -74,6 +80,7 @@ class MaterialInfo extends Component{
           },
         ]}
       >
+
         <Card>
           <DescriptionList style={{ marginBottom: 24 }}>
            
