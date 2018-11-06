@@ -207,7 +207,7 @@ export default class AgencyList extends PureComponent{
   state = {
     selectedRows: [],
     modalVisible: false,
-    uploading: false,
+    loading: false,
   }
 
   columns = [

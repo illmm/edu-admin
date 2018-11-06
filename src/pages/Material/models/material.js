@@ -1,5 +1,5 @@
 
-import { queryMaterial, putaway, soldout,updateMaterial } from '@/services/material';
+import { queryMaterial, putaway, soldout, updateMaterial, queryMaterialInfo, updateMaterialInfo } from '@/services/material';
 export default {
   namespace: 'material',
   state: {
@@ -29,6 +29,19 @@ export default {
       const response = yield call(updateMaterial,payload);
       if(callback) callback(response);
     },
+    *editInfo({ payload, callback},{ call }){
+      const response = yield call(updateMaterialInfo,payload);
+      if(callback) callback(response);
+    },
+    *info({ payload, callback },{ call, put }){
+      const response = yield call(queryMaterialInfo,payload);
+      yield put({
+        type: 'saveInfo',
+        payload: response,
+      })
+      if(callback) callback(response);
+    }
+
   },
   reducers: {
     save(state, action){
@@ -36,6 +49,12 @@ export default {
         ...state,
         data:action.payload.data,
       };
+    },
+    saveInfo(state, action){
+      return {
+        ...state,
+        data: action.payload.data,
+      }
     },
   },
 

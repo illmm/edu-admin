@@ -4,6 +4,7 @@ import StandardTable from '@/components/StandardTable';
 import { formatMessage } from 'umi/locale';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { connect } from 'dva';
+import { getAuthority } from '@/utils/authority';
 import Link from 'umi/link';
 import { 
   Card,
@@ -34,13 +35,16 @@ const Option = Select.Option;
 const statusMap = [ 'error','success'];
 const status = ["未发布","已发布"];
 
+//编辑组件
 @Form.create()
 class UpdateForm extends PureComponent {
   constructor(props) {
     super(props);
 
+    const { editId } = this.props;
     this.state = {
-      id: props.editId,
+      id: editId,
+      
     };
 
     this.formLayout = {
@@ -60,8 +64,8 @@ class UpdateForm extends PureComponent {
   
   render() {
     const { form, updateModalVisible, handleUpdateModalVisible, handleUploadChange,
-            imageUrl, classify, tags, handleTypeChange } = this.props;
-    
+            imageUrl, classify, tags, handleTypeChange, values } = this.props;
+    let defultVal = values.type || 3;
     function onChange(value, selectedOptions) {
       //console.log(value, selectedOptions);
     }
@@ -90,17 +94,18 @@ class UpdateForm extends PureComponent {
        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
           {form.getFieldDecorator('type', {
-            initialValue:3,
+            initialValue:values.type,
             valuePropName:'check',
           })(
-            <Radio.Group defaultValue="3" buttonStyle="solid" onChange={handleTypeChange}>
-              <Radio.Button value="3">海外教材</Radio.Button>
-              <Radio.Button value="4">阅读世界</Radio.Button>
+            <Radio.Group defaultValue={values.type} buttonStyle="solid" onChange={ handleTypeChange }>
+              <Radio  value={3}>海外教材</Radio>
+              <Radio  value={4}>阅读世界</Radio>
             </Radio.Group>
           )}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类">
-          {form.getFieldDecorator('threeClassifyId', {
+          {form.getFieldDecorator('classifyIds', {
+            initialValue:values.classifyIds,
             rules: [
               { 
                 required: true, 
@@ -117,11 +122,12 @@ class UpdateForm extends PureComponent {
         </FormItem>
        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="标签">
-          {form.getFieldDecorator('tags', {
+          {form.getFieldDecorator('tagsIds', {
+            initialValue:values.tagsIds,
             rules: [
               { 
                 required: true, 
-                message: '是否有音频'
+                message: '请选择标签'
               }
             ],
           })(<Select
@@ -135,6 +141,7 @@ class UpdateForm extends PureComponent {
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商城URL">
           {form.getFieldDecorator('shoppingUrl', {
+            initialValue:values.shoppingUrl,
             rules: [
               
               {
@@ -145,10 +152,10 @@ class UpdateForm extends PureComponent {
           })(<Input />)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="蓝思值">
-          {form.getFieldDecorator('lexile')(<InputNumber style={{width:'50%'}} />)}
+          {form.getFieldDecorator('lexile',{initialValue:values.lexile,})(<InputNumber style={{width:'50%'}} />)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="促销价格">
-          {form.getFieldDecorator('price')(<InputNumber min={0.01} precision={2} max={99999} style={{width:'50%'}}/>)}
+          {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0.01} precision={2} max={99999} style={{width:'50%'}}/>)}
         </FormItem>
       </Modal>
       
@@ -168,8 +175,11 @@ export default class MaterialList extends React.Component{
     selectedRows: [],
     updateModalVisible:false,
     perfectModalVisible:false,
+    uploadMsgType:'warning',
+    uploadMsgTitle:'注意事项',
+    uploadMsg:'需按照模板格式要求组织数据.',
   }
-  
+  // table 列名
   columns = [
     {
       title: 'ISBN',
@@ -240,40 +250,92 @@ export default class MaterialList extends React.Component{
   
     });
   }
-  //列表选择事件
+  //条件查询
+  handleSearch = e => {
+    e.preventDefault();
+
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      console.log(err);
+      if (err) return;
+      dispatch({
+        type: 'material/fetch',
+        payload: fieldsValue,
+      });
+    });
+  };
+  //重置查询表单
+  handleFormReset = () => {
+    const { form, dispatch } = this.props;
+    form.resetFields();
+    dispatch({
+      type: 'material/fetch',
+      payload: {},
+    });
+  };
+  //列表批量选择事件
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
+  //刷新table
   handleTableReset = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'material/fetch',
     });
   }
+  //编辑弹出框
   handleUpdateModalVisible = (flag, record) => {  
-    let key = {};
+    const { dispatch, form } = this.props;
+    let key = null;
     if(flag){
       key = record.key 
+      dispatch({
+        type: 'material/editInfo',
+        payload:key,
+        callback:(_ = res =>{
+          dispatch({
+            type: 'global/getClassify',
+            payload: { type:res.data.type },
+          });
+          this.setState({
+            FormValues:res.data,
+          });
+        })
+      })
+     
     }
     this.setState({
       updateModalVisible: !!flag,
       editId:key,
     });
+    
+    
+   
+    
+    
   };
+  //导入Excel批量完善
   handlePerfectModalVisible = (flag) => {
     this.setState({
       perfectModalVisible: !!flag,
     });
   }
-
+  //编辑完善
   handleUpdate = fields => {
     const { dispatch } = this.props;
+    const { editId} = this.state;
+    const values = {
+      ...fields,
+      id:editId,
+    };
     dispatch({
       type: 'material/update',
       payload: {
-        ...fields
+        ...values
       },
       callback: (_ = res => {
         if(res.success){
@@ -287,22 +349,8 @@ export default class MaterialList extends React.Component{
     });
     this.handleUpdateModalVisible();
   };
-
-  handleUploadChange = (info) => {
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
-      return;
-    }
-    if (info.file.status === 'done') {
-      this.setState({
-        fileKey:info.file.response.key,
-      });
-      getBase64(info.file.originFileObj, imageUrl => this.setState({
-        imageUrl,
-        loading: false,
-      }));
-    }
-  }
+  
+  //类别更改修改分类数据
   handleTypeChange = (e) => {
     const { dispatch } = this.props;
     dispatch({
@@ -310,6 +358,7 @@ export default class MaterialList extends React.Component{
       payload: { type:e.target.value },
     });
   }
+  //上架
   handlePutaway = () => {
     const { selectedRows } = this.state;
     Modal.confirm({
@@ -338,7 +387,7 @@ export default class MaterialList extends React.Component{
       }
     });
   }
-  
+  //下架
   handleSoldout = () => {
     const { selectedRows } = this.state;
     Modal.confirm({
@@ -367,6 +416,7 @@ export default class MaterialList extends React.Component{
       }
     });
   }
+  //查询表单渲染
   renderForm () {
     const {
       form: { getFieldDecorator },
@@ -397,7 +447,7 @@ export default class MaterialList extends React.Component{
           </Col>
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label="教材状态">
-              {getFieldDecorator('title')(
+              {getFieldDecorator('status')(
                 <Select allowClear={true} style={{ width: '100%' }}>
                   <Option value="1">已发布</Option>
                   <Option value="0">未发布</Option>
@@ -407,7 +457,7 @@ export default class MaterialList extends React.Component{
           </Col>
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label="作者">
-              {getFieldDecorator('name')(
+              {getFieldDecorator('author')(
                 <Input style={{ width: '100%' }} />
               )}
             </FormItem>
@@ -430,7 +480,7 @@ export default class MaterialList extends React.Component{
           </Col>
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label="出版社">
-              {getFieldDecorator('name')(
+              {getFieldDecorator('publisher')(
                 <Input style={{ width: '100%' }} />
               )}
             </FormItem>
@@ -450,7 +500,28 @@ export default class MaterialList extends React.Component{
       </Form>
     );
   }
+  //文件上传后处理事件
+  handleUploadChange = (info) => {
+    if (info.file.status === 'uploading') {
+      //this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+        const uploadMsgType = info.file.response.success ? 'success':'error';
+        const uploadMsgTitle = info.file.response.success ? '上传完成':'错误';
 
+        this.setState({
+          uploadMsgType,
+          uploadMsgTitle,
+          uploadMsg:info.file.response.msg,
+        })
+      
+      this.setState({
+        upMsg:info.file.response.data,
+      });
+      
+    }
+  }
   render(){
     const {
       global: { classify,tags },
@@ -459,7 +530,7 @@ export default class MaterialList extends React.Component{
       form,
     } = this.props;
    
-    const { selectedRows,updateModalVisible,editId,perfectModalVisible } = this.state;
+    const { selectedRows, updateModalVisible, editId, perfectModalVisible, FormValues } = this.state;
     const menu = (
       <Menu>
         <Menu.Item onClick={this.handleSoldout} key="down">下架</Menu.Item>
@@ -474,6 +545,7 @@ export default class MaterialList extends React.Component{
       tags:tags,
       handleTypeChange:this.handleTypeChange,
     };
+    const token = getAuthority('token');
     const beforeUpload = file => {
       const isJPG = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       if (!isJPG) {
@@ -514,11 +586,14 @@ export default class MaterialList extends React.Component{
             />
           </div>
         </Card>
+        {FormValues && Object.keys(FormValues).length ? (
         <UpdateForm
           {...updateMethods}
           updateModalVisible={updateModalVisible}
           editId={editId}
+          values={FormValues}
         />
+        ) : null}
         <Modal
           width={640}
           bodyStyle={{ padding: '32px 40px 48px' }}
@@ -529,34 +604,31 @@ export default class MaterialList extends React.Component{
           footer={null}
           visible={perfectModalVisible}
         >
-     
+       
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="模板文件">
-              <a><Icon type="download" theme="outlined" />下载模板</a>
+              <a href="https://static.cnpeducation.com/BookTemplate.xlsx"><Icon type="download" theme="outlined" />下载模板</a>
         </FormItem>
 
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="Excel文件">
-          {form.getFieldDecorator('price', {
-            rules: [
-              { 
-                required: true, 
-                message: '请上传Excel'
-              }
-            ],
-          })(<Upload 
+         <Upload 
               name= 'file'
-              action= '//upload.qiniup.com'
+              action= '/api/textbook/batchperfectinfo'
               showUploadList={false}
               beforeUpload={beforeUpload}
-              >
-                <Button>
-                  <Icon type="upload" /> 上传Excel 
-                </Button>
-            </Upload>)}
+              onChange={this.handleUploadChange}
+              headers={
+                {'Authorization':`Bearer ${token}`}
+              }
+            >
+            <Button>
+              <Icon type="upload" /> 上传Excel 
+            </Button>
+          </Upload>
         </FormItem>
         <Alert
-          message="上传成功"
-          description="已完善成功教材107册，失败10册"
-          type="success"
+          message={this.state.uploadMsgTitle}
+          description={this.state.uploadMsg}
+          type={this.state.uploadMsgType}
           showIcon
         />
         {/* <Alert
