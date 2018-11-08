@@ -1,11 +1,11 @@
 export default [
-  // user
+  // login
   {
-    path: '/user',
+    path: '/login',
     component: '../layouts/UserLayout',
     routes: [
-      { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', component: './User/Login' },
+      //{ path: '/user', redirect: '/user/login' },
+      { path: '/login', component: './User/Login' },
     ],
   },
   // app
@@ -51,7 +51,7 @@ export default [
         path: '/course',
         icon: 'video-camera',
         name: 'course',
-        authority: ['admin'],
+        authority: ['test'],
         routes: [
           {
             path: '/course/video',
@@ -87,7 +87,7 @@ export default [
         name: 'train',
         icon: 'customer-service',
         path: '/train',
-        authority: ['admin'],
+        authority: ['test'],
         component: './Exception/403',
       },
       //套餐产品
@@ -95,7 +95,7 @@ export default [
         name: 'package',
         icon: 'shop',
         path: '/package',
-        authority: ['admin'],
+        authority: ['test'],
         component: './Exception/403',
       },
       //权限管理
@@ -115,11 +115,13 @@ export default [
           {
             path: '/authority/role',
             name: 'role',
+            authority: ['test'],
             component: './Exception/403',
           },
           {
             path: '/authority/menu',
             name: 'menu',
+            authority: ['test'],
             component: './Exception/403',
           },
         ],
@@ -137,6 +139,7 @@ export default [
         name: 'message',
         icon: 'message',
         path: '/result',
+        authority: ['test'],
         component: './Exception/403',
        
       },
@@ -162,6 +165,7 @@ export default [
         name: 'settings',
         icon: 'setting',
         path: '/settings',
+        authority: ['test'],
         component: './Exception/403',
         
       },

@@ -8,8 +8,6 @@ export default {
       pagination: {},
     },
     info: {
-      name:'',
-      logo:'',
     }  
   },
   effects: {

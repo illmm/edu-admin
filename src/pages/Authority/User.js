@@ -151,6 +151,7 @@ class UpdateForm extends PureComponent {
       wrapperCol: { span: 13 },
     };
   }
+  //更新用户
   updateOkHandle = () => {
     const { form,handleUpdate} = this.props;
     const { formVals:oldVal } = this.state;
@@ -161,7 +162,7 @@ class UpdateForm extends PureComponent {
       handleUpdate(formVals);
     });
   };
-  
+  //修改用户状态state
   changeStatus = (value) => {
     
     this.setState({
@@ -768,7 +769,7 @@ export default class TableList extends PureComponent {
               data={data}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              //onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>

@@ -7,6 +7,9 @@ export default {
       list: [],
       pagination: {},
     },
+    info:{
+      classifyIds:[],
+    },
      
   },
   effects: {
@@ -53,7 +56,7 @@ export default {
     saveInfo(state, action){
       return {
         ...state,
-        data: action.payload.data,
+        info: action.payload.data,
       }
     },
   },

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
+
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -14,6 +15,9 @@ import {
   Form,
   Modal,
   Transfer,
+  Input,
+  Select,
+  AutoComplete,
 } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -21,11 +25,20 @@ import styles from './Info.less';
 
 const { Description } = DescriptionList;
 const ButtonGroup = Button.Group;
+const FormItem = Form.Item;
 
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
 const EditResource = Form.create()(props =>{
-  const { form,modalVisible,resourceTabKey,handleModalVisible,handleResourceTabChange } = props;
+  const { form: { getFieldDecorator },
+          modalVisible,
+          resourceTabKey,
+          handleModalVisible,
+          handleResourceTabChange,
+          dataSource, 
+          handleSourceSearch 
+        } = props;
+ 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -33,14 +46,15 @@ const EditResource = Form.create()(props =>{
       //handleAdd(fieldsValue);
     });
   };
-  console.log(resourceTabKey);
+
   const targetKeys = [];
   const mockData = [];
+
   for (let i = 0; i < 20; i++) {
     const data = {
       key: i.toString(),
-      title: `海外教材${i + 1}`,
-      description: `海外教材${i + 1}`,
+      title: `海外教材海外教${i + 1}`,
+      description: `9781305071735-海外教材海外教材海外教材海外教材海外教材${i + 1}-Cengage`,
       chosen: Math.random() * 2 > 1,
     };
     if (data.chosen) {
@@ -51,6 +65,19 @@ const EditResource = Form.create()(props =>{
   const filterOption = (inputValue, option) => {
     return option.description.indexOf(inputValue) > -1;
   }
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 18 },
+    },
+    colon:false,
+  };
+  
+  //const dataSource  = ['北京出版社','沈阳出版社']
   return(
     <Modal
       destroyOnClose
@@ -58,8 +85,7 @@ const EditResource = Form.create()(props =>{
       okText="完成"
       visible={modalVisible}
       onOk={okHandle}
-      width={900}
-      
+      width={950}
       onCancel={() => handleModalVisible()}
     >
      <Card
@@ -70,9 +96,53 @@ const EditResource = Form.create()(props =>{
         activeTabKey={resourceTabKey}
         
       >
+    <div className={styles.tableListForm}>
+     <Form layout="inline">
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={7} sm={24}>
+            <FormItem {...formItemLayout}  label="编号">
+              {getFieldDecorator('no')( 
+                <Input></Input>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={7} sm={24}>
+            <FormItem {...formItemLayout} label="标题">
+              {getFieldDecorator('title')(
+                <Input></Input>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={7} sm={24}>
+            <FormItem {...formItemLayout} label="来源">
+              {getFieldDecorator('source')(
+                <AutoComplete
+                  dataSource={dataSource}
+                  style={{ width: 200 }}
+                  // onSelect={onSelect}
+                  onSearch={handleSourceSearch}
+                  placeholder="来源"
+                />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={3} sm={24}>
+            <div style={{ overflow: 'hidden' }}>
+            <div style={{ float: 'right', marginBottom: 24 }}>
+              <Button type="primary" htmlType="submit">
+              查询
+              </Button>
+            </div>
+            </div>
+          </Col>
+        </Row>
+        
+        
+      </Form>
+      </div>
       <Transfer
           dataSource={mockData}
-          showSearch
+          //showSearch
           filterOption={filterOption}
           targetKeys={targetKeys}
           //onChange={this.handleChange}
@@ -128,7 +198,7 @@ const description = info => (
 const tabList = [
   {
     key: 'detail',
-    tab: '详情',
+    tab: '已购资源',
   },
   
 ];
@@ -244,8 +314,21 @@ class AgencyInfo extends Component {
       resourceModalVisible: !!flag,
     });
   };
+  handleSourceSearch = (value) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'global/queryAutoSource',
+      payload:{ name:value },
+      callback:(_ = res =>{
+        this.setState({
+          dataSource:res.data
+        });
+      })
+    })
+    
+  }
   render() {
-    const { resourceModalVisible } = this.state;
+    const { resourceModalVisible,dataSource } = this.state;
     const { 
       agency: {info},
     } = this.props;
@@ -293,6 +376,8 @@ class AgencyInfo extends Component {
       handleModalVisible: this.handleResourceModalVisible,
       handleResourceTabChange:this.handleResourceTabChange,
       resourceTabKey:this.state.resourceTabKey,
+      handleSourceSearch:this.handleSourceSearch,
+      dataSource:dataSource
 
     };
     return (
@@ -307,7 +392,7 @@ class AgencyInfo extends Component {
         tabList={tabList}
       >
         
-        <Card title="客户信息" style={{ marginBottom: 24 }} bordered={false}>
+        {/* <Card title="客户信息" style={{ marginBottom: 24 }} bordered={false}>
           <DescriptionList style={{ marginBottom: 24 }}>
             <Description term="联系人">李四</Description>
             <Description term="联系方式">18100000000</Description>
@@ -320,7 +405,7 @@ class AgencyInfo extends Component {
             <Description term="机构规模">大型</Description>
             <Description>&nbsp;</Description>
           </DescriptionList>
-        </Card>
+        </Card> */}
         
         <Card
           style={{ marginBottom: 24 }}
@@ -331,12 +416,12 @@ class AgencyInfo extends Component {
         >
           {/* {contentList[resourceTabKey]} */}
         </Card>
-        <Card title="客户近半年购买记录" style={{ marginBottom: 24 }} bordered={false}>
+        {/* <Card title="客户近半年购买记录" style={{ marginBottom: 24 }} bordered={false}>
           <div className={styles.noData}>
             <Icon type="frown-o" />
             暂无数据
           </div>
-        </Card>
+        </Card> */}
         <EditResource modalVisible={resourceModalVisible} {...resourceProps}/>
       </PageHeaderWrapper>
       

@@ -93,13 +93,13 @@ class UpdateForm extends PureComponent {
         >
        
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
-          {form.getFieldDecorator('type', {
+          {form.getFieldDecorator('type', { 
             initialValue:values.type,
             valuePropName:'check',
           })(
             <Radio.Group defaultValue={values.type} buttonStyle="solid" onChange={ handleTypeChange }>
-              <Radio  value={3}>海外教材</Radio>
-              <Radio  value={4}>阅读世界</Radio>
+              <Radio.Button value={3}>海外教材</Radio.Button>
+              <Radio.Button value={4}>阅读世界</Radio.Button>
             </Radio.Group>
           )}
         </FormItem>
@@ -155,7 +155,7 @@ class UpdateForm extends PureComponent {
           {form.getFieldDecorator('lexile',{initialValue:values.lexile,})(<InputNumber style={{width:'50%'}} />)}
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="促销价格">
-          {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0.01} precision={2} max={99999} style={{width:'50%'}}/>)}
+          {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0} precision={2} max={99999} style={{width:'50%'}}/>)}
         </FormItem>
       </Modal>
       
@@ -291,6 +291,9 @@ export default class MaterialList extends React.Component{
   handleUpdateModalVisible = (flag, record) => {  
     const { dispatch, form } = this.props;
     let key = null;
+    this.setState({
+      FormValues:{},
+    });
     if(flag){
       key = record.key 
       dispatch({

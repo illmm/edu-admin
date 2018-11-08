@@ -12,6 +12,10 @@ export async function getQiniuToken() {
   return request('/api/qiniu/token');
   
 }
+/* 来源自动完成 */
+export async function queryAutoSource(params) {
+  return request(`/api/option/source/name?${stringify(params)}`);
+}
 /* 获取分类 */
 export async function getClassify(params){
   return request(`/api/classify?${stringify(params)}`);

@@ -1,4 +1,4 @@
-import { queryNotices, getQiniuToken, getClassify, getTags } from '@/services/api'
+import { queryNotices, getQiniuToken, getClassify, getTags, queryAutoSource } from '@/services/api'
 import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user'
 
 export default {
@@ -98,6 +98,10 @@ export default {
         payload: response,
       });
     },
+    *queryAutoSource({ payload, callback },{ call }){
+      const response = yield call(queryAutoSource,payload);
+      if (callback) callback(response);
+    }
   },
 
   reducers: {

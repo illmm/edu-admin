@@ -20,8 +20,9 @@ export default {
     
   },
   effects: {
-    *login({ payload }, { call, put }) {
+    *login({ callback, payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+      if(callback) callback(response);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -49,7 +50,7 @@ export default {
     },
 
 
-    *logout(_, { put }) {
+    *logout(_, { call,put }) {
       yield put({
         type: 'changeLoginStatus',
         payload: {
@@ -59,9 +60,14 @@ export default {
         },
       });
       reloadAuthorized();
+      const response = yield call(queryGeetest);
+      yield put({
+        type: 'saveGeetest',
+        payload: response,
+      });
       yield put(
         routerRedux.push({
-          pathname: '/user/login',
+          pathname: '/login',
           search: stringify({
             redirect: window.location.href,
           }),
