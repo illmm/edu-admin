@@ -189,14 +189,14 @@ export default class MaterialList extends React.Component{
       title: '标题',
       dataIndex: 'title',
     },
-    {
-      title: '作者',
-      dataIndex: 'author',
-    },
-    {
-      title: '出版社',
-      dataIndex: 'publisher',
-    },
+    // {
+    //   title: '作者',
+    //   dataIndex: 'author',
+    // },
+    // {
+    //   title: '出版社',
+    //   dataIndex: 'publisher',
+    // },
     {
       title: '价格',
       dataIndex: 'listprice',

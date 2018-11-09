@@ -55,9 +55,6 @@ class Workplace extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'global/fetchCurrent',
-    });
-    dispatch({
       type: 'activities/fetchList',
     });
     dispatch({

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
-
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -30,41 +29,39 @@ const FormItem = Form.Item;
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
 const EditResource = Form.create()(props =>{
-  const { form: { getFieldDecorator },
-          modalVisible,
-          resourceTabKey,
-          handleModalVisible,
-          handleResourceTabChange,
-          dataSource, 
-          handleSourceSearch 
-        } = props;
- 
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      //form.resetFields();
-      //handleAdd(fieldsValue);
-    });
-  };
+  const { 
+    form,
+    form: { getFieldDecorator },
+    handleModalVisible,
+    handleResourceTabChange,
+    handleSelectResourceChange,
+    handleResourceChange,
+    handleSourceSearch,
+    handleResourceSearch,
+    dataSource, 
+    modalVisible,
+    resourceTabKey,
+    resourceData,
+    resourceTargetKeys,
+  } = props;
 
-  const targetKeys = [];
-  const mockData = [];
-
-  for (let i = 0; i < 20; i++) {
-    const data = {
-      key: i.toString(),
-      title: `海外教材海外教${i + 1}`,
-      description: `9781305071735-海外教材海外教材海外教材海外教材海外教材${i + 1}-Cengage`,
-      chosen: Math.random() * 2 > 1,
-    };
-    if (data.chosen) {
-      targetKeys.push(data.key);
-    }
-    mockData.push(data);
-  }
   const filterOption = (inputValue, option) => {
     return option.description.indexOf(inputValue) > -1;
   }
+  const handleSearch = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      console.log(fieldsValue);
+      if (err) return;
+      handleResourceSearch(fieldsValue)
+     
+    });
+  };
+  const handleTabChange = (key) => {
+    form.resetFields();
+    handleResourceTabChange(key);
+  }
+
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -77,31 +74,30 @@ const EditResource = Form.create()(props =>{
     colon:false,
   };
   
-  //const dataSource  = ['北京出版社','沈阳出版社']
   return(
     <Modal
       destroyOnClose
       title="分配资源"
       okText="完成"
       visible={modalVisible}
-      onOk={okHandle}
       width={950}
+      footer={null}
       onCancel={() => handleModalVisible()}
     >
      <Card
         bordered={false}
         className={styles.tabsCard}
         tabList={classifyTabList}
-        onTabChange={handleResourceTabChange}
+        onTabChange={handleTabChange}
         activeTabKey={resourceTabKey}
         
       >
     <div className={styles.tableListForm}>
-     <Form layout="inline">
+     <Form onSubmit={handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={7} sm={24}>
             <FormItem {...formItemLayout}  label="编号">
-              {getFieldDecorator('no')( 
+              {getFieldDecorator('number')( 
                 <Input></Input>
               )}
             </FormItem>
@@ -115,13 +111,12 @@ const EditResource = Form.create()(props =>{
           </Col>
           <Col md={7} sm={24}>
             <FormItem {...formItemLayout} label="来源">
-              {getFieldDecorator('source')(
+              {getFieldDecorator('sourceName')(
                 <AutoComplete
                   dataSource={dataSource}
                   style={{ width: 200 }}
                   // onSelect={onSelect}
                   onSearch={handleSourceSearch}
-                  placeholder="来源"
                 />
               )}
             </FormItem>
@@ -141,11 +136,11 @@ const EditResource = Form.create()(props =>{
       </Form>
       </div>
       <Transfer
-          dataSource={mockData}
-          //showSearch
+          dataSource={resourceData}
           filterOption={filterOption}
-          targetKeys={targetKeys}
-          //onChange={this.handleChange}
+          targetKeys={resourceTargetKeys}
+          onChange={handleResourceChange}
+          onSelectChange={handleSelectResourceChange}
           listStyle={{
             width: 376,
             height: 400,
@@ -154,8 +149,6 @@ const EditResource = Form.create()(props =>{
           render={item => item.title}
         />
       </Card>
-      
-
     </Modal>
   );
 });
@@ -163,7 +156,6 @@ const EditResource = Form.create()(props =>{
 
 const menu = (
   <Menu>
-    <Menu.Item key="1">新增联系人</Menu.Item>
     <Menu.Item key="2">批量导入资源</Menu.Item>
     <Menu.Item key="3">批量导入成员</Menu.Item>
   </Menu>
@@ -205,32 +197,24 @@ const tabList = [
 
 const classifyTabList = [
   {
-    key: 'tab1',
+    key: '3',
     tab: '海外教材',
   },
   {
-    key: 'tab2',
+    key: '4',
     tab: '阅读世界',
   },
   {
-    key: 'tab3',
+    key: '1',
     tab: '视频课程',
   },
   {
-    key: 'tab4',
+    key: '2',
     tab: '在线课程',
   },
   {
-    key: 'tab5',
+    key: '5',
     tab: '培训',
-  },
-  {
-    key: 'tab6',
-    tab: '测评',
-  },
-  {
-    key: 'tab7',
-    tab: '套餐',
   },
 ];
 
@@ -266,9 +250,10 @@ const columns = [
 @Form.create()
 class AgencyInfo extends Component {
   state = {
-    resourceTabKey: 'tab1',
+    resourceTabKey: '3',
     stepDirection: 'horizontal',
     resourceModalVisible:false,
+    agencyId:this.props.match.params.id,
   };
   componentDidMount() {
     const { dispatch } = this.props;
@@ -285,13 +270,17 @@ class AgencyInfo extends Component {
     window.removeEventListener('resize', this.setStepDirection);
     this.setStepDirection.cancel();
   }
-
+   /* 已分配资源列表Tab改变事件 */
   onOperationTabChange = key => {
     //this.setState({ operationkey: key });
   };
+   /* 资源分配Tab改变事件 */
   handleResourceTabChange = key => {
-    this.setState({ resourceTabKey: key });
-    console.log(this.state.resourceTabKey);
+    this.setState({ 
+      resourceTabKey: key 
+    },() => {
+      this.handleResourceSearch();
+    });
   };
 
   @Bind()
@@ -309,11 +298,16 @@ class AgencyInfo extends Component {
       });
     }
   }
+   /* 资源管理弹出框 */
   handleResourceModalVisible = flag => {
+    if(flag){
+      this.handleResourceSearch();
+    }
     this.setState({
       resourceModalVisible: !!flag,
     });
   };
+  /* 来源自动完成 */
   handleSourceSearch = (value) => {
     const { dispatch } = this.props;
     dispatch({
@@ -325,38 +319,92 @@ class AgencyInfo extends Component {
         });
       })
     })
-    
   }
+  /* 资源分配选择改变事件 */
+  handleSelectResourceChange = (sourceSelectedKeys, targetSelectedKeys) => {
+    //this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
+
+    console.log('sourceSelectedKeys: ', sourceSelectedKeys);
+    console.log('targetSelectedKeys: ', targetSelectedKeys);
+  }
+  /* 资源分配移动事件 */
+  handleResourceChange = (nextTargetKeys, direction, moveKeys) => {
+
+    const { dispatch } = this.props;
+    dispatch({
+      type:'agency/targetKeys',
+      payload:{
+        targetKeys:nextTargetKeys,
+        direction,
+        moveKeys,
+        organizationId:this.state.agencyId,
+        type:this.state.resourceTabKey,
+      }
+    });
+  }
+  /* 分配资源查询 */
+  handleResourceSearch = (fieldsValue) => {
+    const { dispatch } = this.props;
+    
+    dispatch({
+      type:'agency/resource',
+      payload:{
+        organizationId:this.state.agencyId,
+        type:this.state.resourceTabKey,
+        ...fieldsValue
+      }
+    })
+  }
+
   render() {
-    const { resourceModalVisible,dataSource } = this.state;
+    const { resourceModalVisible, 
+            dataSource,
+            resourceTabKey,
+    } = this.state;
     const { 
-      agency: {info},
+      agency: { info, resourceData, resourceTargetKeys },
     } = this.props;
     const contentList = {
-      // tab1: (
-      //   <Table
-      //     pagination={false}
-      //     loading={loading}
-      //     dataSource={}
-      //     columns={columns}
-      //   />
-      // ),
-      // tab2: (
-      //   <Table
-      //     pagination={false}
-      //     loading={loading}
-      //     dataSource={}
-      //     columns={columns}
-      //   />
-      // ),
-      // tab3: (
-      //   <Table
-      //     pagination={false}
-      //     loading={loading}
-      //     dataSource={}
-      //     columns={columns}
-      //   />
-      // ),
+      1: (
+        <Table
+          pagination={false}
+          loading={loading}
+          dataSource={null}
+          columns={columns}
+        />
+      ),
+      2: (
+        <Table
+          pagination={false}
+          loading={loading}
+          dataSource={null}
+          columns={columns}
+        />
+      ),
+      3: (
+        <Table
+          pagination={false}
+          loading={loading}
+          dataSource={null}
+          columns={columns}
+        />
+      ),
+      4: (
+        <Table
+          pagination={false}
+          loading={loading}
+          dataSource={null}
+          columns={columns}
+        />
+      ),
+      5: (
+        <Table
+          pagination={false}
+          loading={loading}
+          dataSource={null}
+          columns={columns}
+        />
+      ),
     };
     const action = (
       <Fragment>
@@ -371,13 +419,18 @@ class AgencyInfo extends Component {
         <Button type="primary" onClick={() => this.handleResourceModalVisible(true)}>资源管理</Button>
       </Fragment>
     );
-
+   
     const resourceProps = {
       handleModalVisible: this.handleResourceModalVisible,
       handleResourceTabChange:this.handleResourceTabChange,
-      resourceTabKey:this.state.resourceTabKey,
+      handleSelectResourceChange:this.handleSelectResourceChange,
+      handleResourceChange:this.handleResourceChange,
       handleSourceSearch:this.handleSourceSearch,
-      dataSource:dataSource
+      handleResourceSearch:this.handleResourceSearch,
+      resourceTabKey:resourceTabKey,
+      dataSource:dataSource,
+      resourceData:resourceData,
+      resourceTargetKeys:resourceTargetKeys,
 
     };
     return (

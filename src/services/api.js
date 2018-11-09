@@ -32,15 +32,10 @@ export async function getTags() {
 export async function queryNotices() {
   return request('/api/notices');
 }
+/* 验证码 */
 export async function queryGeetest() {
   return request('/api/captcha');
 }
-export async function queryBasicProfile() {
-  return request('/api/profile/basic');
-}
 
-export async function queryAdvancedProfile() {
-  return request('/api/profile/advanced');
-}
 
 

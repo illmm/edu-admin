@@ -1,5 +1,13 @@
 
-import { queryAgency,addAgency,removeAgency,updateAgency,queryAgencyInfo } from '@/services/agency';
+import { 
+  queryAgency,
+  addAgency,
+  removeAgency,
+  updateAgency,
+  queryAgencyInfo,
+  resourceSearch,
+  resourceDistribution,
+} from '@/services/agency';
 export default {
   namespace: 'agency',
   state: {
@@ -8,7 +16,10 @@ export default {
       pagination: {},
     },
     info: {
-    }  
+    },
+    resourceData:[],
+    resourceTargetKeys:[],
+
   },
   effects: {
     *fetch({ payload }, { call, put }){
@@ -48,6 +59,36 @@ export default {
         payload:response,
       });
     },
+    *resource({ payload }, { call, put }){
+      const response = yield call(resourceSearch, payload);
+      const targetKeys = [];
+      if(response.data){
+        response.data.map(item => {
+          if(item.chosen){
+            targetKeys.push(item.key);
+          }
+        });
+      }
+      
+      
+      yield put({
+        type:'saveResource',
+        payload:{
+          response,
+          targetKeys
+        },
+      });
+    },
+    *targetKeys({ payload },{ call, put }){
+      const response = yield call(resourceDistribution,payload)
+      if(response.success){
+        yield put({
+          type:'saveTargetKeys',
+          payload:payload.targetKeys,
+        });
+      }
+      
+    }
     
   },
   reducers: {
@@ -63,6 +104,19 @@ export default {
         info:action.payload.data,
       };
     },
+    saveResource(state,action){
+      return {
+        ...state,
+        resourceData:action.payload.response.data,
+        resourceTargetKeys:action.payload.targetKeys,
+      }
+    },
+    saveTargetKeys(state,action){
+      return {
+        ...state,
+        resourceTargetKeys:action.payload,
+      }
+    }
   },
 
 };
