@@ -263,8 +263,6 @@ export default class AgencyList extends PureComponent{
       dispatch({
         type: 'global/getQiniuToekn',
         callback: _ = res => {
-          console.log(res);
-         
           this.setState({
             qiniuToken: res.data.token
           })

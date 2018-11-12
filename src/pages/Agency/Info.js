@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Debounce from 'lodash-decorators/debounce';
+import { FormattedNumber } from 'react-intl'
 import Bind from 'lodash-decorators/bind';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -17,9 +18,11 @@ import {
   Input,
   Select,
   AutoComplete,
+  Table,
 } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import StandardTable from '@/components/StandardTable';
 import styles from './Info.less';
 
 const { Description } = DescriptionList;
@@ -45,9 +48,10 @@ const EditResource = Form.create()(props =>{
     resourceTargetKeys,
   } = props;
 
-  const filterOption = (inputValue, option) => {
-    return option.description.indexOf(inputValue) > -1;
-  }
+  /**
+   * @method 分配资源条件搜索
+   * @param {*} e 
+   */
   const handleSearch = e => {
     e.preventDefault();
     form.validateFields((err, fieldsValue) => {
@@ -57,11 +61,14 @@ const EditResource = Form.create()(props =>{
      
     });
   };
+  /**
+   * 分配资源Tab切换
+   * @param {*} key 
+   */
   const handleTabChange = (key) => {
     form.resetFields();
     handleResourceTabChange(key);
   }
-
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -115,7 +122,6 @@ const EditResource = Form.create()(props =>{
                 <AutoComplete
                   dataSource={dataSource}
                   style={{ width: 200 }}
-                  // onSelect={onSelect}
                   onSearch={handleSourceSearch}
                 />
               )}
@@ -137,7 +143,6 @@ const EditResource = Form.create()(props =>{
       </div>
       <Transfer
           dataSource={resourceData}
-          filterOption={filterOption}
           targetKeys={resourceTargetKeys}
           onChange={handleResourceChange}
           onSelectChange={handleSelectResourceChange}
@@ -156,7 +161,6 @@ const EditResource = Form.create()(props =>{
 
 const menu = (
   <Menu>
-    <Menu.Item key="2">批量导入资源</Menu.Item>
     <Menu.Item key="3">批量导入成员</Menu.Item>
   </Menu>
 );
@@ -192,7 +196,6 @@ const tabList = [
     key: 'detail',
     tab: '已购资源',
   },
-  
 ];
 
 const classifyTabList = [
@@ -218,27 +221,106 @@ const classifyTabList = [
   },
 ];
 
-const columns = [
+const videoCourseColumns = [
   {
-    title: '教材名称',
-    dataIndex: 'type',
-    key: 'type',
+    title: '课程名称',
+    dataIndex: 'title',
   },
   {
-    title: '操作人',
-    dataIndex: 'name',
-    key: 'name',
+    title: '价格',
+    dataIndex: 'price',
+    render(val){
+      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+    }
   },
-  
   {
     title: '分配时间',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
+    dataIndex: 'createTime',
+    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+  },
+  
+];
+const onlineCoursesColumns = [
+  {
+    title: '课程名称',
+    dataIndex: 'title',
   },
   {
-    title: '到期时间',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
+    title: '价格',
+    dataIndex: 'price',
+    render(val){
+      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+    }
+  },
+  {
+    title: '分配时间',
+    dataIndex: 'createTime',
+    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+  },
+];
+
+const teachingTextbooksColumns = [
+  {
+    title: '教材名称',
+    dataIndex: 'title',
+  },
+  {
+    title: 'ISBN',
+    dataIndex: 'isbn',
+  },
+  {
+    title: '价格',
+    dataIndex: 'price',
+    render(val){
+      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+    }
+  },
+  {
+    title: '分配时间',
+    dataIndex: 'createTime',
+    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+  },
+  
+];
+const readingTextbooksColumns = [
+  {
+    title: '教材名称',
+    dataIndex: 'title',
+  },
+  {
+    title: 'ISBN',
+    dataIndex: 'isbn',
+  },
+  {
+    title: '价格',
+    dataIndex: 'price',
+    render(val){
+      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+    }
+  },
+  {
+    title: '分配时间',
+    dataIndex: 'createTime',
+    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+  },
+  
+];
+const trainsColumns = [
+  {
+    title: '培训名称',
+    dataIndex: 'title',
+  },
+  {
+    title: '价格',
+    dataIndex: 'price',
+    render(val){
+      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+    }
+  },
+  {
+    title: '分配时间',
+    dataIndex: 'createTime',
+    render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
   },
   
 ];
@@ -250,6 +332,7 @@ const columns = [
 @Form.create()
 class AgencyInfo extends Component {
   state = {
+    tabKey:'3',
     resourceTabKey: '3',
     stepDirection: 'horizontal',
     resourceModalVisible:false,
@@ -270,11 +353,16 @@ class AgencyInfo extends Component {
     window.removeEventListener('resize', this.setStepDirection);
     this.setStepDirection.cancel();
   }
-   /* 已分配资源列表Tab改变事件 */
-  onOperationTabChange = key => {
-    //this.setState({ operationkey: key });
+ 
+  /**
+   * @method 已分配资源列表Tab改变事件
+   */
+  onTabChange = key => {
+    this.setState({ tabKey: key });
   };
-   /* 资源分配Tab改变事件 */
+  /**
+   * @method 资源分配Tab改变事件
+   */
   handleResourceTabChange = key => {
     this.setState({ 
       resourceTabKey: key 
@@ -298,7 +386,9 @@ class AgencyInfo extends Component {
       });
     }
   }
-   /* 资源管理弹出框 */
+  /**
+   * @method 资源管理弹出框
+   */
   handleResourceModalVisible = flag => {
     if(flag){
       this.handleResourceSearch();
@@ -307,7 +397,9 @@ class AgencyInfo extends Component {
       resourceModalVisible: !!flag,
     });
   };
-  /* 来源自动完成 */
+  /**
+   * @method 来源自动完成
+   */
   handleSourceSearch = (value) => {
     const { dispatch } = this.props;
     dispatch({
@@ -320,14 +412,18 @@ class AgencyInfo extends Component {
       })
     })
   }
-  /* 资源分配选择改变事件 */
+  /**
+   * @method 资源分配选择改变事件
+   */
   handleSelectResourceChange = (sourceSelectedKeys, targetSelectedKeys) => {
     //this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
 
     console.log('sourceSelectedKeys: ', sourceSelectedKeys);
     console.log('targetSelectedKeys: ', targetSelectedKeys);
   }
-  /* 资源分配移动事件 */
+  /**
+   * @method 资源分配移动事件
+   */
   handleResourceChange = (nextTargetKeys, direction, moveKeys) => {
 
     const { dispatch } = this.props;
@@ -342,7 +438,9 @@ class AgencyInfo extends Component {
       }
     });
   }
-  /* 分配资源查询 */
+  /**
+   * @method 分配资源查询
+   */
   handleResourceSearch = (fieldsValue) => {
     const { dispatch } = this.props;
     
@@ -357,52 +455,61 @@ class AgencyInfo extends Component {
   }
 
   render() {
-    const { resourceModalVisible, 
-            dataSource,
-            resourceTabKey,
+    const { 
+      resourceModalVisible, 
+      dataSource,
+      resourceTabKey,
+      tabKey,
     } = this.state;
     const { 
-      agency: { info, resourceData, resourceTargetKeys },
+      agency: { info, resourceData, resourceTargetKeys, purchased },
+      loading,
     } = this.props;
+    
     const contentList = {
       1: (
         <Table
-          pagination={false}
+          rowKey="id" 
           loading={loading}
-          dataSource={null}
-          columns={columns}
+          dataSource={purchased.videoCourse.list}
+          pagination={purchased.videoCourse.pagination}
+          columns={videoCourseColumns}
         />
       ),
       2: (
         <Table
-          pagination={false}
+          rowKey="id" 
           loading={loading}
-          dataSource={null}
-          columns={columns}
+          dataSource={purchased.onlineCourses.list}
+          pagination={purchased.onlineCourses.pagination}
+          columns={onlineCoursesColumns}
         />
       ),
       3: (
         <Table
-          pagination={false}
+          rowKey="id" 
           loading={loading}
-          dataSource={null}
-          columns={columns}
+          dataSource={purchased.teachingTextbooks.list}
+          pagination={purchased.teachingTextbooks.pagination}
+          columns={teachingTextbooksColumns}
         />
       ),
       4: (
         <Table
-          pagination={false}
+          rowKey="id" 
           loading={loading}
-          dataSource={null}
-          columns={columns}
+          dataSource={purchased.readingTextbooks.list}
+          pagination={purchased.readingTextbooks.pagination}
+          columns={readingTextbooksColumns}
         />
       ),
       5: (
         <Table
-          pagination={false}
+          rowKey="id" 
           loading={loading}
-          dataSource={null}
-          columns={columns}
+          dataSource={purchased.trains.list}
+          pagination={purchased.trains.pagination}
+          columns={trainsColumns}
         />
       ),
     };
@@ -444,37 +551,21 @@ class AgencyInfo extends Component {
         extraContent={extra(info)}
         tabList={tabList}
       >
-        
-        {/* <Card title="客户信息" style={{ marginBottom: 24 }} bordered={false}>
-          <DescriptionList style={{ marginBottom: 24 }}>
-            <Description term="联系人">李四</Description>
-            <Description term="联系方式">18100000000</Description>
-            <Description term="联系地址">
-              北京市朝阳区工体东路16号
-            </Description>
-          </DescriptionList>
-          <DescriptionList style={{ marginBottom: 24 }} title="信息组">
-            <Description term="机构类型">培训机构</Description>
-            <Description term="机构规模">大型</Description>
-            <Description>&nbsp;</Description>
-          </DescriptionList>
-        </Card> */}
-        
         <Card
           style={{ marginBottom: 24 }}
           className={styles.tabsCard}
           bordered={false}
           tabList={classifyTabList}
-          onTabChange={this.onOperationTabChange}
+          onTabChange={this.onTabChange}
         >
-          {/* {contentList[resourceTabKey]} */}
+           {contentList[tabKey]} 
         </Card>
-        {/* <Card title="客户近半年购买记录" style={{ marginBottom: 24 }} bordered={false}>
+        <Card title="客户近半年购买记录" style={{ marginBottom: 24 }} bordered={false}>
           <div className={styles.noData}>
             <Icon type="frown-o" />
             暂无数据
           </div>
-        </Card> */}
+        </Card>
         <EditResource modalVisible={resourceModalVisible} {...resourceProps}/>
       </PageHeaderWrapper>
       

@@ -1,4 +1,3 @@
-
 import { 
   queryAgency,
   addAgency,
@@ -7,6 +6,7 @@ import {
   queryAgencyInfo,
   resourceSearch,
   resourceDistribution,
+  purchased,
 } from '@/services/agency';
 export default {
   namespace: 'agency',
@@ -19,6 +19,28 @@ export default {
     },
     resourceData:[],
     resourceTargetKeys:[],
+    purchased:{
+      videoCourse:{
+        list: [],
+        pagination: {},
+      },
+      onlineCourses:{
+        list: [],
+        pagination: {},
+      },
+      teachingTextbooks:{
+        list: [],
+        pagination: {},
+      },
+      readingTextbooks:{
+        list: [],
+        pagination: {},
+      },
+      trains:{
+        list: [],
+        pagination: {},
+      },
+    }
 
   },
   effects: {
@@ -58,6 +80,11 @@ export default {
         type:'savaAgencyInfo',
         payload:response,
       });
+      const res = yield call(purchased, payload);
+      yield put({
+        type:'savePurchased',
+        payload:res,
+      })
     },
     *resource({ payload }, { call, put }){
       const response = yield call(resourceSearch, payload);
@@ -69,8 +96,6 @@ export default {
           }
         });
       }
-      
-      
       yield put({
         type:'saveResource',
         payload:{
@@ -80,15 +105,15 @@ export default {
       });
     },
     *targetKeys({ payload },{ call, put }){
-      const response = yield call(resourceDistribution,payload)
+      const response = yield call(resourceDistribution,payload);
       if(response.success){
         yield put({
           type:'saveTargetKeys',
           payload:payload.targetKeys,
         });
       }
-      
-    }
+    },
+
     
   },
   reducers: {
@@ -97,6 +122,12 @@ export default {
         ...state,
         data:action.payload.data,
       };
+    },
+    savePurchased(state, action){
+      return {
+        ...state,
+        purchased:action.payload.data,
+      }
     },
     savaAgencyInfo(state,action){
       return {
@@ -118,5 +149,4 @@ export default {
       }
     }
   },
-
 };

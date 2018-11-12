@@ -16,20 +16,15 @@ export default {
       success: -1,
     },
   },
-  reducers:{
-    
-  },
   effects: {
     *login({ callback, payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
       if(callback) callback(response);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
       // Login successfully
       if (response.success) {
+        
         reloadAuthorized();
+        setAuthority(response.data);
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -83,14 +78,6 @@ export default {
     },
   },
   reducers: {
-    changeLoginStatus(state, { payload }) {
-     // const authority = payload.data||{};
-      setAuthority(payload.data);
-      return {
-        ...state,
-        success: payload.success,
-      };
-    },
     saveGeetest(state, { payload }) {
        return {
          ...state,

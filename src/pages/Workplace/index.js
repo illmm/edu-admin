@@ -293,17 +293,17 @@ class Workplace extends PureComponent {
             >
               
               <DescriptionList style={{ marginBottom: 24 }} col={1}>
-                <Description term="机构名称">王府学校</Description>
+                <Description term="机构名称"> {currentUser.organizationName}</Description>
               </DescriptionList>
-              <DescriptionList style={{ marginBottom: 24 }} col={1}>
+              {/* <DescriptionList style={{ marginBottom: 24 }} col={1}>
                 <Description term="合作级别">战略合作伙伴</Description>
-              </DescriptionList>  
+              </DescriptionList>   */}
               <DescriptionList style={{ marginBottom: 24 }} col={1}>
-                <Description term="专属客服">孟亚楠</Description>
+                <Description term="专属客服">{currentUser.salesman}</Description>
               </DescriptionList>
-              <DescriptionList style={{ marginBottom: 24 }} col={1}>
+              {/* <DescriptionList style={{ marginBottom: 24 }} col={1}>
                 <Description term="服务期限">2018-01-01~2019-01-01</Description>
-              </DescriptionList>
+              </DescriptionList> */}
               
             </Card>
           </Col>

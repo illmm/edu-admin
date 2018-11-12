@@ -1,3 +1,9 @@
+/**
+ * @file 登陆页面
+ * @author guoyuming
+ * @copyright 中图数字科技
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Alert,message } from 'antd';
@@ -27,10 +33,11 @@ class LoginPage extends Component {
       type: 'login/geetest',
     });
   }
+  /**
+   * @method 
+   * @desc 登陆提交
+   */
   handleSubmit = (err, values) => {
-    
-  
-    
     if (!err) {
       if(!this.state.captcha){
         message.error("请点击按钮进行验证")
@@ -57,6 +64,10 @@ class LoginPage extends Component {
       
     }
   };
+  /**
+   * @method
+   * @desc 重置验证码
+   */
   resetCaptchaForm() {
     reset(CAPTCHA_NAME);
  
@@ -70,17 +81,16 @@ class LoginPage extends Component {
     });
     
   }
+  /**
+   * @method
+   * @desc 验证码回调
+   */
   handlerCaptchaSuccess = (result) => {
-    
     this.setState({
       captchaData:result,
       captcha:true,
     });
   };
-  renderMessage = content => (
-    <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
-  );
-  
 
   render() {
     const { login, submitting } = this.props;
@@ -92,7 +102,6 @@ class LoginPage extends Component {
             this.loginForm = form;
           }}
         >
-          {/* {!login.success && !submitting && this.renderMessage('账户或密码错误')} */}
           <UserName name="account" placeholder="用户名" />
           <Password
             name="password"
@@ -112,13 +121,6 @@ class LoginPage extends Component {
             }
           />
           }
-          {/* <Geetest 
-            width="100%"
-            gt={login.geetest.gt}
-            challenge={login.geetest.challenge}
-            success={login.geetest.success}
-            onSuccess={this.handlerCaptchaSuccess}
-          /> */}
           <div />
           <Submit loading={submitting}>登录</Submit>
         </Login>
