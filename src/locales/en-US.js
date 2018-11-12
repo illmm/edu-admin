@@ -19,6 +19,8 @@ export default {
   'component.noticeIcon.clear': 'Clear',
   'component.noticeIcon.cleared': 'Cleared',
   'component.noticeIcon.empty': 'No notifications',
+  'form.captcha': 'Get Captcha',
+  'form.captcha.second': 'sec',
   'menu.home': 'Home',
   'menu.workplace': 'Workplace',
   'menu.agency': 'Agency',

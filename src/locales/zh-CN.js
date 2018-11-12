@@ -15,6 +15,8 @@ export default {
   'component.noticeIcon.clear': '清空',
   'component.noticeIcon.cleared': '清空了',
   'component.noticeIcon.empty': '暂无数据',
+  'form.captcha': '获取验证码',
+  'form.captcha.second': '秒',
   'menu.home': '首页',
   'menu.workplace': '工作台',
   'menu.agency': '机构管理',
