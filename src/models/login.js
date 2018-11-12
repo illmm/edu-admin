@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
 import { fakeAccountLogin, queryGeetest } from '@/services/api';
-import { setAuthority } from '@/utils/authority';
+import { setAuthority, removeAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 
@@ -22,9 +22,8 @@ export default {
       if(callback) callback(response);
       // Login successfully
       if (response.success) {
-        
-        reloadAuthorized();
         setAuthority(response.data);
+        reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -46,14 +45,7 @@ export default {
 
 
     *logout(_, { call,put }) {
-      yield put({
-        type: 'changeLoginStatus',
-        payload: {
-          status: false,
-          data: {role: 'guest'},
-          success: true,
-        },
-      });
+      removeAuthority();
       reloadAuthorized();
       const response = yield call(queryGeetest);
       yield put({

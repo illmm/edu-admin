@@ -3,7 +3,6 @@ import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '
 
 export default {
   namespace: 'global',
-
   state: {
     collapsed: false,
     notices: [],

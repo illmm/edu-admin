@@ -11,9 +11,6 @@ export function getAuthority(str = 'role') {
     return null;
   }
   return authority[str];
-  
-
-  
 }
 
 export function setAuthority(authority) {
@@ -21,4 +18,7 @@ export function setAuthority(authority) {
   const proAuthority = typeof authority === 'string' ? [authority] : authority;
   
   return sessionStorage.setItem('authority', JSON.stringify(proAuthority));
+}
+export function removeAuthority(){
+  sessionStorage.removeItem('authority')
 }
