@@ -92,7 +92,7 @@ class StandardTable extends PureComponent {
               <Fragment>
                 {formatMessage({id: 'app.total'})}
                 <a style={{ fontWeight: 600 }}>{pagination.total}</a>,{formatMessage({id: 'app.selected'})} <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> &nbsp;&nbsp;
-                {/* {needTotalList.map(item => (
+                {needTotalList.map(item => (
                   <span style={{ marginLeft: 8 }} key={item.dataIndex}>
                     {item.title}
                     总计&nbsp;
@@ -100,7 +100,7 @@ class StandardTable extends PureComponent {
                       {item.render ? item.render(item.total) : item.total}
                     </span>
                   </span>
-                ))} */}
+                ))}
                 <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }}>
                   {formatMessage({id: 'app.clear'})}
                 </a>

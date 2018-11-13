@@ -51,7 +51,7 @@ export default [
         path: '/course',
         icon: 'video-camera',
         name: 'course',
-        authority: ['test'],
+        authority: ['admin'],
         routes: [
           {
             path: '/course/video',
@@ -87,7 +87,7 @@ export default [
         name: 'train',
         icon: 'customer-service',
         path: '/train',
-        authority: ['test'],
+        authority: ['admin'],
         component: './Exception/403',
       },
       //套餐产品
@@ -95,7 +95,7 @@ export default [
         name: 'package',
         icon: 'shop',
         path: '/package',
-        authority: ['test'],
+        authority: ['admin'],
         component: './Exception/403',
       },
       //权限管理
@@ -105,25 +105,24 @@ export default [
         icon: 'profile',
         authority: ['admin'],
         routes: [
-          // profile
           {
             path: '/authority/user',
             name: 'user',
             authority: ['admin'],
             component: './Authority/User',
           },
-          {
-            path: '/authority/role',
-            name: 'role',
-            authority: ['test'],
-            component: './Exception/403',
-          },
-          {
-            path: '/authority/menu',
-            name: 'menu',
-            authority: ['test'],
-            component: './Exception/403',
-          },
+          // {
+          //   path: '/authority/role',
+          //   name: 'role',
+          //   authority: ['test'],
+          //   component: './Exception/403',
+          // },
+          // {
+          //   path: '/authority/menu',
+          //   name: 'menu',
+          //   authority: ['test'],
+          //   component: './Exception/403',
+          // },
         ],
       },
       //师生管理
@@ -139,7 +138,7 @@ export default [
         name: 'message',
         icon: 'message',
         path: '/result',
-        authority: ['test'],
+        authority: ['admin'],
         component: './Exception/403',
        
       },
@@ -165,8 +164,21 @@ export default [
         name: 'settings',
         icon: 'setting',
         path: '/settings',
-        authority: ['test'],
-        component: './Exception/403',
+        authority: ['admin'],
+        routes: [
+          {
+            name: 'salesman',
+            authority: ['admin'],
+            path: '/settings/salesman',
+            component: './Settings/Salesman',
+          },
+          {
+            name: 'classify',
+            authority: ['admin'],
+            path: '/settings/classify',
+            component: './Settings/Classify',
+          },
+        ]
         
       },
       {
@@ -202,6 +214,30 @@ export default [
               },
             ],
           },
+        ],
+      },
+      {
+        name: 'exception',
+        icon: 'warning',
+        path: '/exception',
+        hideInMenu: true,
+        routes: [
+          {
+            path: '/exception/403',
+            name: 'not-permission',
+            component: './Exception/403',
+          },
+          {
+            path: '/exception/404',
+            name: 'not-find',
+            component: './Exception/404',
+          },
+          {
+            path: '/exception/500',
+            name: 'server-error',
+            component: './Exception/500',
+          },
+          
         ],
       },
       {

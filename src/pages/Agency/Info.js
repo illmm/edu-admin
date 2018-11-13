@@ -418,8 +418,7 @@ class AgencyInfo extends Component {
   handleSelectResourceChange = (sourceSelectedKeys, targetSelectedKeys) => {
     //this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
 
-    console.log('sourceSelectedKeys: ', sourceSelectedKeys);
-    console.log('targetSelectedKeys: ', targetSelectedKeys);
+
   }
   /**
    * @method 资源分配移动事件

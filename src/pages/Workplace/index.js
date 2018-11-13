@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { Row, Col, Card, List, Avatar } from 'antd';
-
+import moment from 'moment';
 import EditableLinkGroup from '@/components/EditableLinkGroup';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import DescriptionList from '@/components/DescriptionList';
+
+import { Row, Col, Card, List, Avatar, Button } from 'antd';
 
 import styles from './index.less';
 const { Description } = DescriptionList;
@@ -42,30 +43,42 @@ const links = [
 ];
 
 export default
-@connect(({ global, project, activities, chart, loading }) => ({
+@connect(({ global }) => ({
   currentUser: global.currentUser,
-  project,
-  activities,
-  chart,
-  currentUserLoading: loading.effects['global/fetchCurrent'],
-  projectLoading: loading.effects['project/fetchNotice'],
-  activitiesLoading: loading.effects['activities/fetchList'],
 }))
 class Workplace extends PureComponent {
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'activities/fetchList',
-    });
-    dispatch({
-      type: 'chart/fetch',
-    });
+    
   }
 
   componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/clear',
+   
+  }
+  renderActivities() {
+    const {
+      currentUser: { dynamics },
+    } = this.props;
+    return dynamics.map(item => {
+      
+      return (
+        <List.Item key={item.id}>
+          <List.Item.Meta
+            avatar={<Avatar src={item.account} />}
+            title={
+              <span>
+                <a className={styles.username}>{item.username}</a>
+                &nbsp;
+                <span className={styles.event}>将<a>{item.resourceName}</a>加入了愿望单</span>
+              </span>
+            }
+            description={
+              <span className={styles.datetime} title={item.createTime}>
+                {moment(item.createTime).fromNow()}
+              </span>
+            }
+          />
+        </List.Item>
+      );
     });
   }
 
@@ -75,9 +88,21 @@ class Workplace extends PureComponent {
     const {
       currentUser,
       currentUserLoading,
-      activitiesLoading,
     } = this.props;
-
+    const loadMore =
+        currentUser.dynamics.length > 0 ? (
+        <div style={{ textAlign: 'center', marginTop: 16,marginBottom:30 }}>
+          <Button  style={{ paddingLeft: 48, paddingRight: 48 }}>
+            {currentUserLoading ? (
+              <span>
+                <Icon type="loading" /> 加载中...
+              </span>
+            ) : (
+              '加载更多'
+            )}
+          </Button>
+        </div>
+      ) : null;
     const pageHeaderContent =
       currentUser && Object.keys(currentUser).length ? (
         <div className={styles.pageHeaderContent}>
@@ -92,7 +117,6 @@ class Workplace extends PureComponent {
             </div>
             <div>
               {currentUser.organizationName} |{currentUser.roleName}
-              
             </div>
           </div>
         </div>
@@ -130,147 +154,14 @@ class Workplace extends PureComponent {
               bordered={false}
               className={styles.activeCard}
               title="动态"
-              loading={activitiesLoading}
+              loading={currentUserLoading}
             >
-              <List loading={activitiesLoading} size="large">
-                <div className={styles.activitiesList}>
-                <List.Item key={1}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>将<a>十万个为什么</a>加入了愿望单</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={2}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>将<a>十万个为什么</a>加入了愿望单</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={3}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>将<a>十万个为什么</a>加入了愿望单</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={4}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>登陆了系统</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={5}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>登陆了系统</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={6}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>登陆了系统</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={7}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>登陆了系统</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                <List.Item key={8}>
-                  <List.Item.Meta
-                    avatar={<Avatar src='https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png' />}
-                    title={
-                      <span>
-                        <a className={styles.username}>李四</a>
-                        &nbsp;
-                        <span className={styles.event}>登陆了系统</span>
-                      </span>
-                    }
-                    description={
-                      <span className={styles.datetime} title={1}>
-                        8 hours ago
-                      </span>
-                    }
-                  />
-                </List.Item>
-                </div>
+              <List 
+                loading={currentUserLoading} 
+                loadMore={loadMore} 
+                size="large"
+                >
+              <div className={styles.activitiesList}>{this.renderActivities()}</div>
               </List>
               
             </Card>

@@ -1,7 +1,7 @@
 module.exports = {
-  "navTheme": "dark",
+  "navTheme": "light",
   "primaryColor": "#1890FF",
-  "layout": "sidemenu",
+  "layout": "topmenu",
   "contentWidth": "Fluid",
   "fixedHeader": true,
   "autoHideHeader": true,

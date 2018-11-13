@@ -8,7 +8,9 @@ export default {
     notices: [],
     organization: [],
     role: [],
-    currentUser: {},
+    currentUser: {
+      dynamics:[]
+    },
     tags: [],
   
   },
