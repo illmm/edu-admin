@@ -8,10 +8,16 @@ import {
   Form,
   Card,
   Button,
+  Dropdown,
+  Icon,
+  Menu,
+  Badge,
  } from 'antd';
 import Link from 'umi/link';
 import styles from './Styles.less'
 
+const statusMap = [ 'error','success'];
+const status = ["未发布","已发布"];
 
  @connect(({ course, loading }) => ({
   course,
@@ -49,6 +55,23 @@ class OnlineList extends PureComponent{
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      filters: [
+        {
+          text: status[0],
+          value: 0,
+        },
+        {
+          text: status[1],
+          value: 1,
+        },
+      ],
+      render(val) {
+        return <Badge status={statusMap[val]} text={status[val]} />;
+      },
+    },
+    {
       title: '操作',
       render: (text,record) => (
         <Fragment>
@@ -78,12 +101,28 @@ class OnlineList extends PureComponent{
     });
   };
 
+  handleMenuClick = e => {
+    switch (e.key) {
+      case 'remove':
+        this.handleDelete();
+        break;
+      default:
+        break;
+    }
+  };
+
   render(){
     const { selectedRows } = this.state;
     const { 
       course: { onlineList },
       loading,
     } = this.props;
+    
+    const menu = (
+      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
+        <Menu.Item key="disable">下架</Menu.Item>
+      </Menu>
+    );
     return(
       <PageHeaderWrapper>
         <Card>
@@ -97,12 +136,12 @@ class OnlineList extends PureComponent{
               </Link>
               {selectedRows.length > 0 && (
               <span>
-                {/* <Button onClick={this.handleDelete}>删除</Button> */}
-                {/* <Dropdown overlay={menu}>
-                <Button>
-                更多<Icon type="down" />
-                </Button>
-              </Dropdown> */}
+                <Button>上架</Button>
+                <Dropdown overlay={menu}>
+                  <Button>
+                 更多<Icon type="down" />
+                  </Button>
+                </Dropdown>
               </span>
           )}
             </div>

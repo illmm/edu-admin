@@ -4,32 +4,25 @@ import { FormattedNumber } from 'react-intl'
 import { connect } from 'dva';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
 import { 
   Form,
   Card,
   Button,
+  Badge,
  } from 'antd';
 import styles from './Styles.less'
+import constants,{ status } from '@/constants'
 
- @connect(({ course, loading }) => ({
+@connect(({ course, loading }) => ({
   course,
   loading: loading.effects['course/online'],
- }))
+}))
 
 @Form.create()
 class VideoList extends PureComponent{
   state = {
     selectedRows: [],
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'course/video',
-      payload:{}
-    })
   }
 
   columns = [
@@ -46,6 +39,7 @@ class VideoList extends PureComponent{
       title: '价格',
       dataIndex: 'price',
       render(val){
+        // eslint-disable-next-line
         return <FormattedNumber value={val} style="currency" currency="CNY" />
       },
     },
@@ -56,6 +50,23 @@ class VideoList extends PureComponent{
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      filters: [
+        {
+          text: constants.status[0],
+          value: 0,
+        },
+        {
+          text: constants.status[1],
+          value: 1,
+        },
+      ],
+      render(val) {
+        return <Badge status={constants.statusMap[val]} text={constants.status[val]} />;
+      },
+    },
+    {
       title: '操作',
       render: (text,record) => (
         <Fragment>
@@ -64,6 +75,16 @@ class VideoList extends PureComponent{
       ),
     }
   ]
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'course/video',
+      payload:{}
+    })
+  }
+
+  
 
   /**
    * @method 列表选择事件
