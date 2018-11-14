@@ -8,6 +8,7 @@ import {
   resourceDistribution,
   purchased,
 } from '@/services/agency';
+
 export default {
   namespace: 'agency',
   state: {

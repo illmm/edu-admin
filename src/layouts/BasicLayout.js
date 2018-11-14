@@ -18,6 +18,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
+
 const { Content } = Layout;
 
 // Conversion router to menu.
@@ -165,6 +166,7 @@ class BasicLayout extends React.PureComponent {
     mergeMenuAndRouter(this.getMenuData());
     return routerMap;
   }
+
   matchParamsPath = pathname => {
     const pathKey = Object.keys(this.breadcrumbNameMap).find(key =>
       pathToRegexp(key).test(pathname)
@@ -182,7 +184,7 @@ class BasicLayout extends React.PureComponent {
       id: currRouterData.locale || currRouterData.name,
       defaultMessage: currRouterData.name,
     });
-    return `${message} - `+formatMessage({id:'app.name'});
+    return `${message} - ${formatMessage({id:'app.name'})}`;
   };
 
   getLayoutStyle = () => {
@@ -211,6 +213,7 @@ class BasicLayout extends React.PureComponent {
       payload: collapsed,
     });
   };
+
   renderSettingDrawer() {
     // Do show SettingDrawer in production
     // unless deployed in preview.pro.ant.design as demo

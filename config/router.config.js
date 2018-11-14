@@ -56,12 +56,19 @@ export default [
           {
             path: '/course/video',
             name: 'video',
-            component: './Course/Video',
+            component: './Course/Video/List',
           },
+          
           {
             path: '/course/online',
             name: 'online',
-            component: './Course/Online',
+            component: './Course/Online/List',
+          },
+          {
+            hideInMenu: true,
+            path: '/course/online/add',
+            name: 'online.add',
+            component: './Course/Online/Add',
           },
           
         ],
@@ -88,7 +95,7 @@ export default [
         icon: 'customer-service',
         path: '/train',
         authority: ['admin'],
-        component: './Exception/403',
+        component: './Train/List',
       },
       //套餐产品
       {

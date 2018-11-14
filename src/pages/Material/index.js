@@ -134,7 +134,6 @@ class UpdateForm extends PureComponent {
                 mode="multiple"
                 style={{ width: '100%' }}
                 placeholder="选择标签"
-                onChange={handleChange}
               >
                 {tags.map(item => <Option key={item.id}>{item.name}</Option>)}
               </Select>)}
@@ -257,7 +256,6 @@ export default class MaterialList extends React.Component{
     const { dispatch, form } = this.props;
 
     form.validateFields((err, fieldsValue) => {
-      console.log(err);
       if (err) return;
       dispatch({
         type: 'material/fetch',
@@ -527,7 +525,7 @@ export default class MaterialList extends React.Component{
   }
   render(){
     const {
-      global: { classify,tags },
+      global: { classify, tags },
       material: { data },
       loading,
       form,

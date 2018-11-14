@@ -28,6 +28,7 @@ export default class HeaderSearch extends PureComponent {
     defaultOpen: false,
     onVisibleChange: () => {},
   };
+
   static getDerivedStateFromProps(props) {
     if ('open' in props) {
       return {

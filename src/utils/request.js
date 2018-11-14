@@ -123,7 +123,7 @@ export default function request(
   const token = getAuthority('token');
   if(token){
     newOptions.headers = {
-      "Authorization": 'Bearer ' + token,
+      "Authorization": `Bearer ${  token}`,
       ...newOptions.headers,
     };
   }

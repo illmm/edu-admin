@@ -1,5 +1,6 @@
 
 import { queryMaterial, putaway, soldout, updateMaterial, queryMaterialInfo, updateMaterialInfo } from '@/services/material';
+
 export default {
   namespace: 'material',
   state: {

@@ -9,8 +9,8 @@ import { connect } from 'dva';
 import { Alert,message } from 'antd';
 import Login from '@/components/Login';
 import Geetest from '@/components/Geetest';
-import styles from './Login.less';
 import { RGCaptcha, reset } from 'react-geetest-captcha';
+import styles from './Login.less';
 
 
 const { UserName, Password, Submit } = Login;
@@ -33,6 +33,7 @@ class LoginPage extends Component {
       type: 'login/geetest',
     });
   }
+
   /**
    * @method 
    * @desc 登陆提交
@@ -64,6 +65,7 @@ class LoginPage extends Component {
       
     }
   };
+
   /**
    * @method
    * @desc 重置验证码
@@ -81,6 +83,7 @@ class LoginPage extends Component {
     });
     
   }
+
   /**
    * @method
    * @desc 验证码回调
@@ -110,16 +113,16 @@ class LoginPage extends Component {
           />
           { login.geetest.gt && 
             <RGCaptcha
-            name={CAPTCHA_NAME}
-            width="100%"
-            onSuccess={this.handlerCaptchaSuccess}
-            data={{
+              name={CAPTCHA_NAME}
+              width="100%"
+              onSuccess={this.handlerCaptchaSuccess}
+              data={{
               gt:login.geetest.gt,
               challenge:login.geetest.challenge,
               success:login.geetest.success
               }
             }
-          />
+            />
           }
           <div />
           <Submit loading={submitting}>登录</Submit>

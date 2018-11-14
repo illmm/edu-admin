@@ -9,6 +9,7 @@ import DescriptionList from '@/components/DescriptionList';
 import { Row, Col, Card, List, Avatar, Button } from 'antd';
 
 import styles from './index.less';
+
 const { Description } = DescriptionList;
 const links = [
   {
@@ -54,32 +55,30 @@ class Workplace extends PureComponent {
   componentWillUnmount() {
    
   }
+
   renderActivities() {
     const {
       currentUser: { dynamics },
     } = this.props;
-    return dynamics.map(item => {
-      
-      return (
-        <List.Item key={item.id}>
-          <List.Item.Meta
-            avatar={<Avatar src={item.account} />}
-            title={
-              <span>
-                <a className={styles.username}>{item.username}</a>
+    return dynamics.map(item => (
+      <List.Item key={item.id}>
+        <List.Item.Meta
+          avatar={<Avatar src={item.account} />}
+          title={
+            <span>
+              <a className={styles.username}>{item.username}</a>
                 &nbsp;
-                <span className={styles.event}>将<a>{item.resourceName}</a>加入了愿望单</span>
-              </span>
+              <span className={styles.event}>将<a>{item.resourceName}</a>加入了愿望单</span>
+            </span>
             }
-            description={
-              <span className={styles.datetime} title={item.createTime}>
-                {moment(item.createTime).fromNow()}
-              </span>
+          description={
+            <span className={styles.datetime} title={item.createTime}>
+              {moment(item.createTime).fromNow()}
+            </span>
             }
-          />
-        </List.Item>
-      );
-    });
+        />
+      </List.Item>
+      ));
   }
 
   
@@ -91,17 +90,17 @@ class Workplace extends PureComponent {
     } = this.props;
     const loadMore =
         currentUser.dynamics.length > 0 ? (
-        <div style={{ textAlign: 'center', marginTop: 16,marginBottom:30 }}>
-          <Button  style={{ paddingLeft: 48, paddingRight: 48 }}>
-            {currentUserLoading ? (
-              <span>
-                <Icon type="loading" /> 加载中...
-              </span>
+          <div style={{ textAlign: 'center', marginTop: 16,marginBottom:30 }}>
+            <Button style={{ paddingLeft: 48, paddingRight: 48 }}>
+              {currentUserLoading ? (
+                <span>
+                  <Icon type="loading" /> 加载中...
+                </span>
             ) : (
               '加载更多'
             )}
-          </Button>
-        </div>
+            </Button>
+          </div>
       ) : null;
     const pageHeaderContent =
       currentUser && Object.keys(currentUser).length ? (
@@ -160,8 +159,8 @@ class Workplace extends PureComponent {
                 loading={currentUserLoading} 
                 loadMore={loadMore} 
                 size="large"
-                >
-              <div className={styles.activitiesList}>{this.renderActivities()}</div>
+              >
+                <div className={styles.activitiesList}>{this.renderActivities()}</div>
               </List>
               
             </Card>

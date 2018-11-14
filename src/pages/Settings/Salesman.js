@@ -1,10 +1,11 @@
 import React from 'react';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import TableForm from './TableForm';
 import {
   Form,
   Card,
 } from 'antd';
+import TableForm from './TableForm';
+
 const tableData = [
   {
     key: '1',
@@ -36,11 +37,11 @@ class Salesman extends React.Component{
           title="销售管理"
           
         >
-        <Card title="销售列表" bordered={false}>
-          {getFieldDecorator('members', {
+          <Card title="销售列表" bordered={false}>
+            {getFieldDecorator('members', {
             initialValue: tableData,
           })(<TableForm />)}
-        </Card>
+          </Card>
         </PageHeaderWrapper>
       ) 
     }

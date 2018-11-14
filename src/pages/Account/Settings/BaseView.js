@@ -88,7 +88,7 @@ class BaseView extends Component {
       <div className={styles.baseView} ref={this.getViewDom}>
         <div className={styles.left}>
           <Form layout="vertical" onSubmit={this.handleSubmit} hideRequiredMark>
-          <FormItem label="账号">
+            <FormItem label="账号">
               {getFieldDecorator('account', {
                 rules: [
                   {

@@ -26,6 +26,7 @@ export default {
   'menu.course': '课程管理',
   'menu.course.video': '视频课程',
   'menu.course.online': '在线课程',
+  'menu.course.online.add': '创建在线课程',
   'menu.material': '教材管理',
   'menu.material.info': '教材详细',
   'menu.train': '培训管理',

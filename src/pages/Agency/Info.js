@@ -91,57 +91,56 @@ const EditResource = Form.create()(props =>{
       footer={null}
       onCancel={() => handleModalVisible()}
     >
-     <Card
+      <Card
         bordered={false}
         className={styles.tabsCard}
         tabList={classifyTabList}
         onTabChange={handleTabChange}
         activeTabKey={resourceTabKey}
-        
       >
-    <div className={styles.tableListForm}>
-     <Form onSubmit={handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={7} sm={24}>
-            <FormItem {...formItemLayout}  label="编号">
-              {getFieldDecorator('number')( 
-                <Input></Input>
+        <div className={styles.tableListForm}>
+          <Form onSubmit={handleSearch} layout="inline">
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={7} sm={24}>
+                <FormItem {...formItemLayout} label="编号">
+                  {getFieldDecorator('number')( 
+                    <Input />
               )}
-            </FormItem>
-          </Col>
-          <Col md={7} sm={24}>
-            <FormItem {...formItemLayout} label="标题">
-              {getFieldDecorator('title')(
-                <Input></Input>
+                </FormItem>
+              </Col>
+              <Col md={7} sm={24}>
+                <FormItem {...formItemLayout} label="标题">
+                  {getFieldDecorator('title')(
+                    <Input />
               )}
-            </FormItem>
-          </Col>
-          <Col md={7} sm={24}>
-            <FormItem {...formItemLayout} label="来源">
-              {getFieldDecorator('sourceName')(
-                <AutoComplete
-                  dataSource={dataSource}
-                  style={{ width: 200 }}
-                  onSearch={handleSourceSearch}
-                />
+                </FormItem>
+              </Col>
+              <Col md={7} sm={24}>
+                <FormItem {...formItemLayout} label="来源">
+                  {getFieldDecorator('sourceName')(
+                    <AutoComplete
+                      dataSource={dataSource}
+                      style={{ width: 200 }}
+                      onSearch={handleSourceSearch}
+                    />
               )}
-            </FormItem>
-          </Col>
-          <Col md={3} sm={24}>
-            <div style={{ overflow: 'hidden' }}>
-            <div style={{ float: 'right', marginBottom: 24 }}>
-              <Button type="primary" htmlType="submit">
+                </FormItem>
+              </Col>
+              <Col md={3} sm={24}>
+                <div style={{ overflow: 'hidden' }}>
+                  <div style={{ float: 'right', marginBottom: 24 }}>
+                    <Button type="primary" htmlType="submit">
               查询
-              </Button>
-            </div>
-            </div>
-          </Col>
-        </Row>
+                    </Button>
+                  </div>
+                </div>
+              </Col>
+            </Row>
         
         
-      </Form>
-      </div>
-      <Transfer
+          </Form>
+        </div>
+        <Transfer
           dataSource={resourceData}
           targetKeys={resourceTargetKeys}
           onChange={handleResourceChange}
@@ -230,7 +229,7 @@ const videoCourseColumns = [
     title: '价格',
     dataIndex: 'price',
     render(val){
-      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+      return <FormattedNumber value={val} style="currency" currency="CNY" />
     }
   },
   {
@@ -249,7 +248,7 @@ const onlineCoursesColumns = [
     title: '价格',
     dataIndex: 'price',
     render(val){
-      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+      return <FormattedNumber value={val} style="currency" currency="CNY" />
     }
   },
   {
@@ -272,7 +271,7 @@ const teachingTextbooksColumns = [
     title: '价格',
     dataIndex: 'price',
     render(val){
-      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+      return <FormattedNumber value={val} style="currency" currency="CNY" />
     }
   },
   {
@@ -295,7 +294,7 @@ const readingTextbooksColumns = [
     title: '价格',
     dataIndex: 'price',
     render(val){
-      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+      return <FormattedNumber value={val} style="currency" currency="CNY" />
     }
   },
   {
@@ -314,7 +313,7 @@ const trainsColumns = [
     title: '价格',
     dataIndex: 'price',
     render(val){
-      return <FormattedNumber value={val} style="currency" currency="CNY"></FormattedNumber>
+      return <FormattedNumber value={val} style="currency" currency="CNY" />
     }
   },
   {
@@ -338,6 +337,7 @@ class AgencyInfo extends Component {
     resourceModalVisible:false,
     agencyId:this.props.match.params.id,
   };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -360,6 +360,7 @@ class AgencyInfo extends Component {
   onTabChange = key => {
     this.setState({ tabKey: key });
   };
+
   /**
    * @method 资源分配Tab改变事件
    */
@@ -386,6 +387,7 @@ class AgencyInfo extends Component {
       });
     }
   }
+
   /**
    * @method 资源管理弹出框
    */
@@ -397,6 +399,7 @@ class AgencyInfo extends Component {
       resourceModalVisible: !!flag,
     });
   };
+
   /**
    * @method 来源自动完成
    */
@@ -412,14 +415,16 @@ class AgencyInfo extends Component {
       })
     })
   }
+
   /**
    * @method 资源分配选择改变事件
    */
   handleSelectResourceChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    //this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
+    // this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
 
 
   }
+
   /**
    * @method 资源分配移动事件
    */
@@ -437,6 +442,7 @@ class AgencyInfo extends Component {
       }
     });
   }
+
   /**
    * @method 分配资源查询
    */
@@ -533,10 +539,10 @@ class AgencyInfo extends Component {
       handleResourceChange:this.handleResourceChange,
       handleSourceSearch:this.handleSourceSearch,
       handleResourceSearch:this.handleResourceSearch,
-      resourceTabKey:resourceTabKey,
-      dataSource:dataSource,
-      resourceData:resourceData,
-      resourceTargetKeys:resourceTargetKeys,
+      resourceTabKey,
+      dataSource,
+      resourceData,
+      resourceTargetKeys,
 
     };
     return (
@@ -557,7 +563,7 @@ class AgencyInfo extends Component {
           tabList={classifyTabList}
           onTabChange={this.onTabChange}
         >
-           {contentList[tabKey]} 
+          {contentList[tabKey]} 
         </Card>
         <Card title="客户近半年购买记录" style={{ marginBottom: 24 }} bordered={false}>
           <div className={styles.noData}>
@@ -565,7 +571,7 @@ class AgencyInfo extends Component {
             暂无数据
           </div>
         </Card>
-        <EditResource modalVisible={resourceModalVisible} {...resourceProps}/>
+        <EditResource modalVisible={resourceModalVisible} {...resourceProps} />
       </PageHeaderWrapper>
       
     );
