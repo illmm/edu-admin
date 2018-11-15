@@ -1,4 +1,11 @@
-import { queryNotices, getQiniuToken, getClassify, getTags, queryAutoSource } from '@/services/api'
+import { 
+  queryNotices,
+  getQiniuToken, 
+  getClassify, 
+  getTags, 
+  queryAutoSource,
+  querySource 
+} from '@/services/api'
 import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user'
 
 export default {
@@ -12,6 +19,7 @@ export default {
       dynamics:[]
     },
     tags: [],
+    source: [],
   
   },
 
@@ -105,6 +113,18 @@ export default {
     *queryAutoSource({ payload, callback },{ call }){
       const response = yield call(queryAutoSource,payload);
       if (callback) callback(response);
+    },
+    *source({ callback },{ call, put }){
+      const response = yield call(querySource);
+      if(callback) callback(response);
+      if(response){
+       
+        yield put({
+          type: 'saveSource',
+          payload: response.data,
+        })
+      }
+      
     }
   },
 
@@ -172,6 +192,12 @@ export default {
         },
       };
     },
+    saveSource(state, action) {
+      return {
+        ...state,
+        source: action.payload,
+      }
+    }
   },
 
   subscriptions: {

@@ -1,4 +1,4 @@
-import { queryOnlineCourse, queryVideoCourse } from '@/services/course';
+import { queryOnlineCourse, queryVideoCourse, addCourse } from '@/services/course';
 
 export default {
   namespace: 'course',
@@ -30,6 +30,11 @@ export default {
         type: 'saveOnlineList',
         payload:response,
       })
+    },
+    *add({ payload, callback },{ call }){
+      const response = yield call(addCourse,payload);
+      if(callback) callback(response);
+      
     },
   },
 

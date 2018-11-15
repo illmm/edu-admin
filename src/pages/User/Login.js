@@ -6,9 +6,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Alert,message } from 'antd';
+import { message } from 'antd';
 import Login from '@/components/Login';
-import Geetest from '@/components/Geetest';
 import { RGCaptcha, reset } from 'react-geetest-captcha';
 import styles from './Login.less';
 
@@ -40,11 +39,12 @@ class LoginPage extends Component {
    */
   handleSubmit = (err, values) => {
     if (!err) {
-      if(!this.state.captcha){
+      const { captcha, captchaData } = this.state
+      const { dispatch } = this.props;
+      if(!captcha){
         message.error("请点击按钮进行验证")
         return;
       }
-      const { dispatch } = this.props;
       dispatch({
         type: 'login/geetest',
       });
@@ -52,9 +52,9 @@ class LoginPage extends Component {
         type: 'login/login',
         payload: {
           ...values,
-          ...this.state.captchaData,
+          ...captchaData,
         },
-        callback:(_ = (res) =>{
+        callback:((res) =>{
           if(!res.success){
             message.error("账户或密码错误")
             this.resetCaptchaForm();
@@ -66,23 +66,7 @@ class LoginPage extends Component {
     }
   };
 
-  /**
-   * @method
-   * @desc 重置验证码
-   */
-  resetCaptchaForm() {
-    reset(CAPTCHA_NAME);
- 
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'login/geetest',
-    });
-    this.setState({
-      captcha: false,
-      captchaData:{},
-    });
-    
-  }
+  
 
   /**
    * @method
@@ -95,6 +79,19 @@ class LoginPage extends Component {
     });
   };
 
+  /**
+   * @method
+   * @desc 重置验证码
+   */
+  resetCaptchaForm() {
+    reset(CAPTCHA_NAME);
+    this.setState({
+      captcha: false,
+      captchaData:{},
+    });
+    
+  }
+  
   render() {
     const { login, submitting } = this.props;
     return (

@@ -35,7 +35,7 @@ const CreateForm = Form.create()(props => {
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      //form.resetFields();
+      // form.resetFields();
       handleAdd(fieldsValue);
     });
   };
@@ -90,7 +90,7 @@ const CreateForm = Form.create()(props => {
               message: formatMessage({id:'app.authority.user.account.error.type'})
             }
           ],
-        })(<Input  addonBefore={organizationCode} placeholder={formatMessage({id:'app.please.enter'})}/>)}
+        })(<Input addonBefore={organizationCode} placeholder={formatMessage({id:'app.please.enter'})}/>)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.password'})}>
         {form.getFieldDecorator('password', {
@@ -143,7 +143,6 @@ class UpdateForm extends PureComponent {
         account:props.values.account,
         status:props.values.status,
       },
-      currentStep: 0,
     };
 
     this.formLayout = {
@@ -151,27 +150,29 @@ class UpdateForm extends PureComponent {
       wrapperCol: { span: 13 },
     };
   }
-  //更新用户
+
+  // 更新用户
   updateOkHandle = () => {
     const { form,handleUpdate} = this.props;
     const { formVals:oldVal } = this.state;
-  
     form.validateFields((err,fieldsValue) => {
       const formVals = { ...oldVal, ...fieldsValue };
       if (err) return;
       handleUpdate(formVals);
     });
   };
-  //修改用户状态state
+
+  // 修改用户状态state
   changeStatus = (value) => {
-    
+    const { formVals } = this.state;
     this.setState({
       formVals:{
-        ...this.state.formVals,
+        ...formVals,
         status:value
       }
     });
   };
+
   render() {
     const { form, updateModalVisible,handleUpdateModalVisible,getRoleOption } = this.props;
     const { formVals } = this.state;
@@ -184,7 +185,7 @@ class UpdateForm extends PureComponent {
         visible={updateModalVisible}
         onCancel={() => handleUpdateModalVisible()}
         onOk={() => this.updateOkHandle()}
-        >
+      >
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.account'})}>
           {formVals.account}
         </FormItem>
@@ -239,11 +240,11 @@ class UpdateForm extends PureComponent {
         </FormItem>
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id:'app.authority.user.status'})}>
           <Switch 
-              unCheckedChildren = {formatMessage({id:'app.authority.user.disable'})}
-              defaultChecked = {formVals.status}  
-              checkedChildren = {formatMessage({id:'app.authority.user.enable'})}
-              onChange={checked => this.changeStatus(checked)}
-            />
+            unCheckedChildren={formatMessage({id:'app.authority.user.disable'})}
+            defaultChecked={formVals.status}  
+            checkedChildren={formatMessage({id:'app.authority.user.enable'})}
+            onChange={checked => this.changeStatus(checked)}
+          />
         </FormItem>
       </Modal>
     );
@@ -259,7 +260,7 @@ class UpdateForm extends PureComponent {
 }))
 
 @Form.create()
-export default class TableList extends PureComponent {
+class TableList extends PureComponent {
   state = {
     modalVisible: false,
     updateModalVisible: false,
@@ -304,7 +305,8 @@ export default class TableList extends PureComponent {
         if(val)
           return <Badge status="success" text={formatMessage({id:'app.authority.user.enable'})} />;
         else
-          return <Badge status="error" text={formatMessage({id:'app.authority.user.disable'})}/>;
+          // eslint-disable-next-line
+          return <Badge status="error" text={formatMessage({id:'app.authority.user.disable'})} />;
       },
     },
     {
@@ -404,18 +406,16 @@ export default class TableList extends PureComponent {
     if (!selectedRows) return;
     Modal.confirm({
       title: formatMessage({id:'app.delete'}),
-      content: `${selectedRows.length}`+formatMessage({id:'app.authority.user.msg.delete'}),
+      content: `${selectedRows.length+formatMessage({id:'app.authority.user.msg.delete'})}`,
       centered:true,
       onOk: () => {
-
         const { dispatch } = this.props;
-        
         dispatch({
           type: 'users/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
-          callback: ( _ = res => {
+          callback: (res => {
             if(res.success){
               message.success(formatMessage({id:'app.authority.user.msg.success'}));
               this.handleFormReset();
@@ -484,7 +484,7 @@ export default class TableList extends PureComponent {
       payload: {
         ...fields,
       },
-      callback: (_ = res => {
+      callback: (res => {
         if(res.success){
           message.success(formatMessage({id:'app.authority.user.msg.success'}));
           
@@ -507,7 +507,7 @@ export default class TableList extends PureComponent {
       payload: {
         ...fields
       },
-      callback: (_ = res => {
+      callback: (res => {
         if(res.success){
           message.success(formatMessage({id:'app.authority.user.msg.success'}));
           this.handleFormReset();
@@ -525,10 +525,12 @@ export default class TableList extends PureComponent {
     const { global:{organization} } = this.props;
     return this.getOption(organization);
   };
+
   getRoleOption = () => {
     const { global:{role} } = this.props;
     return this.getOption(role);
   };
+
   getOption = list => {
     if (!list || list.length < 1) {
       return (
@@ -549,7 +551,7 @@ export default class TableList extends PureComponent {
     dispatch({
       type: 'global/organizationCode',
       payload: value,
-      callback: (_ = res => {
+      callback: (res => {
         this.setState({
           organizationCode:res.data
         });
@@ -583,7 +585,7 @@ export default class TableList extends PureComponent {
               {getFieldDecorator('organizeId')(
                 
                 <Select 
-                  allowClear={true} 
+                  allowClear 
                   placeholder={formatMessage({id:'app.please.select'})}
                   style={{ width: '100%' }} 
                 >
@@ -595,7 +597,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.role'})}>
               {getFieldDecorator('roleId')(
-                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear={true} >
+                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear>
                   {this.getRoleOption()}
                 </Select>
               )}
@@ -649,7 +651,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.role'})}>
               {getFieldDecorator('roleId')(
-                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear={true} >
+                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear>
                   {this.getRoleOption()}
                 </Select>
               )}
@@ -665,12 +667,12 @@ export default class TableList extends PureComponent {
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-              <FormItem  {...formItemLayout} label={formatMessage({id:'app.authority.user.account'})}>
-                {getFieldDecorator('account')(
-                  <Input style={{ width: '100%' }}  />
-                )}
-              </FormItem>
-            </Col>
+            <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.account'})}>
+              {getFieldDecorator('account')(
+                <Input style={{ width: '100%' }}  />
+              )}
+            </FormItem>
+          </Col>
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.phone'})}>
               {getFieldDecorator('phone')(
@@ -702,10 +704,10 @@ export default class TableList extends PureComponent {
               {formatMessage({id: 'app.search'})}
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
-            {formatMessage({id: 'app.reset'})}
+              {formatMessage({id: 'app.reset'})}
             </Button>
             <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-            {formatMessage({id: 'app.contract'})} <Icon type="up" />
+              {formatMessage({id: 'app.contract'})} <Icon type="up" />
             </a>
           </div>
         </div>
@@ -757,7 +759,7 @@ export default class TableList extends PureComponent {
                   <Button onClick={this.handleDelete}>{formatMessage({id: 'app.delete'})}</Button>
                   <Dropdown overlay={menu}>
                     <Button>
-                    {formatMessage({id: 'app.more'})}<Icon type="down" />
+                      {formatMessage({id: 'app.more'})}<Icon type="down" />
                     </Button>
                   </Dropdown>
                 </span>
@@ -769,11 +771,11 @@ export default class TableList extends PureComponent {
               data={data}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
-              //onChange={this.handleStandardTableChange}
+              // onChange={this.handleStandardTableChange}
             />
           </div>
         </Card>
-        <CreateForm {...parentMethods}  modalVisible={modalVisible} organizationCode={organizationCode} />
+        <CreateForm {...parentMethods} modalVisible={modalVisible} organizationCode={organizationCode} />
         {stepFormValues && Object.keys(stepFormValues).length ? (
           <UpdateForm
             {...updateMethods}
@@ -785,3 +787,4 @@ export default class TableList extends PureComponent {
     );
   }
 }
+export default TableList
