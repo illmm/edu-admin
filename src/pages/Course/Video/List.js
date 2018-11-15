@@ -12,7 +12,7 @@ import {
   Badge,
  } from 'antd';
 import styles from './Styles.less'
-import constants,{ status } from '@/constants'
+import { status, statusMap } from '@/constants'
 
 @connect(({ course, loading }) => ({
   course,
@@ -54,16 +54,16 @@ class VideoList extends PureComponent{
       dataIndex: 'status',
       filters: [
         {
-          text: constants.status[0],
+          text: status[0],
           value: 0,
         },
         {
-          text: constants.status[1],
+          text: status[1],
           value: 1,
         },
       ],
       render(val) {
-        return <Badge status={constants.statusMap[val]} text={constants.status[val]} />;
+        return <Badge status={statusMap[val]} text={status[val]} />;
       },
     },
     {

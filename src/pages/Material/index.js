@@ -5,6 +5,7 @@ import { formatMessage } from 'umi/locale';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { connect } from 'dva';
 import { getAuthority } from '@/utils/authority';
+import { status, statusMap } from '@/constants'
 import Link from 'umi/link';
 import { 
   Card,
@@ -32,8 +33,6 @@ import styles from './Index.less';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const statusMap = [ 'error','success'];
-const status = ["未发布","已发布"];
 
 //编辑组件
 @Form.create()

@@ -26,7 +26,10 @@ export async function getTags() {
   return request('/api/front/common/tags');
 }
 
-
+/* 获取来源 */
+export async function querySource() {
+  return request('/api/front/common/source');
+}
 
 /* 查询消息 */
 export async function queryNotices() {

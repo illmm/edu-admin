@@ -4,6 +4,7 @@ import { FormattedNumber } from 'react-intl'
 import { connect } from 'dva';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import { status, statusMap } from '@/constants'
 import { 
   Form,
   Card,
@@ -16,8 +17,6 @@ import {
 import Link from 'umi/link';
 import styles from './Styles.less'
 
-const statusMap = [ 'error','success'];
-const status = ["未发布","已发布"];
 
  @connect(({ course, loading }) => ({
   course,
