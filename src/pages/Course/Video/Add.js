@@ -148,40 +148,31 @@ class AddVideoCourse extends PureComponent{
       </div>
     );
 
-    const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media' ]
     
     return(
       <PageHeaderWrapper>
         
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label="机构">
-              {getFieldDecorator('organization',{
-                rules: [
-                  {
-                    required: true,
-                    message:'请选择机构'
-                  }, 
-                ],
-              })( 
-                <Select style={{width:300}} placeholder="请选择机构">
-                  <Option value="1">机构1</Option> 
-                  <Option value="2">机构2</Option> 
-                </Select>)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="课程">
+            <FormItem {...formItemLayout} label="课程名称">
               {getFieldDecorator('title',{
                 rules: [
                   {
                     required: true,
-                    message:'请选择课程'
+                    message:'请输入课程名称'
                   }, 
                 ],
-              })( 
-                <Select style={{width:300}} placeholder="请选择课程">
-                  <Option value="1">课程1</Option> 
-                  <Option value="2">课程2</Option> 
-                </Select>)}
+              })(<Input />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="编号">
+              {getFieldDecorator('courseNumber',{
+                rules: [
+                  {
+                    required: true,
+                    message:'请输入课程编号'
+                  }, 
+                ],
+              })(<Input />)}
             </FormItem>
             <FormItem {...formItemLayout} label="分类">
               {getFieldDecorator('classify')
@@ -203,7 +194,6 @@ class AddVideoCourse extends PureComponent{
               })
               (
                 <Select
-                  
                   mode="multiple"
                   style={{width:300}}
                   placeholder="选择标签"
@@ -303,7 +293,7 @@ class AddVideoCourse extends PureComponent{
                   }
                 }],
                 // style={{ border:'1px solid #d1d1d1',borderRadius:'5px'}}
-              })(<BraftEditor className={styles.editor} controls={controls} placeholder="请输入简介" />)}
+              })(<BraftEditor className={styles.editor} placeholder="请输入简介" />)}
             </FormItem>
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>

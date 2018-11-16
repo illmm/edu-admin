@@ -33,6 +33,7 @@ class AddOnlineCourse extends PureComponent{
   state = {
     uploadLoading: false,
     qiniuToken:'',
+    editorState: BraftEditor.createEditorState()
   }
   
   componentDidMount() {
@@ -57,7 +58,11 @@ class AddOnlineCourse extends PureComponent{
       }
     });
   }
-  
+
+  handleChange = (editorState) => {
+    this.setState({ editorState })
+  }
+
   handleSubmit = e => {
     const { dispatch, form } = this.props;
     e.preventDefault();
@@ -97,6 +102,76 @@ class AddOnlineCourse extends PureComponent{
         uploadLoading: false,
       }));
     }
+  }
+
+  preview = () => {
+
+    if (window.previewWindow) {
+      window.previewWindow.close()
+    }
+
+    window.previewWindow = window.open()
+    window.previewWindow.document.write(this.buildPreviewHtml())
+    window.previewWindow.document.close()
+
+  }
+
+  buildPreviewHtml () {
+    const { editorState } = this.state;
+    return `
+      <!Doctype html>
+      <html>
+        <head>
+          <title>Preview Content</title>
+          <style>
+            html,body{
+              height: 100%;
+              margin: 0;
+              padding: 0;
+              overflow: auto;
+              background-color: #f1f2f3;
+            }
+            .container{
+              box-sizing: border-box;
+              width: 1000px;
+              max-width: 100%;
+              min-height: 100%;
+              margin: 0 auto;
+              padding: 30px 20px;
+              overflow: hidden;
+              background-color: #fff;
+              border-right: solid 1px #eee;
+              border-left: solid 1px #eee;
+            }
+            .container img,
+            .container audio,
+            .container video{
+              max-width: 100%;
+              height: auto;
+            }
+            .container p{
+              white-space: pre-wrap;
+              min-height: 1em;
+            }
+            .container pre{
+              padding: 15px;
+              background-color: #f1f1f1;
+              border-radius: 5px;
+            }
+            .container blockquote{
+              margin: 0;
+              padding: 15px;
+              background-color: #f1f1f1;
+              border-left: 3px solid #d1d1d1;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">${editorState.toHTML()}</div>
+        </body>
+      </html>
+    `
+
   }
 
   render(){
@@ -147,9 +222,14 @@ class AddOnlineCourse extends PureComponent{
         <div className="ant-upload-text">上传</div>
       </div>
     );
-
-    const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media' ]
-    
+    const extendControls = [
+      {
+        key: 'custom-button',
+        type: 'button',
+        text: '预览',
+        onClick: this.preview
+      }
+    ]
     return(
       <PageHeaderWrapper>
         
@@ -184,7 +264,14 @@ class AddOnlineCourse extends PureComponent{
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="分类">
-              {getFieldDecorator('classify')
+              {getFieldDecorator('classify',{
+                rules: [
+                  {
+                    required: true,
+                    message:'请选择分类'
+                  }, 
+                ],
+              })
               (<Cascader 
                 style={{width:300}}
                 options={classify}     
@@ -303,7 +390,13 @@ class AddOnlineCourse extends PureComponent{
                   }
                 }],
                 // style={{ border:'1px solid #d1d1d1',borderRadius:'5px'}}
-              })(<BraftEditor className={styles.editor} controls={controls} placeholder="请输入简介" />)}
+              })(
+                <BraftEditor 
+                  onChange={this.handleChange}
+                  className={styles.editor} 
+                  placeholder="请输入简介" 
+                  extendControls={extendControls}
+                />)}
             </FormItem>
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>

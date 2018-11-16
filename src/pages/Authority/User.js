@@ -30,7 +30,7 @@ const getValue = obj =>
     .join(',');
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible,organizationCode, form, setOrganizationCode,handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
   
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -52,7 +52,7 @@ const CreateForm = Form.create()(props => {
         {form.getFieldDecorator('organizeId', {
           rules: [{ required: true, message: formatMessage({id:'app.please.select'})}],
         })(
-          <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} onChange={setOrganizationCode}>
+          <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }}>
             {getOrganizationOption()}
           </Select>
         )}
@@ -90,7 +90,7 @@ const CreateForm = Form.create()(props => {
               message: formatMessage({id:'app.authority.user.account.error.type'})
             }
           ],
-        })(<Input addonBefore={organizationCode} placeholder={formatMessage({id:'app.please.enter'})}/>)}
+        })(<Input placeholder={formatMessage({id:'app.please.enter'})} />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.password'})}>
         {form.getFieldDecorator('password', {
@@ -466,7 +466,6 @@ class TableList extends PureComponent {
   handleModalVisible = flag => {
     this.setState({
       modalVisible: !!flag,
-      organizationCode: "",
     });
   };
 
@@ -546,18 +545,7 @@ class TableList extends PureComponent {
     ));
   };
 
-  setOrganizationCode = value =>{
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'global/organizationCode',
-      payload: value,
-      callback: (res => {
-        this.setState({
-          organizationCode:res.data
-        });
-      }),
-    });
-  }
+  
 
   renderSimpleForm() {
     const {
@@ -737,7 +725,6 @@ class TableList extends PureComponent {
       handleModalVisible: this.handleModalVisible,
       getOrganizationOption: this.getOrganizationOption,
       getRoleOption: this.getRoleOption,
-      setOrganizationCode: this.setOrganizationCode,
     };
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,

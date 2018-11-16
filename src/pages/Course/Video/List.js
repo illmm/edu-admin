@@ -107,9 +107,11 @@ class VideoList extends PureComponent{
           <div className={styles.tableList}>
             <div className={styles.tableListForm} />
             <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary">
-            新建视频课程
-              </Button>
+              <Link to="/course/video/add">
+                <Button icon="plus" type="primary">
+                  新建视频课程
+                </Button>
+              </Link>
               {selectedRows.length > 0 && (
               <span>
                 {/* <Button onClick={this.handleDelete}>删除</Button> */}
