@@ -64,8 +64,15 @@ class AddOnlineCourse extends PureComponent{
 
     form.validateFieldsAndScroll((err, values) => {
       if(!err){
+        // eslint-disable-next-line
         values.key = values.image.file.response.key;
+        // eslint-disable-next-line
         delete values.image;
+        // eslint-disable-next-line
+        values.introduceRAW = values.introduce.toRAW();
+        // eslint-disable-next-line
+        values.introduceHTML = values.introduce.toHTML();
+        console.log(values)
         dispatch({
           type: 'course/add',
           payload: values,
@@ -94,7 +101,7 @@ class AddOnlineCourse extends PureComponent{
 
   render(){
     const {
-      form: { getFieldDecorator, getFieldValue },
+      form: { getFieldDecorator },
       global: { classify, tags, source },
     } = this.props;
 
@@ -140,23 +147,38 @@ class AddOnlineCourse extends PureComponent{
         <div className="ant-upload-text">上传</div>
       </div>
     );
+
+    const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media' ]
     
     return(
       <PageHeaderWrapper>
         
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
-            <FormItem {...formItemLayout} label="标题">
+            <FormItem {...formItemLayout} label="机构">
+              {getFieldDecorator('organization',{
+                rules: [
+                  {
+                    required: true,
+                    message:'请选择机构'
+                  }, 
+                ],
+              })( 
+                <Select style={{width:300}} placeholder="请选择机构">
+                  <Option value="1">机构1</Option> 
+                  <Option value="2">机构2</Option> 
+                </Select>)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="课程">
               {getFieldDecorator('title',{
                 rules: [
                   {
                     required: true,
-                    message:'请输入课程名称'
+                    message:'请选择课程'
                   }, 
                 ],
-                initialValue: '1',
               })( 
-                <Select style={{width:300}}>
+                <Select style={{width:300}} placeholder="请选择课程">
                   <Option value="1">课程1</Option> 
                   <Option value="2">课程2</Option> 
                 </Select>)}
@@ -164,7 +186,6 @@ class AddOnlineCourse extends PureComponent{
             <FormItem {...formItemLayout} label="分类">
               {getFieldDecorator('classify')
               (<Cascader 
-               
                 style={{width:300}}
                 options={classify}     
                 placeholder="请选择分类" 
@@ -172,7 +193,14 @@ class AddOnlineCourse extends PureComponent{
               />)}
             </FormItem>
             <FormItem {...formItemLayout} label="标签">
-              {getFieldDecorator('tags')
+              {getFieldDecorator('tags',{
+                rules: [
+                  {
+                    required: true,
+                    message:'请选择标签'
+                  }
+                ]
+              })
               (
                 <Select
                   
@@ -184,7 +212,14 @@ class AddOnlineCourse extends PureComponent{
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="来源">
-              {getFieldDecorator('source_id')
+              {getFieldDecorator('source_id',{
+                rules: [
+                  {
+                    required: true,
+                    message:'请选择来源'
+                  }
+                ]
+              })
               (
                 <Select
                   style={{width:300}}
@@ -193,25 +228,7 @@ class AddOnlineCourse extends PureComponent{
                   {source.map(item => <Option key={item.id}>{item.name}</Option>)}
                 </Select>)}
             </FormItem>
-            <FormItem {...formItemLayout} label="图片">
-              {getFieldDecorator('image')
-              (
-                <Upload
-                  listType="picture-card"
-                  className={styles.uploadImage}
-                  showUploadList={false}
-                  action="//upload.qiniup.com"
-                  beforeUpload={beforeUpload}
-                  loading={uploadLoading}
-                  onChange={this.handleUploadChange}
-                  name="file"
-                  data={data}
-                >
-                  {imageUrl ? <img src={imageUrl} className={styles.uploadImage} alt="avatar" /> : uploadButton}
-                </Upload>
-              )}
-
-            </FormItem>
+            
             <FormItem {...formItemLayout} label="关键字">
               {getFieldDecorator('keyWord',{
                 rules: [
@@ -240,7 +257,7 @@ class AddOnlineCourse extends PureComponent{
                     message:'请输入价格'
                   }
                 ]
-              })(<InputNumber placeholder="价格" />)}
+              })(<InputNumber precision={2} min={0} max={9999} placeholder="价格" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="原始价格">
               {getFieldDecorator('originPrice',{
@@ -250,14 +267,45 @@ class AddOnlineCourse extends PureComponent{
                     message:'请输入原始价格'
                   }
                 ]
-              })(<InputNumber placeholder="原始价格" />)}
+              })(<InputNumber precision={2} min={0} max={9999} placeholder="原始价格" />)}
             </FormItem>
-           
-            <FormItem {...formItemLayout} label="介绍">
-              {getFieldDecorator('detail',{
-               
-              })(<div className={styles.editor}><BraftEditor /></div>)}
+            <FormItem {...formItemLayout} label="图片">
+              {getFieldDecorator('image')
+              (
+                <Upload
+                  listType="picture-card"
+                  className={styles.uploadImage}
+                  showUploadList={false}
+                  action="//upload.qiniup.com"
+                  beforeUpload={beforeUpload}
+                  loading={uploadLoading}
+                  onChange={this.handleUploadChange}
+                  name="file"
+                  data={data}
+                >
+                  {imageUrl ? <img src={imageUrl} className={styles.uploadImage} alt="avatar" /> : uploadButton}
+                </Upload>
+              )}
+
             </FormItem>
+            <FormItem {...formItemLayout} label="简介">
+              {getFieldDecorator('introduce',{
+                validateTrigger: 'onBlur',
+                rules: [{
+                  required: true,
+                  validator: (_, value, callback) => {
+                    console.log(value);
+                    if (value) {
+                      callback()
+                    } else {
+                      callback('请输入正文内容')
+                    }
+                  }
+                }],
+                // style={{ border:'1px solid #d1d1d1',borderRadius:'5px'}}
+              })(<BraftEditor className={styles.editor} controls={controls} placeholder="请输入简介" />)}
+            </FormItem>
+
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={false}>
                 提交
