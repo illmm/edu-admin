@@ -22,7 +22,7 @@ export default [
         component: './Workplace',
        
       },
-      //机构管理
+      // 机构管理
       {
         path: '/agency',
         name: 'agency',
@@ -57,7 +57,12 @@ export default [
             name: 'video',
             component: './Course/Video/List',
           },
-          
+          {
+            hideInMenu: true,
+            path: '/course/video/add',
+            name: 'video.add',
+            component: './Course/Video/Add',
+          },
           {
             path: '/course/online',
             name: 'online',
