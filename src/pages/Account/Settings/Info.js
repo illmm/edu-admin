@@ -21,8 +21,6 @@ class Info extends Component {
       security: (
         <FormattedMessage id="app.settings.menuMap.security" defaultMessage="Security Settings" />
       ),
-      
-      
     };
     const key = location.pathname.replace(`${match.path}/`, '');
     this.state = {
@@ -89,7 +87,7 @@ class Info extends Component {
 
   render() {
     const { children, currentUser } = this.props;
-    if (!currentUser.id) {
+    if (!currentUser.name) {
       return '';
     }
     const { mode, selectKey } = this.state;

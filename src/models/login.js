@@ -5,21 +5,20 @@ import { setAuthority, removeAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 
-
 export default {
   namespace: 'login',
   state: {
     success: true,
-    geetest:{
-      gt: "",
-      challenge: "",
+    geetest: {
+      gt: '',
+      challenge: '',
       success: -1,
     },
   },
   effects: {
     *login({ callback, payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
-      if(callback) callback(response);
+      if (callback) callback(response);
       // Login successfully
       if (response.success) {
         setAuthority(response.data);
@@ -31,8 +30,8 @@ export default {
           const redirectUrlParams = new URL(redirect);
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.startsWith('/#')) {
-              redirect = redirect.substr(2);
+            if (redirect.match(/^\/.*#/)) {
+              redirect = redirect.substr(redirect.indexOf('#') + 1);
             }
           } else {
             window.location.href = redirect;
@@ -43,8 +42,7 @@ export default {
       }
     },
 
-
-    *logout(_, { call,put }) {
+    *logout(_, { call, put }) {
       removeAuthority();
       reloadAuthorized();
       const response = yield call(queryGeetest);
@@ -71,10 +69,10 @@ export default {
   },
   reducers: {
     saveGeetest(state, { payload }) {
-       return {
-         ...state,
-         geetest: payload,
-       };
-     },
+      return {
+        ...state,
+        geetest: payload,
+      };
+    },
   },
 };

@@ -3,9 +3,7 @@ export default [
   {
     path: '/login',
     component: '../layouts/UserLayout',
-    routes: [
-      { path: '/login', component: './User/Login' },
-    ],
+    routes: [{ path: '/login', component: './User/Login' }],
   },
   // app
   {
@@ -20,7 +18,6 @@ export default [
         name: 'workplace',
         icon: 'desktop',
         component: './Workplace',
-       
       },
       // 机构管理
       {
@@ -29,7 +26,6 @@ export default [
         icon: 'cluster',
         component: './Agency/List',
         authority: ['admin'],
-        
       },
       {
         path: '/agency/resource',
@@ -64,6 +60,12 @@ export default [
             component: './Course/Video/Add',
           },
           {
+            hideInMenu: true,
+            path: '/course/video/:id',
+            name: 'video.info',
+            component: './Course/Video/Info',
+          },
+          {
             path: '/course/online',
             name: 'online',
             component: './Course/Online/List',
@@ -74,7 +76,6 @@ export default [
             name: 'online.add',
             component: './Course/Online/Add',
           },
-          
         ],
       },
       // 教材管理
@@ -93,7 +94,7 @@ export default [
         hideInMenu: true,
         authority: ['admin'],
       },
-      //培训管理
+      // 培训管理
       {
         name: 'train',
         icon: 'customer-service',
@@ -101,7 +102,7 @@ export default [
         authority: ['admin'],
         component: './Train/List',
       },
-      //套餐产品
+      // 套餐产品
       {
         name: 'package',
         icon: 'shop',
@@ -109,7 +110,7 @@ export default [
         authority: ['admin'],
         component: './Exception/403',
       },
-      //权限管理
+      // 权限管理
       {
         path: '/authority',
         name: 'authority',
@@ -136,41 +137,40 @@ export default [
           // },
         ],
       },
-      //师生管理
+      // 师生管理
       {
         name: 'member',
         icon: 'user',
         path: '/member',
-        authority: ['organize_admin','principal'],
+        authority: ['organize_admin', 'principal'],
         component: './Exception/403',
       },
-      //消息管理
+      // 消息管理
       {
         name: 'message',
         icon: 'message',
         path: '/result',
         authority: ['admin'],
         component: './Exception/403',
-       
       },
-      //采购管理
+      // 采购管理
       {
         name: 'purchase',
         icon: 'heart',
         path: '/purchase',
-        authority: ['organize_admin','principal'],
+        authority: ['organize_admin', 'principal'],
         component: './Exception/403',
       },
-      //统计报表
+      // 统计报表
       {
         name: 'statistics',
         icon: 'bar-chart',
         path: '/statistics',
-        authority: ['organize_admin','principal'],
+        authority: ['organize_admin', 'principal'],
         component: './Exception/403',
       },
-    
-      //系统设置
+
+      // 系统设置
       {
         name: 'settings',
         icon: 'setting',
@@ -189,9 +189,9 @@ export default [
             path: '/settings/classify',
             component: './Settings/Classify',
           },
-        ]
-        
+        ],
       },
+      // 个人设置
       {
         name: 'account',
         icon: 'user',
@@ -248,7 +248,6 @@ export default [
             name: 'server-error',
             component: './Exception/500',
           },
-          
         ],
       },
       {

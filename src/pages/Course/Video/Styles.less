@@ -1,6 +1,15 @@
 @import '~antd/lib/style/themes/default.less';
 @import '~@/utils/utils.less';
-
+.headerList {
+  margin-bottom: 4px;
+}
+.textSecondary {
+  color: @text-color-secondary;
+}
+.heading {
+  color: @heading-color;
+  font-size: 20px;
+}
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
@@ -39,12 +48,12 @@
   width: 100px;
   height: 100px;
 }
-.input{
+.input {
   width: 300px;
 }
-.editor{
-  border:1px solid #d1d1d1;
-  border-radius:5px
+.editor {
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
 }
 @media screen and (max-width: @screen-lg) {
   .tableListForm :global(.ant-form-item) {

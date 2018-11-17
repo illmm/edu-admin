@@ -5,18 +5,21 @@
 
 ### 使用 docker
 
+
 ```bash
-// dev 
+
+
+# dev 
 $ npm run docker:dev
 
-// build 
+# build 
 $ npm run docker:build
 
 
-// production dev 
+# production dev 
 $ npm run docker-prod:dev
 
-// production build 
+# production build 
 $ npm run docker-prod:build
 ```
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from 'antd';
+import { Layout, BackTop } from 'antd';
 import DocumentTitle from 'react-document-title';
 import isEqual from 'lodash/isEqual';
 import memoizeOne from 'memoize-one';
@@ -19,37 +19,38 @@ import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
 
+import styles from '@/global.less';
+
 const { Content } = Layout;
 
 // Conversion router to menu.
 function formatter(data, parentAuthority, parentName) {
   return data
-  .map(item => {
-    if (!item.name || !item.path) {
-      return null;
-    }
-    let locale = 'menu';
-    if (parentName) {
-      locale = `${parentName}.${item.name}`;
-    } else {
-      locale = `menu.${item.name}`;
-    }
-    const result = {
-      ...item,
-      name: formatMessage({ id: locale, defaultMessage: item.name }),
-      locale,
-      authority: item.authority || parentAuthority,
-    };
-    if (item.routes) {
-      const children = formatter(item.routes, item.authority, locale);
-      // Reduce memory usage
-      result.children = children;
-    }
-    delete result.routes;
-    return result;
-  })
-  .filter(item => item);
-
+    .map(item => {
+      if (!item.name || !item.path) {
+        return null;
+      }
+      let locale = 'menu';
+      if (parentName) {
+        locale = `${parentName}.${item.name}`;
+      } else {
+        locale = `menu.${item.name}`;
+      }
+      const result = {
+        ...item,
+        name: formatMessage({ id: locale, defaultMessage: item.name }),
+        locale,
+        authority: item.authority || parentAuthority,
+      };
+      if (item.routes) {
+        const children = formatter(item.routes, item.authority, locale);
+        // Reduce memory usage
+        result.children = children;
+      }
+      delete result.routes;
+      return result;
+    })
+    .filter(item => item);
 }
 const memoizeOneFormatter = memoizeOne(formatter, isEqual);
 
@@ -85,7 +86,6 @@ class BasicLayout extends React.PureComponent {
     this.getBreadcrumbNameMap = memoizeOne(this.getBreadcrumbNameMap, isEqual);
     this.breadcrumbNameMap = this.getBreadcrumbNameMap();
     this.matchParamsPath = memoizeOne(this.matchParamsPath, isEqual);
-
   }
 
   state = {
@@ -143,9 +143,9 @@ class BasicLayout extends React.PureComponent {
 
   getMenuData() {
     const {
-      route: { routes },
-    } = this.props; 
-    return memoizeOneFormatter(routes);
+      route: { routes, authority },
+    } = this.props;
+    return memoizeOneFormatter(routes, authority);
   }
 
   /**
@@ -178,13 +178,13 @@ class BasicLayout extends React.PureComponent {
     const currRouterData = this.matchParamsPath(pathname);
 
     if (!currRouterData) {
-      return formatMessage({id:'app.name'});
+      return formatMessage({ id: 'app.name' });
     }
-    const message = formatMessage({
+    const pageName = formatMessage({
       id: currRouterData.locale || currRouterData.name,
       defaultMessage: currRouterData.name,
     });
-    return `${message} - ${formatMessage({id:'app.name'})}`;
+    return `${pageName} - ${formatMessage({ id: 'app.name' })}`;
   };
 
   getLayoutStyle = () => {
@@ -265,7 +265,9 @@ class BasicLayout extends React.PureComponent {
               authority={routerConfig && routerConfig.authority}
               noMatch={<Exception403 />}
             >
-
+              <BackTop>
+                <div className={styles.topInner}>UP</div>
+              </BackTop>
               {children}
             </Authorized>
           </Content>

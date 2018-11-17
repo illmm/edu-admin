@@ -1,12 +1,12 @@
-import { 
+import {
   queryNotices,
-  getQiniuToken, 
-  getClassify, 
-  getTags, 
+  getQiniuToken,
+  getClassify,
+  getTags,
   queryAutoSource,
-  querySource 
-} from '@/services/api'
-import { queryOrganization,queryRole,queryCurrent,queryOrganizationCode } from '@/services/user'
+  querySource,
+} from '@/services/api';
+import { queryOrganization, queryRole, queryCurrent, queryOrganizationCode } from '@/services/user';
 
 export default {
   namespace: 'global',
@@ -16,32 +16,30 @@ export default {
     organization: [],
     role: [],
     currentUser: {
-      dynamics:[]
+      dynamics: [],
     },
     tags: [],
     source: [],
-  
   },
 
   effects: {
-    *getTags(_,{ call, put }){
+    *getTags(_, { call, put }) {
       const response = yield call(getTags);
       yield put({
         type: 'saveTags',
         payload: response,
       });
     },
-    *getClassify({ payload },{ call, put }){
-      const response = yield call(getClassify,payload);
+    *getClassify({ payload }, { call, put }) {
+      const response = yield call(getClassify, payload);
       yield put({
-        type:'saveClassify',
-        payload:response,
+        type: 'saveClassify',
+        payload: response,
       });
-      
     },
-    *getQiniuToekn({ callback },{ call }){
+    *getQiniuToekn({ callback }, { call }) {
       const response = yield call(getQiniuToken);
-      if(callback) callback(response)
+      if (callback) callback(response);
     },
     *fetchNotices(_, { call, put }) {
       const data = yield call(queryNotices);
@@ -80,8 +78,8 @@ export default {
         payload: false,
       });
     },
-    *organizationCode({payload, callback}, { call }) {
-      const response = yield call(queryOrganizationCode,payload);
+    *organizationCode({ payload, callback }, { call }) {
+      const response = yield call(queryOrganizationCode, payload);
       if (callback) callback(response);
     },
     *role(_, { call, put }) {
@@ -90,7 +88,7 @@ export default {
         payload: true,
       });
       const response = yield call(queryRole);
-     
+
       yield put({
         type: 'saveRole',
         payload: response,
@@ -102,30 +100,27 @@ export default {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
-      if(response){
+      if (response) {
         yield put({
           type: 'saveCurrentUser',
           payload: response,
         });
       }
-      
     },
-    *queryAutoSource({ payload, callback },{ call }){
-      const response = yield call(queryAutoSource,payload);
+    *queryAutoSource({ payload, callback }, { call }) {
+      const response = yield call(queryAutoSource, payload);
       if (callback) callback(response);
     },
-    *source({ callback },{ call, put }){
+    *source({ callback }, { call, put }) {
       const response = yield call(querySource);
-      if(callback) callback(response);
-      if(response){
-       
+      if (callback) callback(response);
+      if (response) {
         yield put({
           type: 'saveSource',
           payload: response.data,
-        })
+        });
       }
-      
-    }
+    },
   },
 
   reducers: {
@@ -162,10 +157,10 @@ export default {
     saveClassify(state, action) {
       return {
         ...state,
-        classify: action.payload,
+        classify: action.payload.data,
       };
     },
-    saveTags(state, action){
+    saveTags(state, action) {
       return {
         ...state,
         tags: action.payload.data,
@@ -196,8 +191,8 @@ export default {
       return {
         ...state,
         source: action.payload,
-      }
-    }
+      };
+    },
   },
 
   subscriptions: {

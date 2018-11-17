@@ -23,6 +23,12 @@ const plugins = [
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
       },
+      pwa: {
+        workboxPluginMode: 'InjectManifest',
+        workboxOptions: {
+          importWorkboxFrom: 'local',
+        },
+      },
       ...(!process.env.TEST && os.platform() === 'darwin'
         ? {
             dll: {
@@ -46,8 +52,6 @@ if (process.env.APP_TYPE === 'site') {
   ]);
 }
 
-
-
 export default {
   // add for transfer to umi
   plugins,
@@ -59,7 +63,7 @@ export default {
   },
   // 路由配置
   routes: pageRoutes,
-  
+
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
@@ -68,8 +72,8 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://192.168.1.157:8999'
-    }
+      target: 'http://192.168.1.157:8999',
+    },
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
@@ -103,10 +107,4 @@ export default {
   },
 
   chainWebpack: webpackPlugin,
-  
 };
-
-
-
-
-  
