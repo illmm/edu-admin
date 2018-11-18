@@ -22,9 +22,10 @@ import styles from './Styles.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ global,loading }) => ({
+@connect(({ global, course, loading }) => ({
   global,
-  loading: loading.effects['global/getClassify'],
+  course,
+  loading:loading.effects['global/getClassify'],
 }))
 
 @Form.create()
@@ -48,7 +49,9 @@ class AddOnlineCourse extends PureComponent{
     dispatch({
       type: 'global/source',
     });
-   
+    dispatch({
+      type: 'global/organization',
+    });
     dispatch({
       type: 'global/getQiniuToekn',
       callback: res => {
@@ -63,29 +66,74 @@ class AddOnlineCourse extends PureComponent{
     this.setState({ editorState })
   }
 
+  handleOrganizChange = (value) =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'course/bbCourse',
+      payload: value,
+    });
+  }
+
+  handleBBCourseChange = (key,vals) =>{
+    const { props } = vals.props;
+    const { form } = this.props;
+    form.setFieldsValue({
+      introduce: BraftEditor.createEditorState(props.introduce)
+    })
+    // eslint-disable-next-line
+    delete props.introduce;
+    this.setState({
+      bbProps:props,
+    })
+  }
+
   handleSubmit = e => {
     const { dispatch, form } = this.props;
+    const { bbProps } = this.state;
     e.preventDefault();
 
     form.validateFieldsAndScroll((err, values) => {
       if(!err){
         // eslint-disable-next-line
-        values.key = values.image.file.response.key;
+        values.image = values.image.file.response.key;
         // eslint-disable-next-line
-        delete values.image;
+        //delete values.image;
         // eslint-disable-next-line
         values.introduceRAW = values.introduce.toRAW();
         // eslint-disable-next-line
-        values.introduceHTML = values.introduce.toHTML();
-        console.log(values)
+        values.introduce = values.introduce.toHTML();
+         // eslint-disable-next-line
+        const vals = { ...values,...bbProps }
         dispatch({
           type: 'course/add',
-          payload: values,
+          payload: vals,
         });
       }
     });
 
   }
+
+  getOrganizationOption = () => {
+   
+    const { global: { organization } } = this.props;
+    return this.getOption(organization);
+  };
+
+  getOption = list => {
+    if (!list || list.length < 1) {
+      return (
+        <Option key={0} value={0}>
+          暂无选项
+        </Option>
+      );
+    }
+    return list.map(item => (
+      <Option key={item.id} value={item.id}>
+        {item.name}
+      </Option>
+    ));
+  };
+
 
   handleUploadChange = (info) => {
     if (info.file.status === 'uploading') {
@@ -178,9 +226,14 @@ class AddOnlineCourse extends PureComponent{
     const {
       form: { getFieldDecorator },
       global: { classify, tags, source },
+      course: { bbCourse },
     } = this.props;
 
-    const { uploadLoading, imageUrl, qiniuToken } = this.state;
+    const { 
+      uploadLoading, 
+      imageUrl, 
+      qiniuToken, 
+    } = this.state;
     const data = {
       token: qiniuToken
     }
@@ -236,7 +289,7 @@ class AddOnlineCourse extends PureComponent{
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label="机构">
-              {getFieldDecorator('organization',{
+              {getFieldDecorator('organizationId',{
                 rules: [
                   {
                     required: true,
@@ -244,9 +297,8 @@ class AddOnlineCourse extends PureComponent{
                   }, 
                 ],
               })( 
-                <Select style={{width:300}} placeholder="请选择机构">
-                  <Option value="1">机构1</Option> 
-                  <Option value="2">机构2</Option> 
+                <Select style={{width:300}} placeholder="请选择机构" onChange={this.handleOrganizChange}>
+                  {this.getOrganizationOption()}
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="课程">
@@ -258,13 +310,12 @@ class AddOnlineCourse extends PureComponent{
                   }, 
                 ],
               })( 
-                <Select style={{width:300}} placeholder="请选择课程">
-                  <Option value="1">课程1</Option> 
-                  <Option value="2">课程2</Option> 
+                <Select style={{width:300}} placeholder="请选择课程" onChange={this.handleBBCourseChange}>
+                  {bbCourse.map(item => <Option props={item} key={item.pkIdKey}>{item.title}</Option>)}
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="分类">
-              {getFieldDecorator('classify',{
+              {getFieldDecorator('classifies',{
                 rules: [
                   {
                     required: true,
@@ -280,7 +331,7 @@ class AddOnlineCourse extends PureComponent{
               />)}
             </FormItem>
             <FormItem {...formItemLayout} label="标签">
-              {getFieldDecorator('tags',{
+              {getFieldDecorator('tagsIds',{
                 rules: [
                   {
                     required: true,
@@ -299,7 +350,7 @@ class AddOnlineCourse extends PureComponent{
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="来源">
-              {getFieldDecorator('source_id',{
+              {getFieldDecorator('sourceId',{
                 rules: [
                   {
                     required: true,

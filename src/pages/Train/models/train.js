@@ -29,7 +29,7 @@ export default {
     saveTrainList(state, action){
       return {
         ...state,
-        trainList:action.payload.data,
+        list:action.payload.data,
       }
     }
   }

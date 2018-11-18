@@ -1,7 +1,17 @@
-import React, { Component, Fragment } from 'react';
-import { List, Input, Form, Button, Popover, Progress } from 'antd';
+import React, { Component } from 'react';
+import {  
+  Input, 
+  Form, 
+  Button, 
+  Popover, 
+  Progress,
+  message 
+} from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import styles from './Register.less';
+import { connect } from 'dva';
+
+import styles from './SecurityView.less';
+
 
 const passwordStatusMap = {
   ok: (
@@ -27,15 +37,44 @@ const passwordProgressMap = {
   poor: 'exception',
 };
 const FormItem = Form.Item;
+
+
+@connect(({ loading }) => ({
+  submitting: loading.effects['account/modifyPwd'],
+}))
 @Form.create()
 class SecurityView extends Component {
   state = {
-    count: 0,
     confirmDirty: false,
     visible: false,
     help: '',
   };
 
+  handleSubmit = e => {
+    e.preventDefault();
+    const { form, dispatch } = this.props;
+    form.validateFields({ force: true }, (err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'account/modifyPwd',
+          payload: {
+            ...values,
+          },
+          callback:(res => {
+            if(res.success){
+              message.info(res.msg);
+            }
+            else{
+              this.setState({
+                help: res.msg,
+              });
+            }
+          })
+        });
+      }
+    });
+  };
+  
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -51,7 +90,6 @@ class SecurityView extends Component {
   renderPasswordProgress = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
-    console.log(value);
     const passwordStatus = this.getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
@@ -107,18 +145,11 @@ class SecurityView extends Component {
   render() {
     const {
       form: { getFieldDecorator },
+      submitting,
     } = this.props;
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 3 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 15 },
-      },
-    };
+    const { help } = this.state;
+
     const submitFormLayout = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
@@ -128,9 +159,9 @@ class SecurityView extends Component {
     const { visible } = this.state;
     return (
       <div className={styles.main}>
-        <Form hideRequiredMark>
-          <FormItem>
-            {getFieldDecorator('title', {
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem help={help}>
+            {getFieldDecorator('oldPassword', {
               rules: [
                 {
                   required: true,
@@ -179,10 +210,10 @@ class SecurityView extends Component {
             })(<Input size="large" type="password" placeholder="确认密码" />)}
           </FormItem>
           <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
-            <Button type="primary" htmlType="submit" loading={false}>
+            <Button type="primary" htmlType="submit" loading={submitting}>
               提交
             </Button>
-            <Button style={{ marginLeft: 8 }}>返回</Button>
+            
           </FormItem>
         </Form>
       </div>

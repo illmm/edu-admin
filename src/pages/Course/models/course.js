@@ -1,4 +1,9 @@
-import { queryOnlineCourse, queryVideoCourse, addCourse } from '@/services/course';
+import { 
+  queryOnlineCourse, 
+  queryVideoCourse, 
+  addCourse,
+  queryBBCourse 
+} from '@/services/course';
 
 export default {
   namespace: 'course',
@@ -12,6 +17,7 @@ export default {
       list: [],
       pagination: {},
     },
+    bbCourse:[],
   },
 
   effects: {
@@ -31,10 +37,23 @@ export default {
         payload:response,
       })
     },
-    *add({ payload, callback },{ call }){
+    *add({ payload, callback },{ call, put }){
       const response = yield call(addCourse,payload);
       if(callback) callback(response);
-      
+      yield put({
+        type: 'addHandle',
+        payload: response
+      });
+    },
+    *bbCourse({ payload, callback },{ call, put }){
+      const response = yield call(queryBBCourse,payload);
+      if(callback) callback(response);
+      yield put({
+        type: 'saveBBCourse',
+        payload: response,
+
+      })
+
     },
   },
 
@@ -49,6 +68,18 @@ export default {
       return {
         ...state,
         videoList:action.payload.data,
+      }
+    },
+    addHandle(state, action){
+      return {
+        ...state,
+        addSuccess: action.payload.success,
+      }
+    },
+    saveBBCourse(state, action){
+      return {
+        ...state,
+        bbCourse: action.payload.data,
       }
     }
   }

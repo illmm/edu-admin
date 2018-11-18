@@ -76,6 +76,10 @@ export default [
             name: 'online.add',
             component: './Course/Online/Add',
           },
+          { 
+            path: '/course/add-result', 
+            component: './Course/AddResult' 
+          },
         ],
       },
       // 教材管理

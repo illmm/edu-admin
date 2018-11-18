@@ -46,10 +46,22 @@ export async function updateUser(params) {
   return request('/api/user', {
     method: 'PUT',
     body: {
-      ...params
+      ...params,
     },
   });
 }
+/**
+ * @method 修改当前用户密码
+ */
+export async function modifyPwd(params) {
+  return request('/api/user/updatePassword',{
+    method: 'POST',
+    body: {
+      ...params,
+    }
+  })
+}
+
 /**
  * @method 机构下拉列表数据
  */

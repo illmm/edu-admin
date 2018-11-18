@@ -17,7 +17,7 @@ export async function queryAutoSource(params) {
 }
 /* 获取分类 */
 export async function getClassify(params) {
-  return request(`/api/front/common/classification?${stringify(params)}`);
+  return request(`/api/front/common/classification?blank=1&${stringify(params)}`);
 }
 
 /* 获取标签 */

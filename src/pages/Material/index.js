@@ -90,71 +90,72 @@ class UpdateForm extends PureComponent {
         onCancel={() => handleUpdateModalVisible()}
         onOk={() => this.updateOkHandle()}
         >
-       
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
-          {form.getFieldDecorator('type', { 
-            initialValue:values.type,
-            valuePropName:'check',
-          })(
-            <Radio.Group defaultValue={values.type} buttonStyle="solid" onChange={ handleTypeChange }>
-              <Radio.Button value={3}>海外教材</Radio.Button>
-              <Radio.Button value={4}>阅读世界</Radio.Button>
-            </Radio.Group>
-          )}
-        </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类">
-          {form.getFieldDecorator('classifyIds', {
-            initialValue:values.classifyIds,
-            rules: [
-              { 
-                required: true, 
-                message: '请选择分类'
-              }
-            ],
-          })(<Cascader 
-              style={{width:'100%'}}
-              options={classify}     
-              onChange={onChange}
-              placeholder="请选择分类" 
-              showSearch={{ filter }}
-              />)}
-        </FormItem>
-       
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="标签">
-          {form.getFieldDecorator('tagsIds', {
-            initialValue:values.tagsIds,
-            rules: [
-              { 
-                required: true, 
-                message: '请选择标签'
-              }
-            ],
-          })(<Select
-                mode="multiple"
-                style={{ width: '100%' }}
-                placeholder="选择标签"
-              >
-                {tags.map(item => <Option key={item.id}>{item.name}</Option>)}
-              </Select>)}
-        </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商城URL">
-          {form.getFieldDecorator('shoppingUrl', {
-            initialValue:values.shoppingUrl,
-            rules: [
-              
-              {
-                type:'url',
-                message: 'URL格式不正确'
-              }
-            ],
-          })(<Input />)}
-        </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="蓝思值">
-          {form.getFieldDecorator('lexile',{initialValue:values.lexile,})(<InputNumber style={{width:'50%'}} />)}
-        </FormItem>
-        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="促销价格">
-          {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0} precision={2} max={99999} style={{width:'50%'}}/>)}
-        </FormItem>
+        <Form hideRequiredMark>
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
+            {form.getFieldDecorator('type', { 
+              initialValue:values.type,
+              valuePropName:'check',
+            })(
+              <Radio.Group defaultValue={values.type} buttonStyle="solid" onChange={ handleTypeChange }>
+                <Radio.Button value={3}>海外教材</Radio.Button>
+                <Radio.Button value={4}>阅读世界</Radio.Button>
+              </Radio.Group>
+            )}
+          </FormItem>
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类">
+            {form.getFieldDecorator('classifyIds', {
+              initialValue:values.classifyIds,
+              rules: [
+                { 
+                  required: true, 
+                  message: '请选择分类'
+                }
+              ],
+            })(<Cascader 
+                style={{width:'100%'}}
+                options={classify}     
+                onChange={onChange}
+                placeholder="请选择分类" 
+                showSearch={{ filter }}
+                />)}
+          </FormItem>
+        
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="标签">
+            {form.getFieldDecorator('tagsIds', {
+              initialValue:values.tagsIds,
+              rules: [
+                { 
+                  required: true, 
+                  message: '请选择标签'
+                }
+              ],
+            })(<Select
+                  mode="multiple"
+                  style={{ width: '100%' }}
+                  placeholder="选择标签"
+                >
+                  {tags.map(item => <Option key={item.id}>{item.name}</Option>)}
+                </Select>)}
+          </FormItem>
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商城URL">
+            {form.getFieldDecorator('shoppingUrl', {
+              initialValue:values.shoppingUrl,
+              rules: [
+                
+                {
+                  type:'url',
+                  message: 'URL格式不正确'
+                }
+              ],
+            })(<Input />)}
+          </FormItem>
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="蓝思值">
+            {form.getFieldDecorator('lexile',{initialValue:values.lexile,})(<InputNumber style={{width:'50%'}} />)}
+          </FormItem>
+          <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="促销价格">
+            {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0} precision={2} max={99999} style={{width:'50%'}}/>)}
+          </FormItem>
+        </Form>
       </Modal>
       
     );

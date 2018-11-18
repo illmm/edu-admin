@@ -7,12 +7,24 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import Link from 'umi/link';
 
-import { Card, Button, Row, Col, Table, Divider, Badge, Alert, Icon } from 'antd';
+import { 
+  Card, 
+  Button, 
+  Row, 
+  Col, 
+  Table, 
+  Divider, 
+  Badge, 
+  Icon,
+  Modal,
+  Form, 
+  Input,
+} from 'antd';
 
 import styles from './Styles.less';
 
 const { Description } = DescriptionList;
-
+const FormItem = Form.Item;
 function dragDirection(
   dragIndex,
   hoverIndex,
@@ -28,6 +40,7 @@ function dragDirection(
   if (dragIndex > hoverIndex && hoverClientY < hoverMiddleY) {
     return 'upward';
   }
+  return null;
 }
 
 class BodyRow extends React.Component {
@@ -45,7 +58,7 @@ class BodyRow extends React.Component {
     } = this.props;
     const style = { ...restProps.style, cursor: 'move' };
 
-    let className = restProps.className;
+    let { className } = restProps;
     if (isOver && initialClientOffset) {
       const direction = dragDirection(
         dragRow.index,
@@ -110,6 +123,8 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
   }))(BodyRow)
 );
 
+/* eslint-disable */
+@Form.create()
 class VideoInfo extends PureComponent {
   components = {
     body: {
@@ -138,6 +153,7 @@ class VideoInfo extends PureComponent {
         address: 'Sidney No. 1 Lake Park',
       },
     ],
+    addModalVisible: false,
   };
 
   componentDidMount() {}
@@ -155,7 +171,17 @@ class VideoInfo extends PureComponent {
     );
   };
 
+  handleAddModalVisible = flag =>{
+    
+    this.setState({
+      addModalVisible: !!flag,
+    });
+  }
+
   render() {
+    const { addModalVisible } = this.state;
+
+    const { form: { getFieldDecorator } } = this.props;
     // {moment(info.startDate).format('YYYY-MM-DD')}至{moment(info.endDate).format('YYYY-MM-DD')}
     const description = () => (
       <DescriptionList className={styles.headerList} size="small" col="2">
@@ -179,7 +205,7 @@ class VideoInfo extends PureComponent {
             </Button>
           </Dropdown>
         </ButtonGroup> */}
-        <Button type="primary" onClick={() => this.handleResourceModalVisible(true)}>
+        <Button type="primary" onClick={() => this.handleAddModalVisible(true)}>
           新增课时
         </Button>
       </Fragment>
@@ -238,6 +264,18 @@ class VideoInfo extends PureComponent {
         <Icon type="smile" theme="twoTone" te /> 温馨提示：拖拽行可进行顺序调整
       </span>
     );
+
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 18 },
+      },
+    };
+
     return (
       <PageHeaderWrapper
         title="Managing the Young Learner Classroom	"
@@ -260,6 +298,27 @@ class VideoInfo extends PureComponent {
             })}
           />
         </Card>
+        <Modal
+          destroyOnClose
+          title="新增课时"
+          okText="新增"
+          visible={addModalVisible}
+          // onOk={okHandle}
+          onCancel={() => this.handleAddModalVisible()}
+        > 
+          <Form hideRequiredMark>
+            <FormItem {...formItemLayout} label="课时名称">
+              {getFieldDecorator('name',{
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入机构名称'
+                  },
+                ]
+              })(<Input placeholder="课时名称"/>)}
+            </FormItem>
+          </Form>
+        </Modal>
       </PageHeaderWrapper>
     );
   }

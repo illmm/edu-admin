@@ -30,167 +30,30 @@ const FormItem = Form.Item;
 
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
-const EditResource = Form.create()(props => {
-  const {
-    form,
-    form: { getFieldDecorator },
-    handleModalVisible,
-    handleResourceTabChange,
-    handleSelectResourceChange,
-    handleResourceChange,
-    handleSourceSearch,
-    handleResourceSearch,
-    dataSource,
-    modalVisible,
-    resourceTabKey,
-    resourceData,
-    resourceTargetKeys,
-  } = props;
-
-  /**
-   * @method 分配资源条件搜索
-   * @param {*} e
-   */
-  const handleSearch = e => {
-    e.preventDefault();
-    form.validateFields((err, fieldsValue) => {
-      console.log(fieldsValue);
-      if (err) return;
-      handleResourceSearch(fieldsValue);
-    });
-  };
-  /**
-   * 分配资源Tab切换
-   * @param {*} key
-   */
-  const handleTabChange = key => {
-    form.resetFields();
-    handleResourceTabChange(key);
-  };
-  const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 6 },
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 18 },
-    },
-    colon: false,
-  };
-
-  return (
-    <Modal
-      destroyOnClose
-      title="分配资源"
-      okText="完成"
-      visible={modalVisible}
-      width={950}
-      footer={null}
-      onCancel={() => handleModalVisible()}
-    >
-      <Card
-        bordered={false}
-        className={styles.tabsCard}
-        tabList={this.classifyTabList}
-        onTabChange={handleTabChange}
-        activeTabKey={resourceTabKey}
-      >
-        <div className={styles.tableListForm}>
-          <Form onSubmit={handleSearch} layout="inline">
-            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-              <Col md={7} sm={24}>
-                <FormItem {...formItemLayout} label="编号">
-                  {getFieldDecorator('number')(<Input />)}
-                </FormItem>
-              </Col>
-              <Col md={7} sm={24}>
-                <FormItem {...formItemLayout} label="标题">
-                  {getFieldDecorator('title')(<Input />)}
-                </FormItem>
-              </Col>
-              <Col md={7} sm={24}>
-                <FormItem {...formItemLayout} label="来源">
-                  {getFieldDecorator('sourceName')(
-                    <AutoComplete
-                      dataSource={dataSource}
-                      style={{ width: 200 }}
-                      onSearch={handleSourceSearch}
-                    />
-                  )}
-                </FormItem>
-              </Col>
-              <Col md={3} sm={24}>
-                <div style={{ overflow: 'hidden' }}>
-                  <div style={{ float: 'right', marginBottom: 24 }}>
-                    <Button type="primary" htmlType="submit">
-                      查询
-                    </Button>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Form>
-        </div>
-        <Transfer
-          dataSource={resourceData}
-          targetKeys={resourceTargetKeys}
-          onChange={handleResourceChange}
-          onSelectChange={handleSelectResourceChange}
-          listStyle={{
-            width: 376,
-            height: 400,
-          }}
-          titles={['资源库', '已分配']}
-          render={item => item.title}
-        />
-      </Card>
-    </Modal>
-  );
-});
-
-const menu = (
-  <Menu>
-    <Menu.Item key="3">批量导入成员</Menu.Item>
-  </Menu>
-);
-
-const agencyStatus = ['停止服务', '服务中'];
-const extra = info => (
-  <Row>
-    <Col xs={24} sm={12}>
-      <div className={styles.textSecondary}>状态</div>
-      <div className={styles.heading}>{agencyStatus[info.status]}</div>
-    </Col>
-    <Col xs={24} sm={12}>
-      <div className={styles.textSecondary}>剩余天数</div>
-      <div className={styles.heading}>{moment(info.endDate).diff(moment(), 'days')}天</div>
-    </Col>
-  </Row>
-);
-
-const description = info => (
-  <DescriptionList className={styles.headerList} size="small" col="2">
-    <Description term="销售员">{info.salesman}</Description>
-    <Description term="学生数量">{info.studentNum}位</Description>
-    <Description term="创建时间">
-      {moment(info.createTime).format('YYYY-MM-DD HH:mm:ss')}
-    </Description>
-    <Description term="教师数量">{info.teacherNum}位</Description>
-    <Description term="服务起止日期">
-      {moment(info.startDate).format('YYYY-MM-DD')}至{moment(info.endDate).format('YYYY-MM-DD')}
-    </Description>
-    <Description term="描述">{info.description}</Description>
-  </DescriptionList>
-);
-
 const tabList = [
   {
     key: 'detail',
     tab: '已购资源',
   },
 ];
-
+const classifyEditTabList = [
+  {
+    key: '3',
+    tab: '海外教材',
+  },
+  {
+    key: '4',
+    tab: '阅读世界',
+  },
+  {
+    key: '1',
+    tab: '视频课程',
+  },
+  {
+    key: '5',
+    tab: '培训',
+  },
+];
 const classifyTabList = [
   {
     key: '3',
@@ -318,6 +181,162 @@ const trainsColumns = [
     render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
   },
 ];
+
+const EditResource = Form.create()(props => {
+  const {
+    form,
+    form: { getFieldDecorator },
+    handleModalVisible,
+    handleResourceTabChange,
+    handleSelectResourceChange,
+    handleResourceChange,
+    handleSourceSearch,
+    handleResourceSearch,
+    dataSource,
+    modalVisible,
+    resourceTabKey,
+    resourceData,
+    resourceTargetKeys,
+  } = props;
+
+  /**
+   * @method 分配资源条件搜索
+   * @param {*} e
+   */
+  const handleSearch = e => {
+    e.preventDefault();
+    form.validateFields((err, fieldsValue) => {
+      console.log(fieldsValue);
+      if (err) return;
+      handleResourceSearch(fieldsValue);
+    });
+  };
+  /**
+   * 分配资源Tab切换
+   * @param {*} key
+   */
+  const handleTabChange = key => {
+    form.resetFields();
+    handleResourceTabChange(key);
+  };
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 18 },
+    },
+    colon: false,
+  };
+
+  return (
+    <Modal
+      destroyOnClose
+      title="分配资源"
+      okText="完成"
+      visible={modalVisible}
+      width={950}
+      footer={null}
+      onCancel={() => handleModalVisible()}
+    >
+      <Card
+        bordered={false}
+        className={styles.tabsCard}
+        tabList={classifyEditTabList}
+        onTabChange={handleTabChange}
+        activeTabKey={resourceTabKey}
+      >
+        <div className={styles.tableListForm}>
+          <Form onSubmit={handleSearch} layout="inline">
+            <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+              <Col md={7} sm={24}>
+                <FormItem {...formItemLayout} label="编号">
+                  {getFieldDecorator('number')(<Input />)}
+                </FormItem>
+              </Col>
+              <Col md={7} sm={24}>
+                <FormItem {...formItemLayout} label="标题">
+                  {getFieldDecorator('title')(<Input />)}
+                </FormItem>
+              </Col>
+              <Col md={7} sm={24}>
+                <FormItem {...formItemLayout} label="来源">
+                  {getFieldDecorator('sourceName')(
+                    <AutoComplete
+                      dataSource={dataSource}
+                      style={{ width: 200 }}
+                      onSearch={handleSourceSearch}
+                    />
+                  )}
+                </FormItem>
+              </Col>
+              <Col md={3} sm={24}>
+                <div style={{ overflow: 'hidden' }}>
+                  <div style={{ float: 'right', marginBottom: 24 }}>
+                    <Button type="primary" htmlType="submit">
+                      查询
+                    </Button>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </div>
+        <Transfer
+          dataSource={resourceData}
+          targetKeys={resourceTargetKeys}
+          onChange={handleResourceChange}
+          onSelectChange={handleSelectResourceChange}
+          listStyle={{
+            width: 376,
+            height: 400,
+          }}
+          titles={['资源库', '已分配']}
+          render={item => item.title}
+        />
+      </Card>
+    </Modal>
+  );
+});
+
+const menu = (
+  <Menu>
+    <Menu.Item key="3">批量导入成员</Menu.Item>
+  </Menu>
+);
+
+const agencyStatus = ['停止服务', '服务中'];
+const extra = info => (
+  <Row>
+    <Col xs={24} sm={12}>
+      <div className={styles.textSecondary}>状态</div>
+      <div className={styles.heading}>{agencyStatus[info.status]}</div>
+    </Col>
+    <Col xs={24} sm={12}>
+      <div className={styles.textSecondary}>剩余天数</div>
+      <div className={styles.heading}>{moment(info.endDate).diff(moment(), 'days')}天</div>
+    </Col>
+  </Row>
+);
+
+const description = info => (
+  <DescriptionList className={styles.headerList} size="small" col="2">
+    <Description term="销售员">{info.salesman}</Description>
+    <Description term="学生数量">{info.studentNum}位</Description>
+    <Description term="创建时间">
+      {moment(info.createTime).format('YYYY-MM-DD HH:mm:ss')}
+    </Description>
+    <Description term="教师数量">{info.teacherNum}位</Description>
+    <Description term="服务起止日期">
+      {moment(info.startDate).format('YYYY-MM-DD')}至{moment(info.endDate).format('YYYY-MM-DD')}
+    </Description>
+    <Description term="描述">{info.description}</Description>
+  </DescriptionList>
+);
+
+
 
 @connect(({ agency, loading }) => ({
   agency,

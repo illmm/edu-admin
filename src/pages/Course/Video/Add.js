@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import BraftEditor from 'braft-editor';
 import { getBase64 } from '@/utils/utils';
+import router from 'umi/router';
 import { connect } from 'dva';
 import { 
   Card,
@@ -25,6 +26,7 @@ const { Option } = Select;
 @connect(({ global,loading }) => ({
   global,
   loading: loading.effects['global/getClassify'],
+  submitting:loading.effects['course/add'],
 }))
 
 @Form.create()
@@ -57,6 +59,19 @@ class AddVideoCourse extends PureComponent{
       }
     });
   }
+
+  componentDidUpdate() {
+    const { form, course } =  this.props;
+    const title = form.getFieldDecorator('title');
+    if(course.addSuccess){
+      router.push({
+        pathname: '/course/add-result',
+        state: {
+          title
+        }
+      });
+    }
+  }
   
   handleSubmit = e => {
     const { dispatch, form } = this.props;
@@ -72,7 +87,8 @@ class AddVideoCourse extends PureComponent{
         values.introduceRAW = values.introduce.toRAW();
         // eslint-disable-next-line
         values.introduceHTML = values.introduce.toHTML();
-        console.log(values)
+        // eslint-disable-next-line
+        delete values.introduce;
         dispatch({
           type: 'course/add',
           payload: values,
@@ -105,7 +121,12 @@ class AddVideoCourse extends PureComponent{
       global: { classify, tags, source },
     } = this.props;
 
-    const { uploadLoading, imageUrl, qiniuToken } = this.state;
+    const { 
+      uploadLoading, 
+      imageUrl, 
+      qiniuToken,
+      submitting, 
+    } = this.state;
     const data = {
       token: qiniuToken
     }
@@ -202,7 +223,7 @@ class AddVideoCourse extends PureComponent{
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="来源">
-              {getFieldDecorator('source_id',{
+              {getFieldDecorator('sourceId',{
                 rules: [
                   {
                     required: true,
@@ -297,7 +318,7 @@ class AddVideoCourse extends PureComponent{
             </FormItem>
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
-              <Button type="primary" htmlType="submit" loading={false}>
+              <Button type="primary" htmlType="submit" loading={submitting}>
                 提交
               </Button>
               <Button style={{ marginLeft: 8 }}>

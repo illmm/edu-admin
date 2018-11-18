@@ -25,3 +25,7 @@ export async function addCourse(params) {
     method: 'POST',
   })
 }
+
+export async function queryBBCourse(params) {
+  return request(`/api/course/noAddOnline/${params}`)
+}
