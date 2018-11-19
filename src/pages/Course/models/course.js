@@ -18,6 +18,7 @@ export default {
       pagination: {},
     },
     bbCourse:[],
+    addSuccess:false,
   },
 
   effects: {
@@ -52,8 +53,7 @@ export default {
         type: 'saveBBCourse',
         payload: response,
 
-      })
-
+      });
     },
   },
 

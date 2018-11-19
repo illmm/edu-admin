@@ -20,7 +20,7 @@ export async function queryVideoCourse(params) {
  * @param {*} params 
  */
 export async function addCourse(params) {
-  return request(`/api/course`,{
+  return request(`/api/course/addOnline`,{
     body: params,
     method: 'POST',
   })

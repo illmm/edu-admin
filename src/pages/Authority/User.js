@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { formatMessage } from 'umi/locale';
+import Organization from '@/components/BusinessData/Organization';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
@@ -30,7 +31,7 @@ const getValue = obj =>
     .join(',');
 
 const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible,getOrganizationOption,getRoleOption } = props;
+  const { modalVisible, form, handleAdd, handleModalVisible,getRoleOption } = props;
   
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -52,9 +53,7 @@ const CreateForm = Form.create()(props => {
         {form.getFieldDecorator('organizeId', {
           rules: [{ required: true, message: formatMessage({id:'app.please.select'})}],
         })(
-          <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }}>
-            {getOrganizationOption()}
-          </Select>
+          <Organization />
         )}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label={formatMessage({id: 'app.authority.user.role'})}>
@@ -337,9 +336,6 @@ class TableList extends PureComponent {
       type: 'users/fetch',
     });
     dispatch({
-      type: 'global/organization',
-    });
-    dispatch({
       type: 'global/role',
     });
 
@@ -567,18 +563,9 @@ class TableList extends PureComponent {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-          
             <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.organization'})}>
-            
               {getFieldDecorator('organizeId')(
-                
-                <Select 
-                  allowClear 
-                  placeholder={formatMessage({id:'app.please.select'})}
-                  style={{ width: '100%' }} 
-                >
-                  {this.getOrganizationOption()}
-                </Select>
+                <Organization allowClear />
               )}
             </FormItem>
           </Col>

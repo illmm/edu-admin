@@ -1,12 +1,4 @@
 import React, { PureComponent,Fragment } from 'react';
-import { FormattedNumber } from 'react-intl'
-import StandardTable from '@/components/StandardTable';
-import { formatMessage } from 'umi/locale';
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { connect } from 'dva';
-import { getAuthority } from '@/utils/authority';
-import { status, statusMap } from '@/constants'
-import Link from 'umi/link';
 import { 
   Card,
   Button,
@@ -18,9 +10,7 @@ import {
   Radio,
   Modal,
   Input,
-  Cascader,
   Select,
-  Switch,
   InputNumber,
   Upload,
   Badge,
@@ -29,12 +19,24 @@ import {
   Row,
   Col,
 } from 'antd';
+import { FormattedNumber } from 'react-intl'
+import { formatMessage } from 'umi/locale';
+import Link from 'umi/link';
+import { connect } from 'dva';
+import StandardTable from '@/components/StandardTable';
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import Tag from '@/components/BusinessData/Tag';
+import Classify from '@/components/BusinessData/Classify';
+import { getAuthority } from '@/utils/authority';
+import { status, statusMap } from '@/constants'
+
+
 import styles from './Index.less';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
+const { Option } = Select;
 
-//编辑组件
+// 编辑组件
 @Form.create()
 class UpdateForm extends PureComponent {
   constructor(props) {
@@ -43,7 +45,6 @@ class UpdateForm extends PureComponent {
     const { editId } = this.props;
     this.state = {
       id: editId,
-      
     };
 
     this.formLayout = {
@@ -51,6 +52,7 @@ class UpdateForm extends PureComponent {
       wrapperCol: { span: 13 },
     };
   }
+
   updateOkHandle = () => {
     const { form,handleUpdate} = this.props;
   
@@ -62,24 +64,17 @@ class UpdateForm extends PureComponent {
   
   
   render() {
-    const { form, updateModalVisible, handleUpdateModalVisible, handleUploadChange,
-            imageUrl, classify, tags, handleTypeChange, values } = this.props;
-    let defultVal = values.type || 3;
-    function onChange(value, selectedOptions) {
-      //console.log(value, selectedOptions);
-    }
-    
-    function filter(inputValue, path) {
-      return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
-    }
+    const { 
+      form, 
+      updateModalVisible, 
+      handleUpdateModalVisible, 
+      handleTypeChange, 
+      values,
+      isReading 
+    } = this.props;
 
-    
-    function handleChange(value) {
-      // console.log(`selected ${value}`);
-    }
-    
-    
-    
+    let defultVal = values.type || 3;
+
     return (
       <Modal
         width={640}
@@ -89,14 +84,14 @@ class UpdateForm extends PureComponent {
         visible={updateModalVisible}
         onCancel={() => handleUpdateModalVisible()}
         onOk={() => this.updateOkHandle()}
-        >
+      >
         <Form hideRequiredMark>
           <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="类型">
             {form.getFieldDecorator('type', { 
               initialValue:values.type,
               valuePropName:'check',
             })(
-              <Radio.Group defaultValue={values.type} buttonStyle="solid" onChange={ handleTypeChange }>
+              <Radio.Group defaultValue={values.type} buttonStyle="solid" onChange={handleTypeChange}>
                 <Radio.Button value={3}>海外教材</Radio.Button>
                 <Radio.Button value={4}>阅读世界</Radio.Button>
               </Radio.Group>
@@ -111,13 +106,7 @@ class UpdateForm extends PureComponent {
                   message: '请选择分类'
                 }
               ],
-            })(<Cascader 
-                style={{width:'100%'}}
-                options={classify}     
-                onChange={onChange}
-                placeholder="请选择分类" 
-                showSearch={{ filter }}
-                />)}
+            })(<Classify isReading={isReading} />)}
           </FormItem>
         
           <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="标签">
@@ -129,13 +118,7 @@ class UpdateForm extends PureComponent {
                   message: '请选择标签'
                 }
               ],
-            })(<Select
-                  mode="multiple"
-                  style={{ width: '100%' }}
-                  placeholder="选择标签"
-                >
-                  {tags.map(item => <Option key={item.id}>{item.name}</Option>)}
-                </Select>)}
+            })(<Tag />)}
           </FormItem>
           <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="商城URL">
             {form.getFieldDecorator('shoppingUrl', {
@@ -162,14 +145,15 @@ class UpdateForm extends PureComponent {
     
   }
 }
-
+/* eslint-disable */
 @connect(({ global,material,loading }) => ({
   global,
   material,
   loading: loading.models.material,
 }))
+
 @Form.create()
-export default class MaterialList extends React.Component{
+class MaterialList extends React.Component{
   state = {
     selectedRows: [],
     updateModalVisible:false,
@@ -177,6 +161,7 @@ export default class MaterialList extends React.Component{
     uploadMsgType:'warning',
     uploadMsgTitle:'注意事项',
     uploadMsg:'需按照模板格式要求组织数据.',
+    isReading:false,
   }
   // table 列名
   columns = [
@@ -240,16 +225,13 @@ export default class MaterialList extends React.Component{
       type: 'material/fetch',
       payload: {},
     });
-    dispatch({
-      type: 'global/getClassify',
-      payload: { type:3 },
-    });
+    
     dispatch({
       type: 'global/getTags',
   
     });
   }
-  //条件查询
+  // 条件查询
   handleSearch = e => {
     e.preventDefault();
 
@@ -263,7 +245,8 @@ export default class MaterialList extends React.Component{
       });
     });
   };
-  //重置查询表单
+
+  // 重置查询表单
   handleFormReset = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -272,19 +255,22 @@ export default class MaterialList extends React.Component{
       payload: {},
     });
   };
-  //列表批量选择事件
+
+  // 列表批量选择事件
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
-  //刷新table
+  
+  // 刷新table
   handleTableReset = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'material/fetch',
     });
   }
+
   //编辑弹出框
   handleUpdateModalVisible = (flag, record) => {  
     const { dispatch, form } = this.props;
@@ -298,10 +284,6 @@ export default class MaterialList extends React.Component{
         type: 'material/editInfo',
         payload:key,
         callback:(_ = res =>{
-          dispatch({
-            type: 'global/getClassify',
-            payload: { type:res.data.type },
-          });
           this.setState({
             FormValues:res.data,
           });
@@ -313,19 +295,16 @@ export default class MaterialList extends React.Component{
       updateModalVisible: !!flag,
       editId:key,
     });
-    
-    
-   
-    
-    
   };
-  //导入Excel批量完善
+
+  // 导入Excel批量完善
   handlePerfectModalVisible = (flag) => {
     this.setState({
       perfectModalVisible: !!flag,
     });
   }
-  //编辑完善
+
+  // 编辑完善
   handleUpdate = fields => {
     const { dispatch } = this.props;
     const { editId} = this.state;
@@ -353,11 +332,11 @@ export default class MaterialList extends React.Component{
   
   //类别更改修改分类数据
   handleTypeChange = (e) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'global/getClassify',
-      payload: { type:e.target.value },
-    });
+    const { dispatch, isReading } = this.props;
+    
+    this.setState({
+      isReading: e.target.value == 4
+    })
   }
   //上架
   handlePutaway = () => {
@@ -531,7 +510,14 @@ export default class MaterialList extends React.Component{
       form,
     } = this.props;
    
-    const { selectedRows, updateModalVisible, editId, perfectModalVisible, FormValues } = this.state;
+    const { 
+      selectedRows, 
+      updateModalVisible, 
+      editId, 
+      perfectModalVisible, 
+      FormValues,
+      isReading 
+    } = this.state;
     const menu = (
       <Menu>
         <Menu.Item onClick={this.handleSoldout} key="down">下架</Menu.Item>
@@ -545,6 +531,7 @@ export default class MaterialList extends React.Component{
       classify:classify,
       tags:tags,
       handleTypeChange:this.handleTypeChange,
+      isReading:isReading,
     };
     const token = getAuthority('token');
     const beforeUpload = file => {
@@ -643,3 +630,5 @@ export default class MaterialList extends React.Component{
     ) 
   }
 }
+
+export default MaterialList;

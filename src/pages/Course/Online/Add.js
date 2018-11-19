@@ -1,6 +1,11 @@
 import React, { PureComponent } from 'react';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import Organization from '@/components/BusinessData/Organization';
+import Tag from '@/components/BusinessData/Tag';
+import Source from '@/components/BusinessData/Source';
+import Classify from '@/components/BusinessData/Classify';
 import BraftEditor from 'braft-editor';
+import router from 'umi/router';
 import { getBase64 } from '@/utils/utils';
 import { connect } from 'dva';
 import { 
@@ -8,7 +13,6 @@ import {
   Form,
   Input,
   Select,
-  Cascader,
   InputNumber,
   Button,
   Upload,
@@ -22,10 +26,9 @@ import styles from './Styles.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
-@connect(({ global, course, loading }) => ({
+@connect(({ global, course }) => ({
   global,
   course,
-  loading:loading.effects['global/getClassify'],
 }))
 
 @Form.create()
@@ -34,24 +37,11 @@ class AddOnlineCourse extends PureComponent{
   state = {
     uploadLoading: false,
     qiniuToken:'',
-    editorState: BraftEditor.createEditorState()
+   
   }
   
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'global/getClassify',
-      payload: { type:3 },
-    });
-    dispatch({
-      type: 'global/getTags',
-    });
-    dispatch({
-      type: 'global/source',
-    });
-    dispatch({
-      type: 'global/organization',
-    });
     dispatch({
       type: 'global/getQiniuToekn',
       callback: res => {
@@ -60,11 +50,24 @@ class AddOnlineCourse extends PureComponent{
         })
       }
     });
+
+    
   }
 
-  handleChange = (editorState) => {
-    this.setState({ editorState })
+  componentDidUpdate() {
+    const { form, course } = this.props;
+    const title = form.getFieldValue('title');
+    console.log(title);
+    if(course.addSuccess){
+      router.push({
+        pathname: '/course/add-result',
+        state: {
+          title
+        }
+      });
+    }
   }
+
 
   handleOrganizChange = (value) =>{
     const { dispatch } = this.props;
@@ -113,28 +116,6 @@ class AddOnlineCourse extends PureComponent{
 
   }
 
-  getOrganizationOption = () => {
-   
-    const { global: { organization } } = this.props;
-    return this.getOption(organization);
-  };
-
-  getOption = list => {
-    if (!list || list.length < 1) {
-      return (
-        <Option key={0} value={0}>
-          暂无选项
-        </Option>
-      );
-    }
-    return list.map(item => (
-      <Option key={item.id} value={item.id}>
-        {item.name}
-      </Option>
-    ));
-  };
-
-
   handleUploadChange = (info) => {
     if (info.file.status === 'uploading') {
       this.setState({ uploadLoading: true });
@@ -152,87 +133,16 @@ class AddOnlineCourse extends PureComponent{
     }
   }
 
-  preview = () => {
-
-    if (window.previewWindow) {
-      window.previewWindow.close()
-    }
-
-    window.previewWindow = window.open()
-    window.previewWindow.document.write(this.buildPreviewHtml())
-    window.previewWindow.document.close()
-
-  }
-
-  buildPreviewHtml () {
-    const { editorState } = this.state;
-    return `
-      <!Doctype html>
-      <html>
-        <head>
-          <title>Preview Content</title>
-          <style>
-            html,body{
-              height: 100%;
-              margin: 0;
-              padding: 0;
-              overflow: auto;
-              background-color: #f1f2f3;
-            }
-            .container{
-              box-sizing: border-box;
-              width: 1000px;
-              max-width: 100%;
-              min-height: 100%;
-              margin: 0 auto;
-              padding: 30px 20px;
-              overflow: hidden;
-              background-color: #fff;
-              border-right: solid 1px #eee;
-              border-left: solid 1px #eee;
-            }
-            .container img,
-            .container audio,
-            .container video{
-              max-width: 100%;
-              height: auto;
-            }
-            .container p{
-              white-space: pre-wrap;
-              min-height: 1em;
-            }
-            .container pre{
-              padding: 15px;
-              background-color: #f1f1f1;
-              border-radius: 5px;
-            }
-            .container blockquote{
-              margin: 0;
-              padding: 15px;
-              background-color: #f1f1f1;
-              border-left: 3px solid #d1d1d1;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">${editorState.toHTML()}</div>
-        </body>
-      </html>
-    `
-
-  }
-
   render(){
     const {
       form: { getFieldDecorator },
-      global: { classify, tags, source },
       course: { bbCourse },
     } = this.props;
 
     const { 
       uploadLoading, 
       imageUrl, 
-      qiniuToken, 
+      qiniuToken,
     } = this.state;
     const data = {
       token: qiniuToken
@@ -266,23 +176,14 @@ class AddOnlineCourse extends PureComponent{
       return isJPG && isLt2M;
     }
 
-    function filter(inputValue, path) {
-      return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
-    }
+  
     const uploadButton = (
       <div>
         <Icon type="plus" />
         <div className="ant-upload-text">上传</div>
       </div>
     );
-    const extendControls = [
-      {
-        key: 'custom-button',
-        type: 'button',
-        text: '预览',
-        onClick: this.preview
-      }
-    ]
+    
     return(
       <PageHeaderWrapper>
         
@@ -297,9 +198,8 @@ class AddOnlineCourse extends PureComponent{
                   }, 
                 ],
               })( 
-                <Select style={{width:300}} placeholder="请选择机构" onChange={this.handleOrganizChange}>
-                  {this.getOrganizationOption()}
-                </Select>)}
+                <Organization className={styles.w300} onChange={this.handleOrganizChange} />
+                )}
             </FormItem>
             <FormItem {...formItemLayout} label="课程">
               {getFieldDecorator('title',{
@@ -310,12 +210,12 @@ class AddOnlineCourse extends PureComponent{
                   }, 
                 ],
               })( 
-                <Select style={{width:300}} placeholder="请选择课程" onChange={this.handleBBCourseChange}>
+                <Select className={styles.w300} placeholder="请选择课程" onChange={this.handleBBCourseChange}>
                   {bbCourse.map(item => <Option props={item} key={item.pkIdKey}>{item.title}</Option>)}
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="分类">
-              {getFieldDecorator('classifies',{
+              {getFieldDecorator('classifyIds',{
                 rules: [
                   {
                     required: true,
@@ -323,12 +223,7 @@ class AddOnlineCourse extends PureComponent{
                   }, 
                 ],
               })
-              (<Cascader 
-                style={{width:300}}
-                options={classify}     
-                placeholder="请选择分类" 
-                showSearch={{ filter }}
-              />)}
+              (<Classify className={styles.w300} isReading={false} />)}
             </FormItem>
             <FormItem {...formItemLayout} label="标签">
               {getFieldDecorator('tagsIds',{
@@ -339,15 +234,7 @@ class AddOnlineCourse extends PureComponent{
                   }
                 ]
               })
-              (
-                <Select
-                  
-                  mode="multiple"
-                  style={{width:300}}
-                  placeholder="选择标签"
-                >
-                  {tags.map(item => <Option key={item.id}>{item.name}</Option>)}
-                </Select>)}
+              (<Tag className={styles.w300} />)}
             </FormItem>
             <FormItem {...formItemLayout} label="来源">
               {getFieldDecorator('sourceId',{
@@ -358,13 +245,7 @@ class AddOnlineCourse extends PureComponent{
                   }
                 ]
               })
-              (
-                <Select
-                  style={{width:300}}
-                  placeholder="选择来源"
-                >
-                  {source.map(item => <Option key={item.id}>{item.name}</Option>)}
-                </Select>)}
+              (<Source className={styles.w300} />)}
             </FormItem>
             
             <FormItem {...formItemLayout} label="关键字">
@@ -375,7 +256,7 @@ class AddOnlineCourse extends PureComponent{
                     message:'请输入关键字'
                   }
                 ]
-              })(<Input className={styles.input} placeholder="关键字" />)}
+              })(<Input className={styles.w300} placeholder="关键字" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="适用人群">
               {getFieldDecorator('audiences',{
@@ -385,7 +266,7 @@ class AddOnlineCourse extends PureComponent{
                     message:'请输入适用人群'
                   }
                 ]
-              })(<Input className={styles.input} placeholder="适用人群" />)}
+              })(<Input className={styles.w300} placeholder="适用人群" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="价格">
               {getFieldDecorator('price',{
@@ -432,7 +313,6 @@ class AddOnlineCourse extends PureComponent{
                 rules: [{
                   required: true,
                   validator: (_, value, callback) => {
-                    console.log(value);
                     if (value) {
                       callback()
                     } else {
@@ -440,16 +320,13 @@ class AddOnlineCourse extends PureComponent{
                     }
                   }
                 }],
-                // style={{ border:'1px solid #d1d1d1',borderRadius:'5px'}}
               })(
                 <BraftEditor 
                   onChange={this.handleChange}
                   className={styles.editor} 
                   placeholder="请输入简介" 
-                  extendControls={extendControls}
                 />)}
             </FormItem>
-
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={false}>
                 提交

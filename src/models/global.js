@@ -20,17 +20,18 @@ export default {
     },
     tags: [],
     source: [],
+    classify:[],
   },
 
   effects: {
-    *getTags(_, { call, put }) {
+    *tags(_, { call, put }) {
       const response = yield call(getTags);
       yield put({
         type: 'saveTags',
         payload: response,
       });
     },
-    *getClassify({ payload }, { call, put }) {
+    *classify({ payload }, { call, put }) {
       const response = yield call(getClassify, payload);
       yield put({
         type: 'saveClassify',
