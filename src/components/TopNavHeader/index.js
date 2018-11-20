@@ -28,7 +28,7 @@ export default class TopNavHeader extends PureComponent {
         >
           <div className={styles.left}>
             <div className={styles.logo} key="logo" id="logo">
-              <Link to="/">
+              <Link to="/workplace">
                 <img src={logo} alt="logo" />
                 <h1>中图教育</h1>
               </Link>

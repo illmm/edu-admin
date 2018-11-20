@@ -21,7 +21,7 @@ import {
  } from 'antd';
 
 import 'braft-editor/dist/index.css';
-import styles from './Styles.less';
+import styles from '../Styles.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -57,7 +57,6 @@ class AddOnlineCourse extends PureComponent{
   componentDidUpdate() {
     const { form, course } = this.props;
     const title = form.getFieldValue('title');
-    console.log(title);
     if(course.addSuccess){
       router.push({
         pathname: '/course/add-result',
@@ -211,7 +210,7 @@ class AddOnlineCourse extends PureComponent{
                 ],
               })( 
                 <Select className={styles.w300} placeholder="请选择课程" onChange={this.handleBBCourseChange}>
-                  {bbCourse.map(item => <Option props={item} key={item.pkIdKey}>{item.title}</Option>)}
+                  {bbCourse.map(item => <Option props={item} key={item.title}>{item.title}</Option>)}
                 </Select>)}
             </FormItem>
             <FormItem {...formItemLayout} label="分类">

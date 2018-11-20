@@ -15,7 +15,7 @@ import {
   Badge,
  } from 'antd';
 import Link from 'umi/link';
-import styles from './Styles.less'
+import styles from '../Styles.less'
 
 
  @connect(({ course, loading }) => ({
@@ -128,7 +128,7 @@ class OnlineList extends PureComponent{
           <div className={styles.tableList}>
             <div className={styles.tableListForm} />
             <div className={styles.tableListOperator}>
-              <Link to="/course/online/add">
+              <Link to="/course/add/online">
                 <Button icon="plus" type="primary">
                   新建在线课程
                 </Button>

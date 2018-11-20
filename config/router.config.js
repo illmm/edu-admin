@@ -12,7 +12,7 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // 工作台
-      { path: '/', redirect: '/workplace' },
+      { path: '/', redirect: '/login' },
       {
         path: '/workplace',
         name: 'workplace',
@@ -55,7 +55,7 @@ export default [
           },
           {
             hideInMenu: true,
-            path: '/course/video/add',
+            path: '/course/add/video',
             name: 'video.add',
             component: './Course/Video/Add',
           },
@@ -72,7 +72,7 @@ export default [
           },
           {
             hideInMenu: true,
-            path: '/course/online/add',
+            path: '/course/add/online',
             name: 'online.add',
             component: './Course/Online/Add',
           },

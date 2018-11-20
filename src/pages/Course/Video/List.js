@@ -107,7 +107,7 @@ class VideoList extends PureComponent{
           <div className={styles.tableList}>
             <div className={styles.tableListForm} />
             <div className={styles.tableListOperator}>
-              <Link to="/course/video/add">
+              <Link to="/course/add/video">
                 <Button icon="plus" type="primary">
                   新建视频课程
                 </Button>
