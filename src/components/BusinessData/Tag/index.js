@@ -41,13 +41,12 @@ class Tag extends Component {
     const { className, global: { tags } } = this.props;
     return (
       <CommonSelect 
-        mode="tags"
+        mode="multiple"
         data={tags}
         placeholder="选择标签"
         className={className} 
         onChange={this.handleChange}
       />
-
     );
   }
 }

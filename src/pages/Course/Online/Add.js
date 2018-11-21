@@ -61,7 +61,8 @@ class AddOnlineCourse extends PureComponent{
       router.push({
         pathname: '/course/add-result',
         state: {
-          title
+          title,
+          url:'/course/online',
         }
       });
     }

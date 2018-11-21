@@ -11,7 +11,6 @@ import {
   Card,
   Form,
   Input,
-  Select,
   InputNumber,
   Button,
   Upload,
@@ -23,7 +22,6 @@ import 'braft-editor/dist/index.css';
 import styles from '../Styles.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 
 @connect(({ global, course }) => ({
   global,
@@ -58,16 +56,12 @@ class AddVideoCourse extends PureComponent{
       router.push({
         pathname: '/course/add-result',
         state: {
-          title
+          title,
+          url:'/course/video',
         }
       });
     }
   }
-
-
-  
-
-  
 
   handleSubmit = e => {
     const { dispatch, form } = this.props;
@@ -115,7 +109,6 @@ class AddVideoCourse extends PureComponent{
   render(){
     const {
       form: { getFieldDecorator },
-      course: { bbCourse },
     } = this.props;
 
     const { 

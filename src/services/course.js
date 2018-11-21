@@ -16,11 +16,11 @@ export async function queryVideoCourse(params) {
   return request(`/api/course/video?${stringify(params)}`)
 }
 /**
- * @method 视频课程列表
+ * @method 添加课程
  * @param {*} params 
  */
 export async function addCourse(params) {
-  return request(`/api/course/addOnline`,{
+  return request(`/api/course/add`,{
     body: params,
     method: 'POST',
   })
