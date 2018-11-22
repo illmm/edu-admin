@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import {formatMessage} from 'umi/locale'
 import { Layout } from 'antd';
-import pathToRegexp from 'path-to-regexp';
 import classNames from 'classnames';
 import Link from 'umi/link';
 import styles from './index.less';
@@ -24,36 +23,11 @@ const getDefaultCollapsedSubMenus = props => {
     .filter(item => item);
 };
 
-/**
- * Recursively flatten the data
- * [{path:string},{path:string}] => {path,path2}
- * @param  menu
- */
-export const getFlatMenuKeys = menu =>
-  menu.reduce((keys, item) => {
-    keys.push(item.path);
-    if (item.children) {
-      return keys.concat(getFlatMenuKeys(item.children));
-    }
-    return keys;
-  }, []);
 
-/**
- * Find all matched menu keys based on paths
- * @param  flatMenuKeys: [/abc, /abc/:id, /abc/:id/info]
- * @param  paths: [/abc, /abc/11, /abc/11/info]
- */
-export const getMenuMatchKeys = (flatMenuKeys, paths) =>
-  paths.reduce(
-    (matchKeys, path) =>
-      matchKeys.concat(flatMenuKeys.filter(item => pathToRegexp(item).test(path))),
-    []
-  );
 
 export default class SiderMenu extends PureComponent {
   constructor(props) {
     super(props);
-    this.flatMenuKeys = getFlatMenuKeys(props.menuData);
     this.state = {
       openKeys: getDefaultCollapsedSubMenus(props),
     };

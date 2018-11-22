@@ -76,6 +76,12 @@ export default [
             name: 'online.add',
             component: './Course/Online/Add',
           },
+          {
+            hideInMenu: true,
+            path: '/course/online/:id',
+            name: 'online.info',
+            component: './Course/Online/Info',
+          },
           { 
             path: '/course/add-result', 
             component: './Course/AddResult' 
