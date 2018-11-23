@@ -11,7 +11,7 @@ import {
   Button,
   Badge,
  } from 'antd';
-import styles from './Styles.less'
+import styles from '../Styles.less'
 import { status, statusMap } from '@/constants'
 
 @connect(({ course, loading }) => ({

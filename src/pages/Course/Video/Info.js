@@ -21,7 +21,7 @@ import {
   Input,
 } from 'antd';
 
-import styles from './Styles.less';
+import styles from '../Styles.less';
 
 const { Description } = DescriptionList;
 const FormItem = Form.Item;

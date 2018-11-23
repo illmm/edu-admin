@@ -25,7 +25,36 @@ export async function addCourse(params) {
     method: 'POST',
   })
 }
-
+/**
+ * @method 获取BB课程列表
+ * @param {*} params 
+ */
 export async function queryBBCourse(params) {
   return request(`/api/course/noAddOnline/${params}`)
+}
+
+/**
+ * @method 获取课程详细
+ * @param {*} params 
+ */
+export async function queryCourseInfo(params) {
+  return request(`/api/course/noAddOnline/${params}`)
+}
+
+/**
+ * @method 更新课程
+ * @param {*} params 
+ */
+export async function updateCourse(params) {
+  return request(`/api/course/update`,{
+    body: params,
+    method: 'POST',
+  })
+}
+
+export async function updateCourseStatus(params) {
+  return request(`/api/course/updateStatus`,{
+    body: params,
+    method: 'POST',
+  })
 }

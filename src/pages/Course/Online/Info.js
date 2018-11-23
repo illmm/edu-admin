@@ -25,112 +25,19 @@ import styles from '../Styles.less';
 
 const { Description } = DescriptionList;
 const FormItem = Form.Item;
-function dragDirection(
-  dragIndex,
-  hoverIndex,
-  initialClientOffset,
-  clientOffset,
-  sourceClientOffset
-) {
-  const hoverMiddleY = (initialClientOffset.y - sourceClientOffset.y) / 2;
-  const hoverClientY = clientOffset.y - sourceClientOffset.y;
-  if (dragIndex < hoverIndex && hoverClientY > hoverMiddleY) {
-    return 'downward';
-  }
-  if (dragIndex > hoverIndex && hoverClientY < hoverMiddleY) {
-    return 'upward';
-  }
-  return null;
-}
 
-class BodyRow extends React.Component {
-  render() {
-    const {
-      isOver,
-      connectDragSource,
-      connectDropTarget,
-      moveRow,
-      dragRow,
-      clientOffset,
-      sourceClientOffset,
-      initialClientOffset,
-      ...restProps
-    } = this.props;
-    const style = { ...restProps.style, cursor: 'move' };
 
-    let { className } = restProps;
-    if (isOver && initialClientOffset) {
-      const direction = dragDirection(
-        dragRow.index,
-        restProps.index,
-        initialClientOffset,
-        clientOffset,
-        sourceClientOffset
-      );
-      if (direction === 'downward') {
-        className += ' drop-over-downward';
-      }
-      if (direction === 'upward') {
-        className += ' drop-over-upward';
-      }
-    }
 
-    return connectDragSource(
-      connectDropTarget(<tr {...restProps} className={className} style={style} />)
-    );
-  }
-}
 
-const rowSource = {
-  beginDrag(props) {
-    return {
-      index: props.index,
-    };
-  },
-};
 
-const rowTarget = {
-  drop(props, monitor) {
-    const dragIndex = monitor.getItem().index;
-    const hoverIndex = props.index;
 
-    // Don't replace items with themselves
-    if (dragIndex === hoverIndex) {
-      return;
-    }
 
-    // Time to actually perform the action
-    props.moveRow(dragIndex, hoverIndex);
 
-    // Note: we're mutating the monitor item here!
-    // Generally it's better to avoid mutations,
-    // but it's good here for the sake of performance
-    // to avoid expensive index searches.
-    monitor.getItem().index = hoverIndex;
-  },
-};
-
-const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  sourceClientOffset: monitor.getSourceClientOffset(),
-}))(
-  DragSource('row', rowSource, (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
-    dragRow: monitor.getItem(),
-    clientOffset: monitor.getClientOffset(),
-    initialClientOffset: monitor.getInitialClientOffset(),
-  }))(BodyRow)
-);
 
 /* eslint-disable */
 @Form.create()
 class VideoInfo extends PureComponent {
-  components = {
-    body: {
-      row: DragableBodyRow,
-    },
-  };
+
 
   state = {
     data: [
@@ -206,47 +113,21 @@ class VideoInfo extends PureComponent {
           </Dropdown>
         </ButtonGroup> */}
         <Button type="primary" onClick={() => this.handleAddModalVisible(true)}>
-          新增课时
+          编辑
         </Button>
       </Fragment>
     );
     const tabList = [
       {
-        key: 'detail',
-        tab: '课时列表',
+        key: 'teacher',
+        tab: '老师列表',
+      },
+      {
+        key: 'student',
+        tab: '学生列表',
       },
     ];
-    const columns = [
-      {
-        title: '课时名称',
-        dataIndex: 'name',
-        key: 'name',
-        render(val) {
-          return (
-            <span>
-              {val} <Badge count="免费" style={{ backgroundColor: '#52c41a' }} />
-            </span>
-          );
-        },
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'age',
-        key: 'age',
-      },
-      {
-        title: '操作',
-        dataIndex: 'address',
-        key: 'address',
-        render: record => (
-          <Fragment>
-            <Link to={`/course/video/${record.id}`}>编辑</Link>
-            <Divider type="vertical" />
-            <Link to={`/course/video/${record.id}`}>删除</Link>
-          </Fragment>
-        ),
-      },
-    ];
+    
     const extra = () => (
       <Row>
         <Col xs={24} sm={12}>
@@ -259,11 +140,7 @@ class VideoInfo extends PureComponent {
         </Col>
       </Row>
     );
-    const footer = () => (
-      <span>
-        <Icon type="smile" theme="twoTone" te /> 温馨提示：拖拽行可进行顺序调整
-      </span>
-    );
+    
 
     const formItemLayout = {
       labelCol: {
@@ -283,49 +160,12 @@ class VideoInfo extends PureComponent {
         action={action}
         content={description()}
         extraContent={extra()}
-        tabList={tabList}
+        //tabList={tabList}
       >
-        <Card>
-          <Table
-            pagination={false}
-            footer={footer}
-            columns={columns}
-            dataSource={this.state.data}
-            components={this.components}
-            onRow={(record, index) => ({
-              index,
-              moveRow: this.moveRow,
-            })}
-          />
-        </Card>
-        <Modal
-          destroyOnClose
-          title="新增课时"
-          okText="新增"
-          visible={addModalVisible}
-          // onOk={okHandle}
-          onCancel={() => this.handleAddModalVisible()}
-        > 
-          <Form hideRequiredMark>
-            <FormItem {...formItemLayout} label="课时名称">
-              {getFieldDecorator('name',{
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入机构名称'
-                  },
-                ]
-              })(<Input placeholder="课时名称"/>)}
-            </FormItem>
-          </Form>
-        </Modal>
       </PageHeaderWrapper>
     );
   }
 }
 
-export default DragDropContext(HTML5Backend)(VideoInfo);
-//const Demo = DragDropContext(HTML5Backend)(VideoInfo);
+export default VideoInfo;
 
-//ReactDOM.render(<VideoInfo />);
-//export default VideoInfo;

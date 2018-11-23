@@ -72,7 +72,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://192.168.1.147:8999',
+      target: 'http://192.168.1.157:8999',
     },
   },
   ignoreMomentLocale: true,
