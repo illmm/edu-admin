@@ -216,7 +216,7 @@ class BasicLayout extends React.PureComponent {
         {isTop && !isMobile ? null : (
           <Suspense
             fallback={
-              <Sider width={256}>
+              <Sider width={220}>
                 <PageLoading />
               </Sider>
             }

@@ -203,7 +203,7 @@ const CreateForm = Form.create()(props => {
     loading: loading.models.users,
 }))
 @Form.create()
-export default class AgencyList extends PureComponent{
+class AgencyList extends PureComponent{
   state = {
     selectedRows: [],
     modalVisible: false,
@@ -234,10 +234,6 @@ export default class AgencyList extends PureComponent{
       dataIndex: 'endDate',
       sorter: true,
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
-    },
-    {
-      title: '描述',
-      dataIndex: 'description',
     },
     {
       title: '操作',
@@ -422,3 +418,5 @@ export default class AgencyList extends PureComponent{
     ) 
   }
 }
+
+export default AgencyList
