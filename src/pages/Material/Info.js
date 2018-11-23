@@ -1,26 +1,29 @@
 import React, { Component, Fragment } from 'react';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import DescriptionList from '@/components/DescriptionList';
-import { Card, Button, Icon, Dropdown, Menu, Badge, Row ,Col, Breadcrumb } from 'antd';
+import { 
+  Card, 
+  Button, 
+  Icon, 
+  Dropdown, 
+  Menu, 
+  Badge, 
+  Row,
+  Col, 
+  Breadcrumb 
+} from 'antd';
 import { FormattedNumber } from 'react-intl'
 import { connect } from 'dva';
 import styles from './Info.less';
 
 const { Description } = DescriptionList;
-const ButtonGroup = Button.Group;
-const { Meta } = Card;
-const menu = (
-  <Menu>
-    <Menu.Item key="1">操作1</Menu.Item>
-  
-  </Menu>
-);
+
 const extra = (info) => (
   <Row>
     <Col xs={24} sm={12}>
       <div className={styles.textSecondary}>状态</div>
       <div className={styles.heading}>
-        {info.status == 0 ? <Badge status="error" text="未发布" />:<Badge status="success" text="已发布" />}
+        {info.status === 0 ? <Badge status="error" text="未发布" />:<Badge status="success" text="已发布" />}
       
       </div>
     </Col>
@@ -32,9 +35,6 @@ const extra = (info) => (
 );
      
 const description = (info) => (
-  
-  
-
   <div className={styles.outer}>
     <div className={styles.sidebar}>
       <img src={info.image} />
@@ -44,7 +44,7 @@ const description = (info) => (
         <Description term="书号">{info.isbn}</Description>
         <Description term="副标题">{info.subtitle}</Description>
         <Description term="丛书的书名">{info.series}</Description>
-        <Description term="资源类型">{info.type == 3?'海外教材':'阅读世界'}</Description>
+        <Description term="资源类型">{info.type === 3?'海外教材':'阅读世界'}</Description>
         <Description className={styles.classify} term="分类"><Breadcrumb>{info.classifyIds.map(val => <Breadcrumb.Item>{val}</Breadcrumb.Item>)}</Breadcrumb></Description>
         <Description term="电子书价格"><FormattedNumber value={info.listprice} style="currency" currency="CNY" /></Description>
         <Description term="纸书价格"><FormattedNumber value={info.pprice} style="currency" currency="CNY" /></Description>
@@ -60,10 +60,10 @@ const description = (info) => (
 class MaterialInfo extends Component{
 
   componentDidMount(){
-    const { dispatch } = this.props;
+    const { dispatch, match } = this.props;
     dispatch({
       type: 'material/info',
-      payload: this.props.match.params.id,
+      payload: match.params.id,
     });
 
   }

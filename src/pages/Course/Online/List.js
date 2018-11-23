@@ -12,7 +12,9 @@ import {
   Dropdown,
   Icon,
   Menu,
+  Modal,
   Badge,
+  message,
  } from 'antd';
 import Link from 'umi/link';
 import styles from '../Styles.less'
@@ -100,15 +102,45 @@ class OnlineList extends PureComponent{
     });
   };
 
-  handleMenuClick = e => {
-    switch (e.key) {
-      case 'remove':
-        this.handleDelete();
-        break;
-      default:
-        break;
-    }
-  };
+  handleDelete = () => {
+
+  }
+  
+
+  handleUpdateStatus = type => {
+    const { selectedRows } = this.state;
+    Modal.confirm({
+      title: '确认',
+      content: `确认选择的${selectedRows.length}项吗？`,
+      centered:true,
+      onOk: () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'course/updateStatus',
+          payload: {
+            courseIds: selectedRows.map(row => row.id),
+            status:type,
+          },
+          callback: (res =>{
+            if(res.success){
+              message.success('操作成功');
+              dispatch({
+                type: 'course/online',
+                payload:{}
+              });
+            }else{
+              message.error(res.msg);
+            }
+            this.setState({
+              selectedRows: [],
+            });
+          })
+        });
+      }
+    });
+  }
+
+   
 
   render(){
     const { selectedRows } = this.state;
@@ -116,10 +148,12 @@ class OnlineList extends PureComponent{
       course: { onlineList },
       loading,
     } = this.props;
-    
+
     const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="disable">下架</Menu.Item>
+      <Menu>
+        <Menu.Item onClick={() => this.handleUpdateStatus(0)}>下架</Menu.Item>
+        <Menu.Item onClick={() => this.handleUpdateStatus(2)}>关闭</Menu.Item>
+        <Menu.Item onClick={this.handleDelete}>删除</Menu.Item>
       </Menu>
     );
     return(
@@ -135,10 +169,10 @@ class OnlineList extends PureComponent{
               </Link>
               {selectedRows.length > 0 && (
               <span>
-                <Button>上架</Button>
+                <Button onClick={() => this.handleUpdateStatus(1)}>上架</Button>
                 <Dropdown overlay={menu}>
                   <Button>
-                 更多<Icon type="down" />
+                  更多<Icon type="down" />
                   </Button>
                 </Dropdown>
               </span>

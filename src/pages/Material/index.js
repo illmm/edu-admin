@@ -42,11 +42,7 @@ class UpdateForm extends PureComponent {
   constructor(props) {
     super(props);
 
-    const { editId } = this.props;
-    this.state = {
-      id: editId,
-    };
-
+    
     this.formLayout = {
       labelCol: { span: 7 },
       wrapperCol: { span: 13 },
@@ -73,8 +69,7 @@ class UpdateForm extends PureComponent {
       isReading 
     } = this.props;
 
-    let defultVal = values.type || 3;
-
+    
     return (
       <Modal
         width={640}
@@ -136,7 +131,7 @@ class UpdateForm extends PureComponent {
             {form.getFieldDecorator('lexile',{initialValue:values.lexile,})(<InputNumber style={{width:'50%'}} />)}
           </FormItem>
           <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="促销价格">
-            {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0} precision={2} max={99999} style={{width:'50%'}}/>)}
+            {form.getFieldDecorator('price',{initialValue:values.price,})(<InputNumber min={0} precision={2} max={99999} style={{width:'50%'}} />)}
           </FormItem>
         </Form>
       </Modal>

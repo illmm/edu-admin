@@ -10,6 +10,12 @@ import {
   Card,
   Button,
   Badge,
+  Modal,
+  message,
+  Dropdown,
+  Menu,
+  Icon
+
  } from 'antd';
 import styles from '../Styles.less'
 import { status, statusMap } from '@/constants'
@@ -84,7 +90,38 @@ class VideoList extends PureComponent{
     })
   }
 
-  
+  handleUpdateStatus = type => {
+    const { selectedRows } = this.state;
+    Modal.confirm({
+      title: '确认',
+      content: `确认选择的${selectedRows.length}项吗？`,
+      centered:true,
+      onOk: () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'course/updateStatus',
+          payload: {
+            courseIds: selectedRows.map(row => row.id),
+            status:type,
+          },
+          callback: (res =>{
+            if(res.success){
+              message.success('操作成功');
+              dispatch({
+                type: 'course/video',
+                payload:{}
+              });
+            }else{
+              message.error(res.msg);
+            }
+            this.setState({
+              selectedRows: [],
+            });
+          })
+        });
+      }
+    });
+  }
 
   /**
    * @method 列表选择事件
@@ -101,6 +138,15 @@ class VideoList extends PureComponent{
       course: { videoList },
       loading,
     } = this.props;
+
+    const menu = (
+      <Menu>
+        <Menu.Item onClick={() => this.handleUpdateStatus(0)}>下架</Menu.Item>
+        <Menu.Item onClick={() => this.handleUpdateStatus(2)}>关闭</Menu.Item>
+        <Menu.Item onClick={this.handleDelete}>删除</Menu.Item>
+      </Menu>
+    );
+
     return(
       <PageHeaderWrapper>
         <Card>
@@ -114,12 +160,12 @@ class VideoList extends PureComponent{
               </Link>
               {selectedRows.length > 0 && (
               <span>
-                {/* <Button onClick={this.handleDelete}>删除</Button> */}
-                {/* <Dropdown overlay={menu}>
-                <Button>
-                更多<Icon type="down" />
-                </Button>
-              </Dropdown> */}
+                <Button onClick={() => this.handleUpdateStatus(1)}>上架</Button>
+                <Dropdown overlay={menu}>
+                  <Button>
+                  更多<Icon type="down" />
+                  </Button>
+                </Dropdown>
               </span>
           )}
             </div>

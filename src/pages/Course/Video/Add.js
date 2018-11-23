@@ -172,6 +172,16 @@ class AddVideoCourse extends PureComponent{
                 ],
               })(<Input placeholder="课程标题" className={styles.w300} />)}
             </FormItem>
+            <FormItem {...formItemLayout} label="课程编号">
+              {getFieldDecorator('courseNumber',{
+                rules: [
+                  {
+                    required: true,
+                    message:'请输入课程编号'
+                  }, 
+                ],
+              })(<Input placeholder="课程编号" className={styles.w300} />)}
+            </FormItem>
             <FormItem {...formItemLayout} label="分类">
               {getFieldDecorator('classifyIds',{
                 rules: [

@@ -2,7 +2,8 @@ import {
   queryOnlineCourse, 
   queryVideoCourse, 
   addCourse,
-  queryBBCourse 
+  queryBBCourse,
+  updateCourseStatus 
 } from '@/services/course';
 
 export default {
@@ -19,6 +20,8 @@ export default {
     },
     bbCourse:[],
     addSuccess:false,
+    members:[],
+    info:{},
   },
 
   effects: {
@@ -54,6 +57,10 @@ export default {
         payload: response,
 
       });
+    },
+    *updateStatus({ payload, callback },{ call }){
+      const response = yield call(updateCourseStatus, payload);
+      if(callback) callback(response);
     },
   },
 

@@ -617,7 +617,7 @@ class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem {...formItemLayout} label={formatMessage({id:'app.authority.user.organization'})}>
               {getFieldDecorator('organizeId')(
-                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear={true} >
+                <Select placeholder={formatMessage({id:'app.please.select'})} style={{ width: '100%' }} allowClear>
                   {this.getOrganizationOption()}
                 </Select>
               )}

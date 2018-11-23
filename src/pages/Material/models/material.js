@@ -10,6 +10,9 @@ export default {
     },
     info:{
       classifyIds:[],
+      pprice:0,
+      price:0,
+      listprice:0,
     },
      
   },

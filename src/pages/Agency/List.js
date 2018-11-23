@@ -91,7 +91,7 @@ const CreateForm = Form.create()(props => {
               message:'必须为2-20位'
             }
           ]
-        })(<Input placeholder="请输入机构名称"/>)}
+        })(<Input placeholder="请输入机构名称" />)}
       </FormItem>
       <FormItem {...formItemLayout} label="机构编号">
         {form.getFieldDecorator('code',{
@@ -104,12 +104,9 @@ const CreateForm = Form.create()(props => {
               max:8,
               message:'必须为1-8位'
             },
-            {
-              pattern:/^[a-z]+$/,
-              message: '必须为字母'
-            }
+        
           ]
-        })(<Input placeholder="请输入机构编号"/>)}
+        })(<Input placeholder="请输入机构编号" />)}
       </FormItem>
       <FormItem {...formItemLayout} label="教师数量">
         {form.getFieldDecorator('teacherNum',{

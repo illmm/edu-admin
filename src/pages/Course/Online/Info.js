@@ -24,7 +24,6 @@ import {
 import styles from '../Styles.less';
 
 const { Description } = DescriptionList;
-const FormItem = Form.Item;
 
 
 
@@ -34,61 +33,21 @@ const FormItem = Form.Item;
 
 
 
-/* eslint-disable */
+
 @Form.create()
+@connect(({ course }) => ({
+  course,
+}))
 class VideoInfo extends PureComponent {
 
 
-  state = {
-    data: [
-      {
-        key: '1',
-        name: '课时1',
-        age: '2018-11-11 12:00',
-        address: 'New York No. 1 Lake Park',
-      },
-      {
-        key: '2',
-        name: '课时2',
-        age: '2018-11-11 12:00',
-        address: 'London No. 1 Lake Park',
-      },
-      {
-        key: '3',
-        name: '课时3',
-        age: '2018-11-11 12:00',
-        address: 'Sidney No. 1 Lake Park',
-      },
-    ],
-    addModalVisible: false,
-  };
-
   componentDidMount() {}
 
-  moveRow = (dragIndex, hoverIndex) => {
-    const { data } = this.state;
-    const dragRow = data[dragIndex];
-
-    this.setState(
-      update(this.state, {
-        data: {
-          $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]],
-        },
-      })
-    );
-  };
-
-  handleAddModalVisible = flag =>{
-    
-    this.setState({
-      addModalVisible: !!flag,
-    });
-  }
 
   render() {
-    const { addModalVisible } = this.state;
-
-    const { form: { getFieldDecorator } } = this.props;
+    const { 
+      course:{ members,info }, 
+    } = this.props;
     // {moment(info.startDate).format('YYYY-MM-DD')}至{moment(info.endDate).format('YYYY-MM-DD')}
     const description = () => (
       <DescriptionList className={styles.headerList} size="small" col="2">
@@ -112,20 +71,17 @@ class VideoInfo extends PureComponent {
             </Button>
           </Dropdown>
         </ButtonGroup> */}
-        <Button type="primary" onClick={() => this.handleAddModalVisible(true)}>
+        {/* <Button type="primary" >
           编辑
-        </Button>
+        </Button> */}
       </Fragment>
     );
     const tabList = [
       {
-        key: 'teacher',
-        tab: '老师列表',
+        key: 'members',
+        tab: '成员列表',
       },
-      {
-        key: 'student',
-        tab: '学生列表',
-      },
+      
     ];
     
     const extra = () => (
@@ -142,26 +98,21 @@ class VideoInfo extends PureComponent {
     );
     
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 18 },
-      },
-    };
 
     return (
       <PageHeaderWrapper
         title="Managing the Young Learner Classroom	"
-        logo={<img alt="" src="//static.cnpeducation.com/20170119112754df221e.jpg" />}
+        logo="//static.cnpeducation.com/20170119112754df221e.jpg"
         action={action}
         content={description()}
         extraContent={extra()}
-        //tabList={tabList}
+        tabList={tabList}
       >
+        <Card title="成员列表" style={{ marginBottom: 24 }} bordered={false}>
+          <Table
+            dataSource={members}
+          /> 
+        </Card>
       </PageHeaderWrapper>
     );
   }
